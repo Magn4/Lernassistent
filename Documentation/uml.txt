@@ -1,0 +1,51 @@
+@startuml
+
+' Define classes
+class ApiController {
+    - _httpClientFactory: IHttpClientFactory
+    - _connectionString: string
+    + ProcessPdf(pdfRequest: PdfRequest): IActionResult
+    - InitializeDatabase(): void
+    - GetUserCredits(userId: string): int
+    - InitializeUserCredits(userId: string): int
+    - DeductCredits(userId: string): void
+}
+
+class PdfRequest {
+    - UserId: string
+    - PdfBase64: string
+}
+
+class SQLiteDatabase {
+    - Users: table
+    - SqliteConnection: connection
+}
+
+class IHttpClient {
+    + PostAsync(url: string, content: StringContent): Task<HttpResponseMessage>
+}
+
+class TextExtractorService {
+    + ExtractText(pdfBase64: string): string
+}
+
+class AIService {
+    + ProcessText(extractedText: string): string
+}
+
+' Define relationships
+ApiController --> PdfRequest : "uses"
+ApiController --> SQLiteDatabase : "interacts with"
+ApiController --> IHttpClient : "uses"
+ApiController --> TextExtractorService : "sends data to"
+ApiController --> AIService : "sends data to"
+
+' Relationships for SQLite Database
+SQLiteDatabase -[hidden]-> SqliteConnection
+SQLiteDatabase --> Users : "stores user credits"
+
+' HTTP Client relationship
+IHttpClient --> TextExtractorService : "communicates with"
+IHttpClient --> AIService : "communicates with"
+
+@enduml
