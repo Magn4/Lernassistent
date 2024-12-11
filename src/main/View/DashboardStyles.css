@@ -14,5 +14,11 @@
     flex-grow: 15;
     background-color: white;
     margin: 20px;
+    padding: 30px;
     border-radius: 30px;
+    flex-direction: column;
+  }
+
+  h1 {
+    margin-top: 0px;
   }
