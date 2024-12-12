@@ -1,6 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
 using System.Linq;
+using System.Threading.Tasks;
 using Lernassistent.src.main.database;
+using Lernassistent.src.main.services;
 
 namespace Lernassistent.src.main.controller
 {
@@ -9,14 +11,18 @@ namespace Lernassistent.src.main.controller
     public class AIController : ControllerBase
     {
         private readonly DatabaseContext _dbContext;
+        private readonly AIExternalService _externalService;
+        private readonly AILocalService _localService;
 
-        public AIController(DatabaseContext dbContext)
+        public AIController(DatabaseContext dbContext, AIExternalService externalService, AILocalService localService)
         {
             _dbContext = dbContext;
+            _externalService = externalService;
+            _localService = localService;
         }
 
         [HttpPost("process")]
-        public IActionResult ProcessRequest([FromBody] AIRequest request)
+        public async Task<IActionResult> ProcessRequest([FromBody] AIRequest request)
         {
             // Fetch user from the database
             var user = _dbContext.Users.FirstOrDefault(u => u.Id == request.UserId);
@@ -26,33 +32,24 @@ namespace Lernassistent.src.main.controller
                 return BadRequest("User not found.");
             }
 
-            // Decide which AI to use based on user's credits
+            // Simulated text extraction for demonstration
+            var extractedText = "Sample extracted text for processing";
+
             if (user.Credits > 0)
             {
                 // Deduct credits and save to the database
                 user.Credits--;
-                _dbContext.SaveChanges();
+                await _dbContext.SaveChangesAsync();
 
                 // Route to external AI
-                return ExternalAI(request);
+                return await _externalService.CallExternalAI(request, extractedText);
             }
             else
             {
                 // Route to local AI
-                return LocalAI(request);
+                var localResult = _localService.ProcessLocally(extractedText);
+                return Ok(new { Message = "Request routed to local AI", Result = localResult });
             }
-        }
-
-        private IActionResult ExternalAI(AIRequest request)
-        {
-            // Code to call the external AI microservice
-            return Ok(new { Message = "Request routed to external AI" });
-        }
-
-        private IActionResult LocalAI(AIRequest request)
-        {
-            // Code to call the local AI microservice
-            return Ok(new { Message = "Request routed to local AI" });
         }
     }
 

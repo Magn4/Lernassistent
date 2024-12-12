@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Lernassistent")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+6fe77c0d1f59d0888e3f1f8286335340202b63c3")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+bcf6eac8494f81d65d045c1e536f2c780ab4c57c")]
 [assembly: System.Reflection.AssemblyProductAttribute("Lernassistent")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Lernassistent")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

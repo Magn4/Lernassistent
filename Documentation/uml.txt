@@ -29,7 +29,7 @@ class TextExtractorService {
     + ExtractText(pdfBase64: string): string
 }
 
-class AIService {
+class AIService {D
     + ProcessText(extractedText: string): string
 }
 
