@@ -9,6 +9,9 @@ namespace Lernassistent.src.main.controller
 {
     [ApiController]
     [Route("api/[controller]")]
+    
+    // http://localhost/api/*
+
     public class AIController : ControllerBase
     {
         private readonly DatabaseContext _dbContext;

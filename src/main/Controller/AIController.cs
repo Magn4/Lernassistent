@@ -7,6 +7,16 @@ namespace Lernassistent.src.main.Controller
 {
     [ApiController] // Automatically validates incoming requests and provides model validation error responses.
     [Route("api/[controller]")]
+
+    // AIController.cs
+    // http://localhost/api/AI
+
+    // APIController.cs
+    // http://localhost/api/API
+
+    // TahaController.cs
+    // http://localhost/api/Taha
+
     public class AIController : ControllerBase
     {
         private readonly IAIService _aiService;
