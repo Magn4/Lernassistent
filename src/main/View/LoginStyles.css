@@ -2,7 +2,11 @@ html,
 body {
   height: 100%;
   width: 100%;
-  background-color: #f68464;
+  background-color: #f68464; /* orange */
+  /* background-color: #c4dce0; beautiful blue*/
+  /* background-color: #98a55d; beautiful green*/
+  /* background-color: #50000b; beautiful red */
+  /* background-color: #5d8e9f; beautiful darker blue */
   display: flex;
   justify-content: center;
   align-items: center;
