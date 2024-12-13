@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 using Microsoft.AspNetCore.Mvc;
 
+using Lernassistent.src.main.Controller;
+
 namespace Lernassistent.src.main.services
 {
     public class AIExternalService

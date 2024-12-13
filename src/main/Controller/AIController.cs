@@ -1,5 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
-using Lernassistent.src.main.services;  // For IAIService
+using Lernassistent.src.main.services.interfaces;  // For IAIService
 using Lernassistent.src.main.Models;
 using System.Threading.Tasks;
 

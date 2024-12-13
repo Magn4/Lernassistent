@@ -2,7 +2,7 @@ namespace Lernassistent.src.main.controller
 {
     using Microsoft.AspNetCore.Mvc; // MVC framework to create API endpoints.
     using System.Threading.Tasks; // Async operations.
-    using Lernassistent.src.main.Services; 
+    using Lernassistent.src.main.services.interfaces; 
     using Lernassistent.src.main.Models;  // Add the Models namespace here for AIRequest and other models
 
 
