@@ -4,7 +4,9 @@ using System.Threading.Tasks;
 
 public class APIController
 {
-    public async Task<IActionResult> UploadPdf(byte[] pdfData)
+
+    
+    public async Task<IActionResult> UploadPdf(byte[] pdfData, int UserId)
     {
         // Validate the request
         // ...
