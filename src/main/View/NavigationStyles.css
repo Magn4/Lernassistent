@@ -26,12 +26,26 @@
   text-decoration: none;
   padding: 10px;
   display: block;
+  display: flex;
 }
 
 .navbar a:hover {
   border-radius: 6px;
   box-shadow: 0px 10px 40px white;
+  transition: box-shadow 0.4s;
   /* background-color: #8dc1cc; */
+}
+
+.link-text {
+  display: block;
+  font-size: 20px;
+  padding-left: 10px;
+}
+
+.fas {
+  align-self: center;
+  width: 15px;
+  
 }
 
 .navigation-button-clicked {

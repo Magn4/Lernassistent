@@ -45,7 +45,8 @@ body {
     /* background-color: #13213c; dark blue*/
     /* background-color: #7e8494; dark grey inverted*/
     flex-basis: 100%;
-    height: 800px;
+    /*height: 800px*/
+    height: 740px;
     margin: 10px;
     border-radius: 30px;
     display: flex;
