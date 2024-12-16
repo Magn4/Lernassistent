@@ -1,6 +1,10 @@
+#modules-box {
+    flex-basis: 300px;
+}
+
 #modules-container ul {
     list-style-type: none;
-    padding: 0px 50px 0px 0px;
+    padding: 0px 40px 0px 0px;
 }
 
 #modules-container li {
@@ -36,6 +40,11 @@
     transition: background-color 0.3s;
 }
 
+.folder:hover {
+    border-radius: 6px;
+    box-shadow: 0px 10px 30px 0px #dbdbd9;
+}
+
 .icon-design {
     font-size: 70px;
     color: #98a55d;
@@ -62,4 +71,5 @@
 
 #files-list {
     margin-top: 0px;
+    /* width: 250px; */
 }
