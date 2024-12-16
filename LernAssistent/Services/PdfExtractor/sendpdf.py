@@ -1,20 +1,28 @@
+# curl -X POST -F "file=@/Users/taha/Desktop/Uni/5.Semester/Op_Sys/Exercices/bts_WS2324_exercise_sheet_01.pdf" http://209.38.252.155:5001/api/extract -i
+
 import requests
 
 # Path to the PDF file you want to send
-pdf_path = r"C:\Users\hp\Desktop\Informatik\5. Semester\Informatik Projekt\Sample pdf Test.pdf"
-
+pdf_path = r"/Users/taha/Desktop/Uni/5.Semester/Op_Sys/Exercices/bts_WS2324_exercise_sheet_01.pdf"
 
 # The URL of your Flask endpoint
-url = "http://127.0.0.1:5001/api/extract"
+url = "http://209.38.252.155:5001/api/extract"
 
 # Open the PDF file in binary mode and send it as part of the POST request
 with open(pdf_path, "rb") as pdf_file:
     files = {'file': pdf_file}
     response = requests.post(url, files=files)
 
-# Print the response from the server
+# Print the raw response to help with debugging
+print("Status Code:", response.status_code)
+print("Response Text:", response.text)
+
+# Try to handle JSON response if it exists
 if response.status_code == 200:
-    result = response.json()
-    print("Extracted Text:", result.get("text"))
+    try:
+        result = response.json()
+        print("Extracted Text:", result.get("text"))
+    except ValueError:
+        print("Error: Received non-JSON response")
 else:
-    print("Error:", response.json())
+    print(f"Error: {response.status_code} - {response.text}")
