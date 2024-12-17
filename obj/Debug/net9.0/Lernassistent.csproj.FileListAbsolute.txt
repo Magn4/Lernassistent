@@ -1,8 +1,0 @@
-/Users/taha/Desktop/Git/Lernassistent/obj/Debug/net9.0/Lernassistent.csproj.AssemblyReference.cache
-/Users/taha/Desktop/Git/Lernassistent/obj/Debug/net9.0/Lernassistent.GeneratedMSBuildEditorConfig.editorconfig
-/Users/taha/Desktop/Git/Lernassistent/obj/Debug/net9.0/Lernassistent.AssemblyInfoInputs.cache
-/Users/taha/Desktop/Git/Lernassistent/obj/Debug/net9.0/Lernassistent.AssemblyInfo.cs
-/Users/taha/Desktop/Git/Lernassistent/obj/Debug/net9.0/Lernassistent.csproj.CoreCompileInputs.cache
-/Users/taha/Desktop/Git/Lernassistent/obj/Debug/net9.0/Lernassistent.MvcApplicationPartsAssemblyInfo.cs
-/Users/taha/Desktop/Git/Lernassistent/obj/Debug/net9.0/Lernassistent.MvcApplicationPartsAssemblyInfo.cache
-/Users/taha/Desktop/Git/Lernassistent/obj/Debug/net9.0/Lernassistent.sourcelink.json
