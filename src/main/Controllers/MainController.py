@@ -1,8 +1,19 @@
 import requests
 from flask import Flask, request, jsonify
-import json
 import psycopg2
 from psycopg2.extras import RealDictCursor
+
+class AIController:
+    def __init__(self, external_service, internal_service, db_context):
+        self.external_service = external_service
+        self.internal_service = internal_service
+        self.db_context = db_context
+
+    async def process_text_externally(self, text):
+        return await self.external_service.process_text(text)
+
+    async def process_text_internally(self, text):
+        return await self.internal_service.process_text(text)
 
 class MainController:
     def __init__(self, ai_controller, text_extractor_url, db_context):
@@ -82,6 +93,7 @@ db_context = DatabaseContext()
 external_service = AiExternalService()
 internal_service = AiInternalService()
 
+# Create the AIController
 ai_controller = AIController(external_service, internal_service, db_context)
 
 # Create the MainController

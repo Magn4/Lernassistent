@@ -1,27 +1,31 @@
 version: "3.8"
 services:
   db:
-    image: postgres:latest
+    build:
+      context: .
+      dockerfile: Dockerfile.db  # Reference the custom database Dockerfile
     environment:
-      POSTGRES_USER: yourusername
-      POSTGRES_PASSWORD: yourpassword
-      POSTGRES_DB: yourdbname
+      POSTGRES_USER: db_admin
+      POSTGRES_PASSWORD: password123
+      POSTGRES_DB: main_db
     ports:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
 
   app:
-    build: .
+    build:
+      context: .
+      dockerfile: Dockerfile.app  # Reference your app Dockerfile
     depends_on:
       - db
     environment:
-      - DB_URL=db
-      - DB_USER=yourusername
-      - DB_PASSWORD=yourpassword
-      - DB_NAME=yourdbname
+      - DB_URL=postgres://db_admin:password123@db:5432/main_db
+      - DB_USER=db_admin
+      - DB_PASSWORD=password123
+      - DB_NAME=main_db
     ports:
-      - "5000:5000"
+      - "8000:8000"  # Assuming your app listens on port 8000
 
 volumes:
   postgres_data:

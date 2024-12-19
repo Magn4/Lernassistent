@@ -3,7 +3,7 @@ from Controllers.MainController import MainController
 from Controllers.AiController import AIController
 from Services.AI.AiExternalService import AiExternalService
 from Services.AI.AiInternalService import AiInternalService
-from Database.DatabaseContext import DatabaseContext
+from Services.Database.DatabaseContext import DatabaseContext
 import asyncio
 
 # Initialize services and controllers
