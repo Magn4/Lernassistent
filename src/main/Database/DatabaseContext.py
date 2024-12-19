@@ -1,9 +1,53 @@
 import requests
 from flask import Flask, request, jsonify
 import json
-import psycopg2
-from psycopg2.extras import RealDictCursor
+from sqlalchemy import create_engine, Column, Integer
+from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import sessionmaker
 
+# Database connection settings
+DATABASE_URL = "postgresql://user:password@localhost:5432/mydatabase"  # Change this if needed
+
+# SQLAlchemy setup
+Base = declarative_base()
+
+class User(Base):
+    __tablename__ = 'users'
+
+    user_id = Column(Integer, primary_key=True)
+    credit_balance = Column(Integer)
+
+# DatabaseContext with SQLAlchemy
+class DatabaseContext:
+    def __init__(self, db_url=DATABASE_URL):
+        # Initialize the database connection
+        self.db_url = db_url
+        self.engine = create_engine(db_url)
+        self.Session = sessionmaker(bind=self.engine)
+        self._initialize_database()
+
+    def _initialize_database(self):
+        """
+        Create the necessary tables if they do not exist.
+        """
+        Base.metadata.create_all(self.engine)
+
+    def get_user_info(self, user_id):
+        """
+        Fetch user info based on user_id (e.g., credit balance)
+        """
+        session = self.Session()
+        try:
+            user = session.query(User).filter_by(user_id=user_id).first()
+            if user:
+                return {"credit_balance": user.credit_balance}
+            return {"credit_balance": 0}  # Default value if user not found
+        except Exception as ex:
+            return {"error": f"Failed to fetch user info: {str(ex)}"}
+        finally:
+            session.close()
+
+# MainController and AIController classes (same as before)
 class MainController:
     def __init__(self, ai_controller, text_extractor_url, db_context):
         self.ai_controller = ai_controller
@@ -29,53 +73,17 @@ class MainController:
         """
         Use the AIController to process the extracted text based on the user ID.
         """
-        user_info = await self.db_context.get_user_info_async(user_id)
+        user_info = self.db_context.get_user_info(user_id)
         if user_info['credit_balance'] > 100:
             return await self.ai_controller.process_text_externally(text)
         else:
             return await self.ai_controller.process_text_internally(text)
 
 
-class DatabaseContext:
-    def __init__(self, db_url="postgresql://user:password@localhost:5432/mydatabase"):
-        # Initialize the database connection
-        self.db_url = db_url
-
-    def _get_db_connection(self):
-        # Connect to the PostgreSQL database
-        conn = psycopg2.connect(self.db_url)
-        return conn
-
-    async def get_user_info_async(self, user_id):
-        # Fetch user info based on user_id (e.g., credit balance)
-        conn = self._get_db_connection()
-        cursor = conn.cursor(cursor_factory=RealDictCursor)
-        try:
-            cursor.execute("SELECT credit_balance FROM users WHERE user_id = %s", (user_id,))
-            user_info = cursor.fetchone()
-            if user_info:
-                return user_info
-            return {"credit_balance": 0}
-        except Exception as ex:
-            return {"error": f"Failed to fetch user info: {str(ex)}"}
-        finally:
-            cursor.close()
-            conn.close()
-
-
-class AiExternalService:
-    async def process_text(self, text: str):
-        return f"Processed externally: {text}"
-
-class AiInternalService:
-    async def process_text(self, text: str):
-        return f"Processed internally: {text}"
-
-
 # Flask Setup
 app = Flask(__name__)
 
-# Initialize DatabaseContext
+# Initialize DatabaseContext (this will automatically create the users table if not exists)
 db_context = DatabaseContext()
 
 # Create instances of the services

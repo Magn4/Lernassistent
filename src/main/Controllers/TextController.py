@@ -1,16 +1,19 @@
 import requests
 import json
 
-
-
 class TextController:
     def __init__(self):
         # Base URL for Flask microservice
         # self.base_url = "http://localhost:5001/api/extract"
         self.base_url = "http://209.38.252.155:5001/api/extract"
-    
+
     def convert_to_text(self, pdf_data):
-        # Prepare the file data as part of multipart form-data request
+        """
+        Converts a PDF to text by calling an external microservice.
+
+        :param pdf_data: The binary data of the PDF file.
+        :return: The extracted text or an error message.
+        """
         files = {
             'file': ('uploaded.pdf', pdf_data, 'application/pdf')
         }
@@ -19,30 +22,43 @@ class TextController:
             # Send POST request to Flask microservice with the PDF data
             response = requests.post(self.base_url, files=files)
             
-            # Check if the response was successful
             if response.status_code == 200:
                 # Parse JSON response
                 response_data = response.json()
-                # Return the extracted text from the response
                 return response_data.get('text', 'No text extracted')
             else:
-                # Handle unsuccessful response
                 return f"Error: {response.status_code} - {response.text}"
         except Exception as ex:
-            # Handle exception (e.g., connection errors)
             return f"Exception: {str(ex)}"
 
-# Example usage:
-if __name__ == '__main__':
+
+def process_pdf(file_path):
+    """
+    Process the PDF file, read its content and pass it to TextController for text extraction.
+
+    :param file_path: The path to the PDF file.
+    :return: The extracted text from the PDF or an error message.
+    """
     # Initialize TextController
     controller = TextController()
     
-    # Read the PDF file to be sent
-    with open("/Users/taha/Desktop/001_Taha/002_Studium/002_Uni/001_Fank_UAS/Uni/5.Semester/NachSchreib/Dist_Sys/Lectures/07_blockchains.pdf", "rb") as pdf_file:
-        pdf_data = pdf_file.read()
+    try:
+        with open(file_path, "rb") as pdf_file:
+            pdf_data = pdf_file.read()
+        
+        # Get extracted text
+        extracted_text = controller.convert_to_text(pdf_data)
+        return extracted_text
+    except Exception as ex:
+        return f"Failed to process the PDF file: {str(ex)}"
+
+
+# Example usage:
+if __name__ == '__main__':
+    pdf_path = "/Users/taha/Desktop/001_Taha/002_Studium/002_Uni/001_Fank_UAS/Uni/5.Semester/NachSchreib/Dist_Sys/Lectures/07_blockchains.pdf"
     
-    # Get extracted text
-    extracted_text = controller.convert_to_text(pdf_data)
+    # Call the function to process the PDF
+    extracted_text = process_pdf(pdf_path)
     
     # Print the extracted text
     print(extracted_text)
