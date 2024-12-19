@@ -6,7 +6,7 @@ namespace LernAssistent.Services.AI
 {
     public class AiExternalService : IAiService
 {
-    public async Task<string> ProcessTextAsync(String Text)
+    public async Task<string> ProcessTextAsync(byte[] pdfData)
     {
         // Implement logic to communicate with the external AI API (e.g., Groq)
         // ...

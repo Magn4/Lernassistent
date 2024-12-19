@@ -96,3 +96,4 @@
 /Users/taha/Desktop/Git/Lernassistent/LernAssistent/obj/Debug/net9.0/LernAssistent.pdb
 /Users/taha/Desktop/Git/Lernassistent/LernAssistent/obj/Debug/net9.0/LernAssistent.genruntimeconfig.cache
 /Users/taha/Desktop/Git/Lernassistent/LernAssistent/obj/Debug/net9.0/ref/LernAssistent.dll
+/Users/taha/Desktop/Git/Lernassistent/LernAssistent/obj/Debug/net9.0/LernAssistent.csproj.AssemblyReference.cache

@@ -1,20 +1,24 @@
 using System;
+using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 
 
-public class APIController
+namespace LernAssistent.Controllers
 {
-
-    
-    public async Task<IActionResult> UploadPdf(byte[] pdfData, int UserId)
+    public class APIController
     {
-        // Validate the request
-        // ...
 
-        // Forward the request to the MainController
-        var result = await _mainController.SendPdf(pdfData);
+        
+        public async Task<IActionResult> UploadPdf(byte[] pdfData, int UserId)
+        {
+            // Validate the request
+            // ...
 
-        // Return the appropriate response
-        return Ok(result);
+            // Forward the request to the MainController
+            var result = await _mainController.SendPdf(pdfData);
+
+            // Return the appropriate response
+            return Ok(result);
+        }
     }
 }

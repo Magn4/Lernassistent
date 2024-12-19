@@ -2,42 +2,30 @@
 
 using System;
 using System.Threading.Tasks;
+using LernAssistent.Services.Database;
+using LernAssistent.Controllers;
+
+namespace LernAssistent.Controllers
+{
+    public class MainController
+    {   
+        private readonly APIController _apiController;
+        private readonly AIController _aiController;
+        private readonly DatabaseContext _databaseContext;
 
 
-public class MainController
-{   
-    private readonly APIController _apiController;
-    private readonly AIController _aiController;
-    private readonly DatabaseContext _databaseContext;
+        public MainController(APIController apiController, AIController aiController, DatabaseContext databaseContext)
+        {
+            _apiController = apiController;
+            _aiController = aiController;
+            _databaseContext = databaseContext;
+        }
 
 
-    public MainController(APIController apiController, AIController aiController, DatabaseContext databaseContext)
-    {
-        _apiController = apiController;
-        _aiController = aiController;
-        _databaseContext = databaseContext;
-    }
+        var textController = new TextController();
+        byte[] pdfData = File.ReadAllBytes("/Users/taha/Desktop/001_Taha/002_Studium/002_Uni/001_Fank_UAS/Uni/5.Semester/NachSchreib/Dist_Sys/Lectures/07_blockchains.pdf ");
+        string extractedText = await textController.ConvertToText(pdfData);
+        Console.WriteLine(extractedText);
 
-
-
-    // Finish it !!!!
-    public async String ConvertToText(byte[] pdfData){}
-
-    public async Task<string> SendText(string Text)
-    {
-        // Retrieve user information from the database
-        var userInfo = await _databaseContext.GetUserInfoAsync();
-
-        // Determine which AI service to use based on the user's credit balance
-        IAiService aiService = userInfo.CreditBalance > 100 ? _aiController.AiExternalService : _aiController.AiInternalService;
-
-        // Process the PDF using the selected AI service
-        var result = await aiService.ProcessTextAsync(Text);
-
-        // Return the result
-        return result;
-    }
-
-
-
+    }      
 }
