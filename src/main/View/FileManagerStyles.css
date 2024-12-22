@@ -1,0 +1,89 @@
+#modules-box {
+    flex-basis: 300px;
+}
+
+#modules-container {
+    height: 440px;
+    overflow: auto;
+}
+
+#modules-container ul {
+    list-style-type: none;
+    padding: 20px 40px 0px 20px;
+}
+
+#modules-container li {
+    padding: 15px;
+    margin: 0px 15px 20px 0px;
+    cursor: pointer;
+    border-radius: 6px;
+    background-color: #fafafa;
+    transition: background-color 0.3s;
+}
+
+#modules-container li:hover {
+    border-radius: 6px;
+    box-shadow: 10px 10px 25px 5px #dbdbd9;
+}
+
+#modules-list {
+    margin-top: 0px;
+}
+
+#folders-container {
+    display: flex;
+    flex-wrap: wrap;
+    padding: 20px 0px 20px 20px;
+    height: 180px;
+    overflow: auto;
+}
+
+.folder {
+    padding: 5px 5px 0px 10px;
+    margin: 0px 10px 10px 0px;
+    height: fit-content;
+    cursor: pointer;
+    border-radius: 6px;
+    /* background-color: #fafafa; */
+    transition: background-color 0.3s;
+}
+
+.folder:hover {
+    border-radius: 6px;
+    box-shadow: 10px 10px 25px 5px #dbdbd9;
+}
+
+.icon-design {
+    font-size: 70px;
+    color: #98a55d;
+}
+
+#files-container {
+    height: 100px;
+    overflow: auto;
+    padding: 20px 0px 20px 20px;
+}
+
+#files-container ul {
+    list-style-type: none;
+    padding: 0px;
+}
+
+#files-container li {
+    padding: 0px;
+    margin: 10px 10px 10px 0px;
+    cursor: pointer;
+    border-radius: 6px;
+    background-color: #fafafa;
+    transition: background-color 0.3s;
+}
+
+#files-container li:hover {
+    border-radius: 6px;
+    box-shadow: 0px 10px 30px 0px #dbdbd9;
+}
+
+#files-list {
+    margin-top: 0px;
+    /* width: 250px; */
+}
