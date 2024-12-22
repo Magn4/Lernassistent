@@ -3,23 +3,26 @@ from flask import Flask, request, jsonify
 import psycopg2
 from psycopg2.extras import RealDictCursor
 
+
 class AIController:
-    def __init__(self, external_service, internal_service, db_context):
+    def __init__(self, external_service, local_service):
         self.external_service = external_service
-        self.internal_service = internal_service
-        self.db_context = db_context
+        self.local_service = local_service
 
-    async def process_text_externally(self, text):
-        return await self.external_service.process_text(text)
+    async def process_text(self, text, use_local):
+        """
+        Process the text using either the external or local LLM service based on the flag.
+        """
+        if use_local:
+            return await self.local_service.process_text(text)
+        else:
+            return await self.external_service.process_text(text)
 
-    async def process_text_internally(self, text):
-        return await self.internal_service.process_text(text)
 
 class MainController:
-    def __init__(self, ai_controller, text_extractor_url, db_context):
+    def __init__(self, ai_controller, text_extractor_url):
         self.ai_controller = ai_controller
         self.text_extractor_url = text_extractor_url
-        self.db_context = db_context
 
     def convert_to_text(self, pdf_data):
         """
@@ -36,94 +39,113 @@ class MainController:
         except Exception as ex:
             return f"Exception: {str(ex)}"
 
-    async def process_text(self, text, user_id):
+    async def process_text(self, text, user_id, use_local):
         """
-        Use the AIController to process the extracted text based on the user ID.
+        Use the AIController to process the extracted text based on the user ID and selected service.
         """
-        user_info = await self.db_context.get_user_info_async(user_id)
-        if user_info['credit_balance'] > 100:
-            return await self.ai_controller.process_text_externally(text)
-        else:
-            return await self.ai_controller.process_text_internally(text)
-
-
-class DatabaseContext:
-    def __init__(self, db_url="postgresql://user:password@localhost:5432/mydatabase"):
-        # Initialize the database connection
-        self.db_url = db_url
-
-    def _get_db_connection(self):
-        # Connect to the PostgreSQL database
-        conn = psycopg2.connect(self.db_url)
-        return conn
-
-    async def get_user_info_async(self, user_id):
-        # Fetch user info based on user_id (e.g., credit balance)
-        conn = self._get_db_connection()
-        cursor = conn.cursor(cursor_factory=RealDictCursor)
-        try:
-            cursor.execute("SELECT credit_balance FROM users WHERE user_id = %s", (user_id,))
-            user_info = cursor.fetchone()
-            if user_info:
-                return user_info
-            return {"credit_balance": 0}
-        except Exception as ex:
-            return {"error": f"Failed to fetch user info: {str(ex)}"}
-        finally:
-            cursor.close()
-            conn.close()
+        return await self.ai_controller.process_text(text, use_local)
 
 
 class AiExternalService:
-    async def process_text(self, text: str):
-        return f"Processed externally: {text}"
+    def __init__(self, api_key, api_url):
+        self.api_key = api_key
+        self.api_url = api_url
 
-class AiInternalService:
     async def process_text(self, text: str):
-        return f"Processed internally: {text}"
+        """
+        Send a request to the GroqCloud API to process the given text.
+        """
+        headers = {
+            "Content-Type": "application/json",
+            "Authorization": f"Bearer {self.api_key}"
+        }
+        payload = {
+            "model": "llama3-8b-8192",
+            "messages": [{"role": "user", "content": text}]
+        }
+
+        try:
+            response = requests.post(self.api_url, json=payload, headers=headers)
+            if response.status_code == 200:
+                response_data = response.json()
+                return response_data['choices'][0]['message']['content']
+            else:
+                return f"Error: {response.status_code} - {response.text}"
+        except Exception as ex:
+            return f"Exception: {str(ex)}"
+
+
+class AiLocalService:
+    def __init__(self, api_url):
+        self.api_url = api_url
+
+    async def process_text(self, text: str):
+        """
+        Send a request to the local LLM API to process the given text.
+        """
+        payload = {
+            "model": "llama3.2:3b",
+            "prompt": text
+        }
+
+        try:
+            response = requests.post(self.api_url, json=payload)
+            if response.status_code == 200:
+                # Concatenate the streaming responses
+                response_data = response.iter_lines()
+                output = ""
+                for line in response_data:
+                    output += line.decode("utf-8")
+                return output
+            else:
+                return f"Error: {response.status_code} - {response.text}"
+        except Exception as ex:
+            return f"Exception: {str(ex)}"
 
 
 # Flask Setup
 app = Flask(__name__)
 
-# Initialize DatabaseContext
-db_context = DatabaseContext()
-
 # Create instances of the services
-external_service = AiExternalService()
-internal_service = AiInternalService()
+api_key = "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"
+api_url = "https://api.groq.com/openai/v1/chat/completions"
+local_api_url = "http://209.38.252.155:9191/api/generate"
+
+external_service = AiExternalService(api_key, api_url)
+local_service = AiLocalService(local_api_url)
 
 # Create the AIController
-ai_controller = AIController(external_service, internal_service, db_context)
+ai_controller = AIController(external_service, local_service)
 
 # Create the MainController
-main_controller = MainController(ai_controller, "http://209.38.252.155:5001/api/extract", db_context)
+main_controller = MainController(ai_controller, "http://209.38.252.155:5001/api/extract")
 
 
 @app.route('/process_pdf', methods=['POST'])
 async def process_pdf():
     """
-    API endpoint to receive a PDF, extract text, and process it with AI based on user credit balance.
+    API endpoint to receive a PDF, extract text, and process it with AI based on user preference.
     """
-    # Get the user_id from the request (assuming it's sent in JSON)
-    data = request.get_json()
+    # Get the user_id and LLM selection from the request
+    data = request.form
     user_id = data.get('user_id')
-    
+    use_local = data.get('use_local', 'false').lower() == 'true'
+
     # Get the PDF file from the request
     pdf_file = request.files.get('file')
     if not pdf_file:
         return jsonify({"error": "No PDF file provided"}), 400
-    
+
     pdf_data = pdf_file.read()
 
     # Step 1: Convert PDF to text
     extracted_text = main_controller.convert_to_text(pdf_data)
     if "Error" in extracted_text or "Exception" in extracted_text:
         return jsonify({"error": extracted_text}), 500
-    
+
     # Step 2: Process text using the AIController
-    result = await main_controller.process_text(extracted_text, user_id)
-    
+    result = await main_controller.process_text(extracted_text, user_id, use_local)
+
     # Return the result
     return jsonify({"result": result})
 

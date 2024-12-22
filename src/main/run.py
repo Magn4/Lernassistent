@@ -1,6 +1,6 @@
 from flask import Flask, request, jsonify
-from Controllers.MainController import MainController
-from Controllers.AiController import AIController
+from src.main.Controllers2.MainController import MainController
+from src.main.Controllers2.AiController import AIController
 from Services.AI.AiExternalService import AiExternalService
 from Services.AI.AiInternalService import AiInternalService
 from Services.Database.DatabaseContext import DatabaseContext
