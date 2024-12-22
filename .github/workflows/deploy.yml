@@ -38,13 +38,17 @@ jobs:
       - name: Build Docker image
         run: |
           docker build -t ${{ secrets.DOCKER_USERNAME }}/text-extractor:latest src/main/Services/PdfExtractor/
-          docker build -t ${{ secrets.DOCKER_USERNAME }}/main-controller:latest src/main/Controllers
+          docker build -t ${{ secrets.DOCKER_USERNAME }}/main-controller:latest src/main/Controllers/
+          docker build -t ${{ secrets.DOCKER_USERNAME }}/local-llm:latest src/main/Services/AI/Rest_API/
+
           
       # Step 6: Push the image to Docker Hub
       - name: Push Docker image
         run: |
           docker push ${{ secrets.DOCKER_USERNAME }}/text-extractor:latest
           docker push ${{ secrets.DOCKER_USERNAME }}/main-controller:latest
+          docker push ${{ secrets.DOCKER_USERNAME }}/local-llm:latest
+
 
       # Step 7: Deploy the app to the server
       - name: Deploy to Server
@@ -58,6 +62,7 @@ jobs:
             # Pull the latest image
             docker pull ${{ secrets.DOCKER_USERNAME }}/text-extractor:latest
             docker pull ${{ secrets.DOCKER_USERNAME }}/main-controller:latest
+            docker pull ${{ secrets.DOCKER_USERNAME }}/local-llm:latest
 
             
             # Stop and remove the old container if it exists
@@ -67,9 +72,14 @@ jobs:
             docker stop main-controller || true
             docker rm main-controller || true
 
+            docker stop local-llm || true
+            docker rm local-llm || true
+
 
             # Run the new container
             docker run -d -p 5001:5001 --name text-extractor ${{ secrets.DOCKER_USERNAME }}/text-extractor:latest
             docker run -d -p 5002:5002 --name main-controller ${{ secrets.DOCKER_USERNAME }}/main-controller:latest
+            docker run -d -p 9191:9191 --name local-llm ${{ secrets.DOCKER_USERNAME }}/local-llm:latest
+
 
             
