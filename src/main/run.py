@@ -1,9 +1,9 @@
 from flask import Flask, request, jsonify
 from src.main.Controllers2.MainController import MainController
 from src.main.Controllers2.AiController import AIController
-from Services.AI.AiExternalService import AiExternalService
-from Services.AI.AiInternalService import AiInternalService
-from Services.Database.DatabaseContext import DatabaseContext
+from main.App.Services.AiExternalService import AiExternalService
+from main.App.Services.AiInternalService import AiInternalService
+from main.App.Database.DatabaseContext import DatabaseContext
 import asyncio
 
 # Initialize services and controllers

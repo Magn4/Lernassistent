@@ -1,31 +1,29 @@
-version: "3.8"
+version: '3.8'
+
 services:
-  db:
+  llm_api:
     build:
-      context: .
-      dockerfile: Dockerfile.db  # Reference the custom database Dockerfile
-    environment:
-      POSTGRES_USER: db_admin
-      POSTGRES_PASSWORD: password123
-      POSTGRES_DB: main_db
+      context: ./Services/AI  # Directory containing Dockerfile and LLM_API.jar
+      dockerfile: Dockerfile
     ports:
-      - "5432:5432"
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
+      - "9191:9191"
+    container_name: llm_api
+    restart: unless-stopped
 
-  app:
+  extract_pdf:
     build:
-      context: .
-      dockerfile: Dockerfile.app  # Reference your app Dockerfile
-    depends_on:
-      - db
-    environment:
-      - DB_URL=postgres://db_admin:password123@db:5432/main_db
-      - DB_USER=db_admin
-      - DB_PASSWORD=password123
-      - DB_NAME=main_db
+      context: ./Services/PdfExtractor # Directory containing Dockerfile and ExtractPdf.py
+      dockerfile: Dockerfile
     ports:
-      - "8000:8000"  # Assuming your app listens on port 8000
+      - "5001:5001"
+    container_name: extract_pdf
+    restart: unless-stopped
 
-volumes:
-  postgres_data:
+  main_controller:
+    build:
+      context: ./App  # Directory containing Dockerfile and MainController.py
+      dockerfile: Dockerfile
+    ports:
+      - "5002:5002"
+    container_name: main_controller
+    restart: unless-stopped

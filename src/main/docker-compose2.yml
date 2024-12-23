@@ -1,0 +1,68 @@
+version: '3.8'
+
+services:
+  llm_api:
+    build:
+      context: ./llm_api  # Directory containing Dockerfile and LLM_API.jar
+      dockerfile: Dockerfile
+    container_name: llm_api
+    restart: unless-stopped
+
+  extract_pdf:
+    build:
+      context: ./extract_pdf  # Directory containing Dockerfile and ExtractPdf.py
+      dockerfile: Dockerfile
+    container_name: extract_pdf
+    restart: unless-stopped
+
+  main_controller:
+    build:
+      context: ./main_controller  # Directory containing Dockerfile and MainController.py
+      dockerfile: Dockerfile
+    container_name: main_controller
+    restart: unless-stopped
+
+  db:
+    image: postgres:latest
+    container_name: db
+    environment:
+      POSTGRES_USER: db_admin
+      POSTGRES_PASSWORD: password123
+      POSTGRES_DB: main_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    restart: unless-stopped
+
+  app_with_db:
+    build:
+      context: ./app_with_db  # Directory containing Dockerfile and app code
+      dockerfile: Dockerfile
+    depends_on:
+      - db
+    environment:
+      DB_URL: postgres://db_admin:password123@db:5432/main_db
+      DB_USER: db_admin
+      DB_PASSWORD: password123
+      DB_NAME: main_db
+    container_name: app_with_db
+    restart: unless-stopped
+    entrypoint: ["./wait-for-it.sh", "db:5432", "--", "python3", "run.py"]
+
+  nginx:
+    image: nginx:latest
+    container_name: nginx
+    ports:
+      - "80:80"  # Expose NGINX on port 80
+    depends_on:
+      - llm_api
+      - extract_pdf
+      - main_controller
+      - app_with_db
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro  # Mount NGINX config file
+    restart: unless-stopped
+
+volumes:
+  db_data:

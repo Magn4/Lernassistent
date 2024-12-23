@@ -5,7 +5,9 @@ FROM python:3.9-slim
 WORKDIR /app
 
 # Copy the Python project files into the container
-COPY . /app
+COPY ./App /app
+COPY requirements.txt /app/
+
 
 # Install the required Python packages
 RUN pip install --upgrade pip

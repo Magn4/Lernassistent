@@ -5,7 +5,7 @@ FROM openjdk:21-jdk-slim
 WORKDIR /app
 
 # Copy the local JAR file into the container
-COPY LLM_API.jar /app/LLM_API.jar
+COPY ./Rest_API/LLM_API.jar /app/LLM_API.jar
 
 # Expose the port the application will run on
 EXPOSE 9191

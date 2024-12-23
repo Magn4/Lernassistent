@@ -4,8 +4,8 @@ import json
 from sqlalchemy import create_engine, Column, Integer
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
-from Services.AI.AiExternalService import AiExternalService
-from Services.AI.AiInternalService import AiInternalService
+from main.App.Services.AiExternalService import AiExternalService
+from main.App.Services.AiInternalService import AiInternalService
 
 # Database connection settings
 DATABASE_URL = "postgresql://db_admin:password123@localhost:5432/main_db"  # Updated to match your Docker setup
