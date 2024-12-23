@@ -56,11 +56,11 @@ jobs:
           port: 22
           script: |
             # Pull the latest images
-            docker-compose -f src/main/docker-compose.yml pull
+            docker-compose -f Lernassistent/src/main/docker-compose.yml pull
             
             # Stop and remove old containers
-            docker-compose -f src/main/docker-compose.yml down
+            docker-compose -f Lernassistent/src/main/docker-compose.yml down
             
             # Start the updated services
-            docker-compose -f src/main/docker-compose.yml up -d
+            docker-compose -f Lernassistent/src/main/docker-compose.yml up -d
           debug: true
