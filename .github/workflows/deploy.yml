@@ -63,3 +63,4 @@ jobs:
             
             # Start the updated services
             docker-compose -f src/main/docker-compose.yml up -d
+          debug: true
