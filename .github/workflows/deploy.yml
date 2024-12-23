@@ -1,4 +1,4 @@
-name: CI/CD Pipeline for Flask App
+name: CI/CD Pipeline for Multi-Service App
 
 on:
   push:
@@ -14,11 +14,17 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      # Step 2: Set up Docker Buildx
+      # Step 2: Install Docker Compose
+      - name: Install Docker Compose
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y docker-compose
+
+      # Step 3: Set up Docker Buildx
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v1
 
-      # Step 3: Cache Docker layers to speed up builds
+      # Step 4: Cache Docker layers to speed up builds
       - name: Cache Docker layers
         uses: actions/cache@v2
         with:
@@ -27,24 +33,20 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-docker-
 
-      # Step 4: Log into Docker Hub (or your container registry)
+      # Step 5: Log into Docker Hub (or your container registry)
       - name: Log in to Docker Hub
         uses: docker/login-action@v2
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
-      # Step 5: Build the Docker image
-      - name: Build Docker image
+      # Step 6: Build and Push Docker images using Docker Compose
+      - name: Build and Push Docker Images
         run: |
-          docker build -t ${{ secrets.DOCKER_USERNAME }}/text-extractor:latest src/main/Services/PdfExtractor/
+          docker-compose -f src/main/docker-compose.yml build
+          docker-compose -f src/main/docker-compose.yml push
 
-      # Step 6: Push the image to Docker Hub
-      - name: Push Docker image
-        run: |
-          docker push ${{ secrets.DOCKER_USERNAME }}/text-extractor:latest
-
-      # Step 7: Deploy the app to the server
+      # Step 7: Deploy to the server using SSH
       - name: Deploy to Server
         uses: appleboy/ssh-action@v0.1.5
         with:
@@ -53,12 +55,13 @@ jobs:
           key: ${{ secrets.SERVER_SSH_KEY }}
           port: 22
           script: |
-            # Pull the latest image
-            docker pull ${{ secrets.DOCKER_USERNAME }}/text-extractor:latest
+            git pull
             
-            # Stop and remove the old container if it exists
-            docker stop text-extractor || true
-            docker rm text-extractor || true
+            # Pull the latest images
+            docker-compose -f Lernassistent/src/main/docker-compose.yml pull
             
-            # Run the new container
-            docker run -d -p 5000:5000 --name text-extractor ${{ secrets.DOCKER_USERNAME }}/text-extractor:latest
+            # Stop and remove old containers
+            docker-compose -f Lernassistent/src/main/docker-compose.yml down
+            
+            # Start the updated services
+            docker-compose -f Lernassistent/src/main/docker-compose.yml up -d

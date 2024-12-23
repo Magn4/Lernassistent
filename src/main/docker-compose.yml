@@ -1,31 +1,74 @@
-version: "3.8"
-services:
-  db:
-    build:
-      context: .
-      dockerfile: Dockerfile.db  # Reference the custom database Dockerfile
-    environment:
-      POSTGRES_USER: db_admin
-      POSTGRES_PASSWORD: password123
-      POSTGRES_DB: main_db
-    ports:
-      - "5432:5432"
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
+version: '3.8'
 
-  app:
+services:
+  llm_api:
     build:
-      context: .
-      dockerfile: Dockerfile.app  # Reference your app Dockerfile
-    depends_on:
-      - db
-    environment:
-      - DB_URL=postgres://db_admin:password123@db:5432/main_db
-      - DB_USER=db_admin
-      - DB_PASSWORD=password123
-      - DB_NAME=main_db
+      context: ./Services/AI  # Directory containing Dockerfile and LLM_API.jar
+      dockerfile: Dockerfile
     ports:
-      - "8000:8000"  # Assuming your app listens on port 8000
+      - "9191:9191"
+    container_name: llm_api
+    restart: unless-stopped
+
+  extract_pdf:
+    build:
+      context: ./Services/PdfExtractor # Directory containing Dockerfile and ExtractPdf.py
+      dockerfile: Dockerfile
+    ports:
+      - "5001:5001"
+    container_name: extract_pdf
+    restart: unless-stopped
+
+  main_controller:
+    build:
+      context: ./App  # Directory containing Dockerfile and MainController.py
+      dockerfile: Dockerfile
+    ports:
+      - "5002:5002"
+    container_name: main_controller
+    restart: unless-stopped
+
+  db:
+      image: postgres:latest
+      container_name: db
+      environment:
+        POSTGRES_USER: db_admin
+        POSTGRES_PASSWORD: password123
+        POSTGRES_DB: main_db
+      ports:
+        - "5432:5432"
+      volumes:
+        - db_data:/var/lib/postgresql/data
+      restart: unless-stopped
+
+  # app_with_db:
+  #   build:
+  #     context: .  # Directory containing Dockerfile and app code
+  #     dockerfile: Dockerfile.app
+  #   depends_on:
+  #     - db
+  #   environment:
+  #     DB_URL: postgres://db_admin:password123@db:5432/main_db
+  #     DB_USER: db_admin
+  #     DB_PASSWORD: password123
+  #     DB_NAME: main_db
+  #   container_name: app_with_db
+  #   restart: unless-stopped
+
+  nginx:
+    image: nginx:latest
+    container_name: nginx
+    ports:
+      - "80:80"  # Expose NGINX on port 80
+    depends_on:
+      - llm_api
+      - extract_pdf
+      - main_controller
+      # - app_with_db
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro  # Mount NGINX config file
+    restart: unless-stopped
+
 
 volumes:
-  postgres_data:
+  db_data:
