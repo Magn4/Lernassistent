@@ -63,4 +63,4 @@ jobs:
             
             # Start the updated services
             docker-compose -f Lernassistent/src/main/docker-compose.yml up -d
-          debug: true
+          
