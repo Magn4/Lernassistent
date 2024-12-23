@@ -1,0 +1,63 @@
+.description-text {
+    font-size: 20px;
+}
+
+.upload-container {
+    text-align: center;
+    align-items: center;
+}
+
+.drag-drop-area {
+    border: 2px dashed grey;
+    border-radius: 8px;
+    padding: 40px;
+    background-color: white;
+    transition: background-color 0.4s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+
+.drag-drop-area:hover {
+    background-color: lightgray;
+}
+
+.drag-drop-area p {
+    padding-left: 10px;
+}
+
+.left {
+    min-width: 300px;
+    max-width: 700px;
+    margin-right: 40px;
+}
+
+.list-items {
+    font-size: 20px;
+    margin: 20px;
+}
+
+.right {
+    min-width: 300px;
+}
+
+.centered {
+    text-align: center;
+}
+
+.upload-button input[type="file"] {
+    display: none;
+}
+
+.upload-button label {
+    padding: 15px;
+    cursor: pointer;
+    border-radius: 6px;
+    background-color: #fafafa;
+}
+
+.upload-button label:hover {
+    border-radius: 6px;
+    box-shadow: 0px 10px 30px 0px #dbdbd9;
+}
