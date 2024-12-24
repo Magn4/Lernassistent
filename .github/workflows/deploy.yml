@@ -55,6 +55,8 @@ jobs:
           key: ${{ secrets.SERVER_SSH_KEY }}
           port: 22
           script: |
+            git pull
+            
             # Pull the latest images
             docker-compose -f Lernassistent/src/main/docker-compose.yml pull
             
