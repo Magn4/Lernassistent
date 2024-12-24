@@ -1,13 +1,15 @@
-# Start with an official NGINX image
+# Use the official Nginx image
 FROM nginx:latest
 
-# Install Certbot and dependencies
-RUN apt-get update && apt-get install -y \
-  certbot \
-  python3-certbot-nginx
+# Copy SSL certificates into the container
+COPY /etc/letsencrypt/live/maguna.me/fullchain.pem /etc/ssl/certs/
+COPY /etc/letsencrypt/live/maguna.me/privkey.pem /etc/ssl/private/
 
-# Copy your NGINX configuration
+# Copy your custom Nginx configuration (assuming it's in the same directory as the Dockerfile)
 COPY nginx.conf /etc/nginx/nginx.conf
 
-# Expose HTTP and HTTPS ports
+# Expose both HTTP and HTTPS ports
 EXPOSE 80 443
+
+# Start Nginx
+CMD ["nginx", "-g", "daemon off;"]
