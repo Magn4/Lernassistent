@@ -60,6 +60,7 @@ services:
     container_name: nginx
     ports:
       - "80:80"  # Expose NGINX on port 80
+      - "443:443"
     depends_on:
       - llm_api
       - extract_pdf
@@ -69,7 +70,20 @@ services:
     volumes:
       - ./docs:/usr/share/nginx/html:ro  # Mount the docs directory to Nginx web root
       - ./nginx.conf:/etc/nginx/nginx.conf:ro  # Custom Nginx config
+      - ./data/certbot/conf:/etc/letsencrypt
+      - ./data/certbot/www:/var/www/certbot
     restart: unless-stopped
+    environment:
+      - NGINX_HOST=maguna.me
+      - NGINX_EMAIL=t.elyoussefi@gmail.com
 
+  certbot:
+    image: certbot/certbot
+    container_name: certbot
+    entrypoint: "/bin/sh -c 'while :; do sleep 6h & wait $${!}; certbot renew; done'"
+    volumes:
+        - ./data/certbot/conf:/etc/letsencrypt
+        - ./data/certbot/www:/var/www/certbot
+        
 volumes:
   db_data:
