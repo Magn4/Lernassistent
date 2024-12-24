@@ -14,30 +14,17 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      # Step 2: Install Node.js and npm (if needed for building frontend)
-      - name: Install Node.js and npm
-        uses: actions/setup-node@v2
-        with:
-          node-version: '16'
-
-      # Step 3: Build Frontend
-      - name: Build Frontend
-        run: |
-          cd docs  # Adjust path if necessary
-          npm install  # Or use yarn
-          npm run build  # Or your build command if needed
-
-      # Step 4: Install Docker Compose
+      # Step 2: Install Docker Compose
       - name: Install Docker Compose
         run: |
           sudo apt-get update
           sudo apt-get install -y docker-compose
 
-      # Step 5: Set up Docker Buildx
+      # Step 3: Set up Docker Buildx
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v1
 
-      # Step 6: Cache Docker layers to speed up builds
+      # Step 4: Cache Docker layers to speed up builds
       - name: Cache Docker layers
         uses: actions/cache@v2
         with:
@@ -46,20 +33,20 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-docker-
 
-      # Step 7: Log into Docker Hub
+      # Step 5: Log into Docker Hub
       - name: Log in to Docker Hub
         uses: docker/login-action@v2
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
-      # Step 8: Build and Push Docker images
+      # Step 6: Build and Push Docker images
       - name: Build and Push Docker Images
         run: |
           docker-compose -f src/main/docker-compose.yml build
           docker-compose -f src/main/docker-compose.yml push
 
-      # Step 9: Deploy to the server using SSH
+      # Step 7: Deploy to the server using SSH
       - name: Deploy to Server
         uses: appleboy/ssh-action@v0.1.5
         with:
