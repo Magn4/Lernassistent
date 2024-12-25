@@ -1,114 +1,220 @@
 .description-text {
-    font-size: 20px;
+  font-size: 20px;
+}
+
+.list-container {
+  height: 330px;
+  overflow: auto;
 }
 
 .upload-container {
-    text-align: center;
-    align-items: center;
+  text-align: center;
+  align-items: center;
 }
 
 .drag-drop-area {
-    border: 2px dashed grey;
-    border-radius: 8px;
-    padding: 40px;
-    background-color: white;
-    transition: background-color 0.4s;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
+  border: 2px dashed grey;
+  border-radius: 8px;
+  padding: 40px;
+  background-color: white;
+  transition: background-color 0.4s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
 }
 
 .drag-drop-area:hover {
-    background-color: lightgray;
+  background-color: lightgray;
 }
 
 .drag-drop-area p {
-    padding-left: 10px;
+  padding-left: 10px;
 }
 
 .left {
-    min-width: 300px;
-    max-width: 700px;
-    margin-right: 40px;
+  min-width: 300px;
+  max-width: 700px;
+  margin-right: 40px;
 }
 
 .list-items {
-    font-size: 20px;
-    margin: 20px;
+  font-size: 20px;
+  margin: 20px;
 }
 
 .right {
-    min-width: 300px;
+  min-width: 300px;
 }
 
 .centered {
-    text-align: center;
+  text-align: center;
 }
 
 .upload-button input[type="file"] {
-    display: none;
+  display: none;
 }
 
 .upload-button label {
-    padding: 15px;
-    cursor: pointer;
-    border-radius: 6px;
-    background-color: #fafafa;
+  padding: 15px;
+  cursor: pointer;
+  border-radius: 6px;
+  background-color: #fafafa;
 }
 
 .upload-button label:hover {
-    border-radius: 6px;
-    box-shadow: 0px 10px 30px 0px #dbdbd9;
+  border-radius: 6px;
+  box-shadow: 0px 10px 30px 0px #dbdbd9;
 }
 
- /* The Modal (background) */
- .modal {
-    display: none; /* Hidden by default */
-    position: fixed; /* Stay in place */
-    z-index: 1; /* Sit on top */
-    left: 0;
-    top: 0;
-    width: 100%; /* Full width */
-    height: 100%; /* Full height */
-    overflow: auto; /* Enable scroll if needed */
-    background-color: rgb(0,0,0); /* Fallback color */
-    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-  
-  /* Modal Content/Box */
-  .modal-content {
-    background-color: #fefefe;
-    margin: 15% auto; /* 15% from the top and centered */
-    padding: 20px;
-    height: 300px;
-    width: 250px;
-    border-radius: 10px;
-    /* border: 1px solid #888; */
-    /* width: 80%; */ /* Could be more or less, depending on screen size */
-  }
-  
-  /* The Close Button */
-  .close {
-    color: #aaa;
-    float: right;
-    font-size: 25px;
-    font-weight: bold;
-  }
-  
-  .close:hover,
-  .close:focus {
-    color: black;
-    text-decoration: none;
-    cursor: pointer;
-  }
+/* The Modal (background) */
+.modal {
+  display: none; /* Hidden by default */
+  position: fixed; /* Stay in place */
+  z-index: 1; /* Sit on top */
+  left: 0;
+  top: 0;
+  width: 100%; /* Full width */
+  height: 100%; /* Full height */
+  overflow: auto; /* Enable scroll if needed */
+  background-color: rgb(0, 0, 0); /* Fallback color */
+  background-color: rgba(0, 0, 0, 0.4); /* Black w/ opacity */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Modal Content/Box */
+.modal-content {
+  background-color: #fefefe;
+  margin: 15% auto; /* 15% from the top and centered */
+  padding: 20px;
+  height: 270px;
+  width: 230px;
+  border-radius: 10px;
+
+  /* border: 1px solid #888; */
+  /* width: 80%; */ /* Could be more or less, depending on screen size */
+}
+
+/* The Close Button */
+.close {
+  color: #aaa;
+  float: right;
+  font-size: 25px;
+  font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+  color: black;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.modal-title {
+  font-size: 20px;
+  margin: 10px 105px 20px 10px;
+}
+
+/* .modal-input {
+  margin: 10px;
+  padding: 10px;
+  width: 160px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  font-family: QuickSand;
+} */
+
+.modal-button {
+  padding: 10px 20px;
+  margin: 10px 17px 20px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  font-family: QuickSand;
+  cursor: pointer;
+}
+
+.modal-button:hover {
+  background-color: lightgray;
+}
+
+/* #myCustomInput {
+  margin: 10px;
+  padding: 10px;
+  width: 160px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  font-family: QuickSand;
+}
+
+#dropdown {
+  list-style: none;
+  width: 180px;
+  padding: 0;
+  margin-left: 23px;
+  position: absolute;
+  background: white;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  display: none;
+  z-index: 1;
+}
+
+#dropdown li {
+  cursor: pointer;
+}
+
+#dropdown li:hover {
+  background-color: lightgray;
+} */
+
+.dropdown-container {
+  position: relative;
+  margin-bottom: 15px;
+}
 
 .modal-input {
-    margin: 10px;
-    padding: 10px;
-    border-radius: 5px;
-    border: 1px solid #ccc;
+  margin: 10px 10px 1px;
+  padding: 10px;
+  width: 160px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  font-family: QuickSand;
+}
+
+.dropdown-list {
+  /* list-style: none;
+  width: 180px;
+  padding: 0;
+  margin-left: 24px;
+  position: absolute;
+  background: white;
+  border: 1px solid #ccc;
+  display: none;
+  z-index: 10; */
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  position: absolute;
+  left: 50%;
+  transform: translateX(12%); /* Verschiebt das Element um die Hälfte seiner Breite nach links */
+  top: 100%; /* Direkt unter dem Input-Feld */
+  left: 0;
+  width: 80%; /* Breite an das Input-Feld anpassen */
+  background: white;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  display: none;
+  z-index: 10;
+}
+
+.dropdown-list li {
+  padding: 5px 10px;
+  cursor: pointer;
+}
+
+.dropdown-list li:hover {
+  background: #f0f0f0;
+  border-radius: 5px;
 }
