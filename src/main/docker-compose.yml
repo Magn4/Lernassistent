@@ -47,14 +47,13 @@ services:
 
   # Nginx Reverse Proxy for all services
   nginx:
-    image: nginx:latest
-    container_name: nginx
     build:
-      context: . # Directory containing Dockerfile and ExtractPdf.py
+      context: .  # Directory containing Dockerfile.nginx
       dockerfile: Dockerfile.nginx
+    container_name: nginx
     ports:
       - "80:80"    # HTTP
-    #   - "443:443"  # HTTPS
+    #   - "443:443"  # HTTPS (commented out)
     depends_on:
       - llm_api
       - extract_pdf
@@ -64,11 +63,7 @@ services:
     volumes:
       - ./docs:/usr/share/nginx/html:ro  # Mount the docs directory to Nginx web root
       - ./nginx.conf:/etc/nginx/nginx.conf:ro  # Custom Nginx config
-
     restart: unless-stopped
-    environment:
-      - NGINX_HOST=maguna.me
-      # - NGINX_EMAIL=t.elyoussefi@gmail.com
 
 # Persistent volume for PostgreSQL data
 volumes:
