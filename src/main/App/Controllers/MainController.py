@@ -39,11 +39,12 @@ class MainController:
         except Exception as ex:
             return f"Exception: {str(ex)}"
 
-    async def process_text(self, text, user_id, use_local):
+    async def process_text(self, text, user_id, use_local, instruction):
         """
         Use the AIController to process the extracted text based on the user ID and selected service.
         """
-        return await self.ai_controller.process_text(text, use_local)
+        full_text = f"{instruction}\n\n{text}" # Prepend the instruction to the text
+        return await self.ai_controller.process_text(full_text, use_local)
 
 
 class AiExternalService:
@@ -126,6 +127,8 @@ async def process_pdf():
     data = request.form
     user_id = data.get('user_id')
     use_local = data.get('use_local', 'false').lower() == 'true'
+    instruction = data.get('instruction', '')
+
 
     pdf_file = request.files.get('file')
     if not pdf_file:
@@ -135,12 +138,12 @@ async def process_pdf():
     print("PDF data received")  # Log the receipt of the PDF data
 
     extracted_text = main_controller.convert_to_text(pdf_data)
-    print(f"Extracted text: {extracted_text}")  # Log extracted text or error message
+    # print(f"Extracted text: {extracted_text}")  # Log extracted text or error message
 
     if "Error" in extracted_text or "Exception" in extracted_text:
         return jsonify({"error": extracted_text}), 500
 
-    result = await main_controller.process_text(extracted_text, user_id, use_local)
+    result = await main_controller.process_text(extracted_text, user_id, use_local, instruction)
     print(f"Processing result: {result}")  # Log result from AI processing
 
     return jsonify({"result": result})
@@ -151,3 +154,7 @@ async def process_pdf():
 if __name__ == "__main__":
     app.run(host='0.0.0.0', port=5002, debug=True)
 
+ 
+
+
+    
