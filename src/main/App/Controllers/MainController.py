@@ -118,7 +118,7 @@ local_service = AiLocalService(local_api_url)
 ai_controller = AIController(external_service, local_service)
 
 # Create the MainController
-main_controller = MainController(ai_controller, "http://209.38.252.155:5001/api/extract")
+main_controller = MainController(ai_controller, "http://209.38.252.155/extract_pdf/api/extract")
 
 
 @app.route('/process_pdf', methods=['POST'])

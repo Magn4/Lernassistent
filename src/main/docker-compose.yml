@@ -49,9 +49,12 @@ services:
   nginx:
     image: nginx:latest
     container_name: nginx
+    build:
+      context: . # Directory containing Dockerfile and ExtractPdf.py
+      dockerfile: Dockerfile.nginx
     ports:
       - "80:80"    # HTTP
-      - "443:443"  # HTTPS
+    #   - "443:443"  # HTTPS
     depends_on:
       - llm_api
       - extract_pdf
