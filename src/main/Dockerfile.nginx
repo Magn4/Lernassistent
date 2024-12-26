@@ -1,15 +1,11 @@
 # Use the official Nginx image
 FROM nginx:latest
 
-# Copy SSL certificates into the container
-COPY /etc/letsencrypt/live/maguna.me/fullchain.pem /etc/ssl/certs/
-COPY /etc/letsencrypt/live/maguna.me/privkey.pem /etc/ssl/private/
-
 # Copy your custom Nginx configuration (assuming it's in the same directory as the Dockerfile)
 COPY nginx.conf /etc/nginx/nginx.conf
 
-# Expose both HTTP and HTTPS ports
-EXPOSE 80 443
+# Expose only the HTTP port
+EXPOSE 80
 
 # Start Nginx
 CMD ["nginx", "-g", "daemon off;"]
