@@ -123,31 +123,28 @@ main_controller = MainController(ai_controller, "http://209.38.252.155:5001/api/
 
 @app.route('/process_pdf', methods=['POST'])
 async def process_pdf():
-    """
-    API endpoint to receive a PDF, extract text, and process it with AI based on user preference.
-    """
-    # Get the user_id and LLM selection from the request
     data = request.form
     user_id = data.get('user_id')
     use_local = data.get('use_local', 'false').lower() == 'true'
 
-    # Get the PDF file from the request
     pdf_file = request.files.get('file')
     if not pdf_file:
         return jsonify({"error": "No PDF file provided"}), 400
 
     pdf_data = pdf_file.read()
+    print("PDF data received")  # Log the receipt of the PDF data
 
-    # Step 1: Convert PDF to text
     extracted_text = main_controller.convert_to_text(pdf_data)
+    print(f"Extracted text: {extracted_text}")  # Log extracted text or error message
+
     if "Error" in extracted_text or "Exception" in extracted_text:
         return jsonify({"error": extracted_text}), 500
 
-    # Step 2: Process text using the AIController
     result = await main_controller.process_text(extracted_text, user_id, use_local)
+    print(f"Processing result: {result}")  # Log result from AI processing
 
-    # Return the result
     return jsonify({"result": result})
+
 
 
 # Run the Flask app
