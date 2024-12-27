@@ -1,0 +1,70 @@
+.moudle-card-area {
+    overflow-x: auto;
+}
+
+.module-card-container {
+    border: 1px solid;
+    width: 300px;
+    border-radius: 20px;
+    margin-left: 10px;
+    margin-right: 10px;
+}
+
+.module-card-header {
+    padding: 15px 15px 0px 15px;
+    border-bottom: 1px solid;
+}
+
+.module-card-list {
+    overflow: scroll;
+    height: 500px;
+}
+
+.module-card-list-item {
+    background-color: white;
+    padding: 15px;
+    border: none;
+    cursor: pointer;
+    font-size: 15px;
+}
+
+.module-card-list-item:hover {
+    background-color: lightgrey;
+}
+
+.module-cards {
+    background-color: green;
+}
+
+.current-card {
+    align-self: center;
+    margin: 50px;
+    padding: 20px;
+    border: solid 1px;
+    border-radius: 15px;
+    min-width: 300px;
+    max-width: 600px;
+}
+
+.current-card-question {
+    border-bottom: solid 1px;
+    align-self: center;
+    font-size: 40px;
+    padding-bottom: 10px;
+}
+
+.current-card-answer {
+    font-size: 20px;
+    align-self: center;
+    padding-top: 10px;
+}
+
+.answer-button-area {
+    align-self: center;
+    gap: 10px;
+}
+
+.answer-button {
+    height: 40px;
+    
+}
