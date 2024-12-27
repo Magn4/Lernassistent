@@ -144,7 +144,7 @@
 
                       <div class="modal-buttons">
                         <button class="modal-button" id="quit">Quit</button>
-                        <button class="modal-button">Save</button>
+                        <button class="modal-button" id="save">Save</button>
                       </div>
                     </div>
                   </div>
@@ -190,31 +190,16 @@
       });
 
       //Modal Code
-      // Get the modal
       const modal = document.getElementById("myModal");
 
-      // Get the button that opens the modal
       const btn = document.getElementById("myBtn");
 
-      //Get the button that quits the modal
-      const quit = document.getElementById("quit");
-
-      //Get the dropdown lists
-      const dropdownList1 = document.getElementById("dropdown1");
-      const dropdownList2 = document.getElementById("dropdown2");
-
-      dropdownList1.addEventListener('mousedown', (event) => {
-        event.preventDefault(); // Prevents the input field from losing focus
-      });
-
-      dropdownList2.addEventListener('mousedown', (event) => {
-        event.preventDefault(); // Prevents the input field from losing focus
-      });
-
       // When the user clicks on the button, open the modal
-      btn.onclick = function () {
+      btn.onclick = () => {
         modal.style.display = "block";
       };
+
+      const quit = document.getElementById("quit");
 
       // When the user clicks on the quit button, close the modal
       quit.onclick = () => {
@@ -222,6 +207,30 @@
         document.getElementById("input2").value = "";
         modal.style.display = "none";
       };
+
+      const save = document.getElementById("save");
+
+      // When the user clicks on the save button, save and close the modal
+      save.onclick = () => {
+        const modulename = document.getElementById("input1").value;
+        const directoryname = document.getElementById("input2").value;
+        alert(`Modulename: ${modulename}, Directoryname: ${directoryname}`); //TODO: Send to backend
+        document.getElementById("input1").value = "";
+        document.getElementById("input2").value = "";
+        modal.style.display = "none";
+      };
+
+      //Get the dropdown lists
+      const dropdownList1 = document.getElementById("dropdown1");
+      const dropdownList2 = document.getElementById("dropdown2");
+
+      dropdownList1.addEventListener("mousedown", (event) => {
+        event.preventDefault(); // Prevents the input field from losing focus
+      });
+
+      dropdownList2.addEventListener("mousedown", (event) => {
+        event.preventDefault(); // Prevents the input field from losing focus
+      });
 
       /* // When the user clicks anywhere outside of the modal, close it
       window.onclick = function (event) {
