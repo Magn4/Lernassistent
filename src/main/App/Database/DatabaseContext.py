@@ -3,7 +3,7 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 
 # Database connection settings
-DATABASE_URL = "postgresql://db_admin:password123@localhost:5432/main_db"
+DATABASE_URL = "postgresql://postgres:postgres@localhost:5433/Lernassistent"
 
 # SQLAlchemy setup
 Base = declarative_base()
@@ -25,8 +25,23 @@ class DatabaseContext:
         """ Create the necessary tables if they do not exist. """
         Base.metadata.create_all(self.engine)
 
+    def get_all_users(self):
+        session = self.Session()
+        try:
+            return session.query(User).all()  # Fetch all users from the database
+        finally:
+            session.close()
+
+    def get_user_by_email(self, email):
+        """ Query the database to find a user by their email. """
+        session = self.Session()
+        try:
+            return session.query(User).filter_by(email=email).first()
+        finally:
+            session.close()
+
     def get_user_by_username_or_email(self, user_name, email):
-        """ querie the database to find a user by either their username or email. """
+        """ Query the database to find a user by either their username or email. """
         session = self.Session()
         try:
             return session.query(User).filter((User.user_name == user_name) | (User.email == email)).first()

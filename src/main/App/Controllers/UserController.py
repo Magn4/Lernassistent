@@ -26,3 +26,8 @@ class UserController:
             return jsonify({"message": "Login successful"}), 200
         else:
             return jsonify({"error": "Invalid credentials"}), 401
+    
+    def get_all_users(self):
+        users = self.user_service.get_all_users()  # Call service to get all users
+        user_list = [{"user_id": user.user_id, "user_name": user.user_name, "email": user.email} for user in users]
+        return jsonify({"users": user_list}), 200
