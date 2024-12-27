@@ -72,6 +72,10 @@ def register():
 def login():
     return user_controller.login()
 
+@app.route('/users', methods=['GET'])
+def get_all_users():
+    return user_controller.get_all_users()
+
 # Run the Flask app
 if __name__ == "__main__":
     app.run(host='0.0.0.0', port=5002, debug=True)

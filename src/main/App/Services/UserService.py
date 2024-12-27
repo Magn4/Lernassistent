@@ -18,3 +18,6 @@ class UserService:
         if user and check_password_hash(user.password, password):
             return True
         return False
+    
+    def get_all_users(self):
+        return self.db_context.get_all_users() 
