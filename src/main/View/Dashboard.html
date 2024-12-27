@@ -189,14 +189,15 @@
         alert(`You dropped ${files.length} file(s).`);
       });
 
+      //Modal Code
       // Get the modal
-      var modal = document.getElementById("myModal");
+      const modal = document.getElementById("myModal");
 
       // Get the button that opens the modal
-      var btn = document.getElementById("myBtn");
+      const btn = document.getElementById("myBtn");
 
       //Get the button that quits the modal
-      var quit = document.getElementById("quit");
+      const quit = document.getElementById("quit");
 
       // When the user clicks on the button, open the modal
       btn.onclick = function () {
@@ -227,10 +228,18 @@
         });
       }
 
-      // Versteckt die Dropdown-Liste
+      /* // Versteckt die Dropdown-Liste
       function hideDropdown(dropdownId) {
         const dropdown = document.getElementById(dropdownId);
         dropdown.style.display = "none";
+      } */
+
+      // Versteckt die Dropdown-Liste
+      function hideDropdown(dropdownId) {
+        setTimeout(() => {
+          const dropdown = document.getElementById(dropdownId);
+          dropdown.style.display = "none";
+        }, 200); // Verzögerung für Klicks
       }
 
       // Filtert die Dropdown-Liste basierend auf der Benutzereingabe
