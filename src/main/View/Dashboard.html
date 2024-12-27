@@ -199,6 +199,18 @@
       //Get the button that quits the modal
       const quit = document.getElementById("quit");
 
+      //Get the dropdown lists
+      const dropdownList1 = document.getElementById("dropdown1");
+      const dropdownList2 = document.getElementById("dropdown2");
+
+      dropdownList1.addEventListener('mousedown', (event) => {
+        event.preventDefault(); // Prevents the input field from losing focus
+      });
+
+      dropdownList2.addEventListener('mousedown', (event) => {
+        event.preventDefault(); // Prevents the input field from losing focus
+      });
+
       // When the user clicks on the button, open the modal
       btn.onclick = function () {
         modal.style.display = "block";
@@ -228,18 +240,10 @@
         });
       }
 
-      /* // Versteckt die Dropdown-Liste
+      // Versteckt die Dropdown-Liste
       function hideDropdown(dropdownId) {
         const dropdown = document.getElementById(dropdownId);
         dropdown.style.display = "none";
-      } */
-
-      // Versteckt die Dropdown-Liste
-      function hideDropdown(dropdownId) {
-        setTimeout(() => {
-          const dropdown = document.getElementById(dropdownId);
-          dropdown.style.display = "none";
-        }, 200); // Verzögerung für Klicks
       }
 
       // Filtert die Dropdown-Liste basierend auf der Benutzereingabe
