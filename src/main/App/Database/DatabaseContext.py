@@ -3,7 +3,7 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 
 # Database connection settings
-DATABASE_URL = "postgresql://postgres:postgres@localhost:5433/Lernassistent"
+DATABASE_URL = "postgresql://postgres:postgres@db:5432/Lernassistent"
 
 # SQLAlchemy setup
 Base = declarative_base()

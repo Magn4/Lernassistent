@@ -17,4 +17,4 @@ RUN pip install --no-cache-dir -r requirements.txt
 EXPOSE 5002
 
 # Command to run the application
-CMD ["python", "./Controllers/MainController.py"]
+CMD ["python", "./app.py"]

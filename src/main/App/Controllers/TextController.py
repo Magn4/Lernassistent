@@ -1,5 +1,5 @@
 from Services.TextExtractor import TextExtractor
-from Services.AITextProcessor import AITextProcessor
+from Services.AI.AITextProcessor import AITextProcessor
 
 class TextController:
     def __init__(self, text_extractor, ai_text_processor):
