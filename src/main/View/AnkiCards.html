@@ -25,9 +25,8 @@
                     <div class="module-card-container">
                         <div class="module-card-header">
                             <h2>Analysis</h2>
-                        </div>
                         <div class="module-card-list">
-                            <div class="module-card-list-item" (click)="console.log(Hello World)">
+                            <div class="module-card-list-item">
                                 Hallo
                             </div>
                             <div class="module-card-list-item">
@@ -67,6 +66,7 @@
                                 Hallo
                             </div>
                         </div>
+                    </div>
                     </div>
                     <div class="module-card-container">
                         <div class="module-card-header">
@@ -163,6 +163,7 @@
                 </div>
 
                 <div class="current-card column">
+                    <button class="clickable-card" onclick="toggleAnswer()">
                     <div class="row">
                         <div class="current-card-question">
                             Hier steht eine Frage?
@@ -171,6 +172,7 @@
                             Hier steht ein langer Antworttext! Hier steht ein langer Antworttext! Hier steht ein langer Antworttext! Hier steht ein langer Antworttext.
                         </div>
                     </div>
+                    </button>
                 </div>
 
                 <div class="answer-button-area column">
@@ -196,5 +198,11 @@
             })
             .catch(error => console.error('Error loading navigation:', error));
         });
+
+        //Clickable card
+        function toggleAnswer() {
+            const answer = document.querySelector('.current-card-answer');
+            answer.style.display = answer.style.display === 'none' || answer.style.display === '' ? 'block' : 'none';
+        }
      </script>
 </body>

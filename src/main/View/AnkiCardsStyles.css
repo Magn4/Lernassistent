@@ -1,27 +1,29 @@
 .moudle-card-area {
-    overflow-x: auto;
+    display: flex;
+    flex-wrap: wrap;
+    overflow: auto;
 }
 
 .module-card-container {
-    border: 1px solid;
     width: 300px;
     border-radius: 20px;
     margin-left: 10px;
     margin-right: 10px;
+    background-color: #fafafa;
 }
 
 .module-card-header {
-    padding: 15px 15px 0px 15px;
-    border-bottom: 1px solid;
+    padding: 15px 15px 15px 15px;
 }
 
 .module-card-list {
     overflow: scroll;
     height: 500px;
+    border-top: solid 1px;
+    margin-top: 15px;
 }
 
 .module-card-list-item {
-    background-color: white;
     padding: 15px;
     border: none;
     cursor: pointer;
@@ -29,21 +31,29 @@
 }
 
 .module-card-list-item:hover {
-    background-color: lightgrey;
-}
+    box-shadow: 10px 10px 25px 5px #dbdbd9;
 
-.module-cards {
-    background-color: green;
 }
 
 .current-card {
     align-self: center;
     margin: 50px;
     padding: 20px;
-    border: solid 1px;
     border-radius: 15px;
     min-width: 300px;
     max-width: 600px;
+    background-color: #fafafa;
+}
+
+.current-card:hover {
+    box-shadow: 10px 10px 25px 5px #dbdbd9;
+
+}
+
+.clickable-card {
+    border: none;
+    background-color: #fafafa;
+    cursor: pointer;
 }
 
 .current-card-question {
@@ -57,14 +67,24 @@
     font-size: 20px;
     align-self: center;
     padding-top: 10px;
+    display: none;
 }
 
 .answer-button-area {
     align-self: center;
     gap: 10px;
+    margin-bottom: 50px;
 }
 
 .answer-button {
     height: 40px;
-    
+    border: none;
+    background-color: #fafafa;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+.answer-button:hover {
+    box-shadow: 10px 10px 25px 5px #dbdbd9;
+
 }
