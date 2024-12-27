@@ -1,10 +1,16 @@
 from flask import Flask, request, jsonify
+
+from Database.DatabaseContext import DatabaseContext
+
 from Controllers.TextController import TextController
 from Controllers.AIController import AIController
+from Controllers.UserController import UserController
+
 from Services.TextExtractor import TextExtractor
 from Services.AITextProcessor import AITextProcessor
 from Services.AIExternalService import AIExternalService
 from Services.AILocalService import AILocalService
+from Services.UserService import UserService
 
 # Flask Setup
 app = Flask(__name__)
@@ -24,6 +30,11 @@ AI_text_processor = AITextProcessor(ai_controller)
 
 # Create the TextController
 text_controller = TextController(text_extractor, AI_text_processor)
+
+# Create the UserService and UserController
+db_context = DatabaseContext()
+user_service = UserService(db_context)
+user_controller = UserController(user_service)
 
 
 
@@ -53,7 +64,13 @@ async def process_pdf():
 
     return jsonify({"result": result})
 
+@app.route('/register', methods=['POST'])
+def register():
+    return user_controller.register()
 
+@app.route('/login', methods=['POST'])
+def login():
+    return user_controller.login()
 
 # Run the Flask app
 if __name__ == "__main__":
