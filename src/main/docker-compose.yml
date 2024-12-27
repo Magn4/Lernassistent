@@ -36,11 +36,11 @@ services:
     image: postgres:latest
     container_name: db
     environment:
-      POSTGRES_USER: db_admin
-      POSTGRES_PASSWORD: password123
-      POSTGRES_DB: main_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: Lernassistent
     ports:
-      - "5432:5432"
+      - "5433:5433"
     volumes:
       - db_data:/var/lib/postgresql/data
     restart: unless-stopped

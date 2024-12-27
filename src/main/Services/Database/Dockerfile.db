@@ -2,12 +2,12 @@
 FROM postgres:latest
 
 # Set environment variables for the database
-ENV POSTGRES_USER=db_admin
-ENV POSTGRES_PASSWORD=password123
-ENV POSTGRES_DB=main_db
+ENV POSTGRES_USER=postgres
+ENV POSTGRES_PASSWORD=postgres
+ENV POSTGRES_DB=Lernassistent
 
 # Expose the database port
-EXPOSE 5432
+EXPOSE 5433
 
 # Optionally, you can copy any initialization scripts you want to run on the database startup
 # COPY ./init-scripts /docker-entrypoint-initdb.d/
