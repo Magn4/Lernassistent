@@ -1,15 +1,13 @@
 class AIController:
-    def __init__(self, external_service, internal_service, db_context):
+    def __init__(self, external_service, local_service):
         self.external_service = external_service
-        self.internal_service = internal_service
-        self.db_context = db_context
+        self.local_service = local_service
 
-    async def process_text(self, text, user_id):
+    async def process_text(self, text, use_local):
         """
-        Use the AIController to process the extracted text based on the user ID.
+        Process the text using either the external or local LLM service based on the flag.
         """
-        user_info = await self.db_context.get_user_info_async(user_id)
-        if user_info['credit_balance'] > 100:
-            return await self.external_service.process_text(text)
+        if use_local:
+            return await self.local_service.process_text(text)
         else:
-            return await self.internal_service.process_text(text)
+            return await self.external_service.process_text(text)

@@ -1,25 +1,29 @@
 import requests
 
-class AiExternalService:
-    def __init__(self, api_url: str, api_key: str):
-        self.api_url = api_url  # Base URL for the external API
-        self.api_key = api_key  # API Key for authentication
+class AIExternalService:
+    def __init__(self, api_key, api_url):
+        self.api_key = api_key
+        self.api_url = api_url
 
-    async def process_text(self, text: str) -> str:
-        # Prepare the data to send to the API
-        data = {
-            "text": text,
-            "api_key": self.api_key
+    async def process_text(self, text: str):
+        """
+        Send a request to the GroqCloud API to process the given text.
+        """
+        headers = {
+            "Content-Type": "application/json",
+            "Authorization": f"Bearer {self.api_key}"
+        }
+        payload = {
+            "model": "llama3-8b-8192",
+            "messages": [{"role": "user", "content": text}]
         }
 
         try:
-            # Send POST request to the external API
-            response = requests.post(self.api_url, json=data)
-            # If the request was successful, process the response
+            response = requests.post(self.api_url, json=payload, headers=headers)
             if response.status_code == 200:
-                result = response.json()
-                return result.get('processed_text', 'No processed text returned')
+                response_data = response.json()
+                return response_data['choices'][0]['message']['content']
             else:
                 return f"Error: {response.status_code} - {response.text}"
-        except requests.exceptions.RequestException as e:
-            return f"Request error: {str(e)}"
+        except Exception as ex:
+            return f"Exception: {str(ex)}"
