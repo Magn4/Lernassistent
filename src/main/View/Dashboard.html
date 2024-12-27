@@ -68,7 +68,6 @@
                   <div id="myModal" class="modal">
                     <!-- Modal content -->
                     <div class="modal-content">
-                      <span class="close">&times;</span>
                       <!-- <p style="font-size: large;"><b>Store File</b></p> -->
                       <h2 class="modal-title"><b>Store File</b></h2>
                       <!-- <input
@@ -95,46 +94,16 @@
                         <option value="Safari">
                       </datalist>  -->
 
-                      <!-- <label for="myCustomInput">Wähle oder gib ein:</label> -->
-                      <!-- <div style="position: relative">
-                        <input
-                          type="text"
-                          id="myCustomInput"
-                          placeholder="Modulename"
-                          oninput="filterOptions()"
-                          onfocus="showDropdown()"
-                        />
-                        <ul id="dropdown">
-                          <li onclick="selectOption('Option 1')">Option 1</li>
-                          <li onclick="selectOption('Option 2')">Option 2</li>
-                          <li onclick="selectOption('Option 3')">Option 3</li>
-                        </ul>
-                      </div>
-
-                      <div style="position: relative">
-                        <input
-                          type="text"
-                          id="myCustomInput"
-                          placeholder="Directoryname"
-                          oninput="filterOptions()"
-                          onfocus="showDropdown()"
-                        />
-                        <ul id="dropdown">
-                          <li onclick="selectOption('Option 1')">Option 1</li>
-                          <li onclick="selectOption('Option 2')">Option 2</li>
-                          <li onclick="selectOption('Option 3')">Option 3</li>
-                        </ul>
-                      </div> -->
-
                       <div class="dropdown-container">
                         <!-- <label for="input1">Wähle oder gib ein (1):</label> -->
                         <input
                           type="text"
-                          class = "modal-input"
+                          class="modal-input"
                           id="input1"
                           placeholder="Modulename"
                           oninput="filterOptions('input1', 'dropdown1')"
                           onfocus="showDropdown('dropdown1')"
+                          onblur="hideDropdown('dropdown1')"
                         />
                         <ul id="dropdown1" class="dropdown-list">
                           <li onclick="selectOption('input1', 'Option A')">
@@ -153,11 +122,12 @@
                         <!-- <label for="input2">Wähle oder gib ein (2):</label> -->
                         <input
                           type="text"
-                          class = "modal-input"
+                          class="modal-input"
                           id="input2"
                           placeholder="Directoryname"
                           oninput="filterOptions('input2', 'dropdown2')"
                           onfocus="showDropdown('dropdown2')"
+                          onblur="hideDropdown('dropdown2')"
                         />
                         <ul id="dropdown2" class="dropdown-list">
                           <li onclick="selectOption('input2', 'Option X')">
@@ -173,7 +143,7 @@
                       </div>
 
                       <div class="modal-buttons">
-                        <button class="modal-button">Quit</button>
+                        <button class="modal-button" id="quit">Quit</button>
                         <button class="modal-button">Save</button>
                       </div>
                     </div>
@@ -225,89 +195,30 @@
       // Get the button that opens the modal
       var btn = document.getElementById("myBtn");
 
-      // Get the <span> element that closes the modal
-      var span = document.getElementsByClassName("close")[0];
+      //Get the button that quits the modal
+      var quit = document.getElementById("quit");
 
       // When the user clicks on the button, open the modal
       btn.onclick = function () {
         modal.style.display = "block";
       };
 
-      // When the user clicks on <span> (x), close the modal
-      span.onclick = function () {
+      // When the user clicks on the quit button, close the modal
+      quit.onclick = () => {
+        document.getElementById("input1").value = "";
+        document.getElementById("input2").value = "";
         modal.style.display = "none";
       };
 
-      // When the user clicks anywhere outside of the modal, close it
+      /* // When the user clicks anywhere outside of the modal, close it
       window.onclick = function (event) {
         if (event.target == modal) {
           modal.style.display = "none";
         }
-      };
+      }; */
 
       //Dropdown Code
-      /* const dropdown = document.getElementById("dropdown");
-      const input = document.getElementById("myCustomInput");
-
-      function filterOptions() {
-        const value = input.value.toLowerCase();
-        dropdown.style.display = "block";
-        [...dropdown.children].forEach((option) => {
-          option.style.display = option.textContent
-            .toLowerCase()
-            .includes(value)
-            ? "block"
-            : "none";
-        });
-      }
-
-      function selectOption(value) {
-        input.value = value;
-        dropdown.style.display = "none";
-      }
-
-      input.addEventListener("blur", () => {
-        setTimeout(() => (dropdown.style.display = "none"), 200); // Verzögerung, damit Klicks berücksichtigt werden
-      }); */
-
-      /* 
-      //Dropdown Code
-      const dropdown = document.getElementById("dropdown");
-      const input = document.getElementById("myCustomInput");
-
       // Zeigt die Dropdown-Liste an
-      function showDropdown() {
-        dropdown.style.display = "block";
-        // Zeigt standardmäßig alle Optionen
-        [...dropdown.children].forEach((option) => {
-          option.style.display = "block";
-        });
-      }
-
-      // Filtert die Dropdown-Liste basierend auf der Benutzereingabe
-      function filterOptions() {
-        const value = input.value.toLowerCase();
-        dropdown.style.display = "block"; // Dropdown bleibt sichtbar
-        [...dropdown.children].forEach((option) => {
-          option.style.display = option.textContent
-            .toLowerCase()
-            .includes(value)
-            ? "block"
-            : "none";
-        });
-      }
-
-      // Wählt eine Option aus und blendet die Dropdown-Liste aus
-      function selectOption(value) {
-        input.value = value;
-        dropdown.style.display = "none";
-      }
-
-      // Versteckt das Dropdown, wenn das Input-Feld den Fokus verliert
-      input.addEventListener("blur", () => {
-        setTimeout(() => (dropdown.style.display = "none"), 200); // Verzögerung für Klicks
-      }); */
-
       function showDropdown(dropdownId) {
         const dropdown = document.getElementById(dropdownId);
         dropdown.style.display = "block";
@@ -316,6 +227,13 @@
         });
       }
 
+      // Versteckt die Dropdown-Liste
+      function hideDropdown(dropdownId) {
+        const dropdown = document.getElementById(dropdownId);
+        dropdown.style.display = "none";
+      }
+
+      // Filtert die Dropdown-Liste basierend auf der Benutzereingabe
       function filterOptions(inputId, dropdownId) {
         const input = document.getElementById(inputId);
         const dropdown = document.getElementById(dropdownId);
@@ -330,6 +248,7 @@
         });
       }
 
+      // Wählt eine Option aus und blendet die Dropdown-Liste aus
       function selectOption(inputId, value) {
         const input = document.getElementById(inputId);
         input.value = value;
@@ -344,6 +263,11 @@
           });
         }
       });
+
+      /* // Versteckt das Dropdown, wenn das Input-Feld den Fokus verliert
+      input.addEventListener("blur", () => {
+        setTimeout(() => (dropdown.style.display = "none"), 200); // Verzögerung für Klicks
+      }); */
     </script>
   </body>
 </html>
