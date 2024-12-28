@@ -1,13 +1,15 @@
 from flask import Flask, request, jsonify
 
 from Database.DatabaseContext import DatabaseContext
+
 from Controllers.TextController import TextController
-from Services.AI.AIController import AIController
+from Controllers.AIController import AIController
 from Controllers.UserController import UserController
+
 from Services.TextExtractor import TextExtractor
-from Services.AI.AITextProcessor import AITextProcessor
-from Services.AI.AIExternalService import AIExternalService
-from Services.AI.AILocalService import AILocalService
+from Services.AITextProcessor import AITextProcessor
+from Services.AIExternalService import AIExternalService
+from Services.AILocalService import AILocalService
 from Services.UserService import UserService
 
 # Flask Setup
@@ -18,6 +20,7 @@ api_key = "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"
 api_url = "https://api.groq.com/openai/v1/chat/completions"
 local_api_url = "http://209.38.252.155:9191/api/generate"
 text_extractor_url = "http://209.38.252.155/extract_pdf/api/extract"
+
 
 external_service = AIExternalService(api_key, api_url)
 local_service = AILocalService(local_api_url)
@@ -33,12 +36,15 @@ db_context = DatabaseContext()
 user_service = UserService(db_context)
 user_controller = UserController(user_service)
 
+
+
 @app.route('/process_pdf', methods=['POST'])
 async def process_pdf():
     data = request.form
     user_id = data.get('user_id')
     use_local = data.get('use_local', 'false').lower() == 'true'
     instruction = data.get('instruction', '')
+
 
     pdf_file = request.files.get('file')
     if not pdf_file:
@@ -73,3 +79,5 @@ def get_all_users():
 # Run the Flask app
 if __name__ == "__main__":
     app.run(host='0.0.0.0', port=5002, debug=True)
+
+ 

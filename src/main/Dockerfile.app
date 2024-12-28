@@ -17,12 +17,12 @@ RUN pip install -r requirements.txt
 
 
 # Set environment variables
-ENV DB_URL=postgres://postgres:postgres@database:5433/Lernassistent
-ENV DB_USER=postgres
-ENV DB_PASSWORD=postgres
-ENV DB_NAME=Lernassistent
+ENV DB_URL=postgres://db_admin:password123@db:5432/main_db
+ENV DB_USER=db_admin
+ENV DB_PASSWORD=password123
+ENV DB_NAME=main_db
 
 # Define the entrypoint to wait for the database to be ready
 # ENTRYPOINT ["/wait-for-it.sh", "db:5432", "--", "python3", "run.py"]
-CMD ["python3", "./App/app.py"]
+CMD ["python3", "run.py"]
 
