@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="de"> 
+<html lang="de">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -14,22 +14,22 @@
     <div class="login-box">
       <div class="login-left-side">
         <h1 class="login-header">Get started</h1>
-        <label for="benutzername"></label>
+        <label for="username"></label>
         <input
           class="login-input"
           type="text"
-          id="benutzername"
-          placeholder="Benutzername"
+          id="username"
+          placeholder="Username"
         />
-        <label for="passwort"></label>
+        <label for="password"></label>
         <input
           class="login-input"
           type="text"
-          id="passwort"
-          placeholder="Passwort"
+          id="password"
+          placeholder="Password"
         />
-        <button class="login-button" id="login">Sign in</button>
-        <p>Neu hier? <a href="RegisterWindow.html">Registrieren</a></p>
+        <button class="login-button" id="loginButton">Sign in</button>
+        <p>No account yet? <a href="Register.html">Register</a></p>
       </div>
       <div class="login-right-side">
         <img
@@ -39,5 +39,17 @@
         />
       </div>
     </div>
+    <script>
+      const loginButton = document.getElementById("loginButton");
+
+      loginButton.onclick = () => {
+        const username = document.getElementById("username").value;
+        const password = document.getElementById("password").value;
+        // TODO: Implement login logic
+
+        // Redirect to Dashboard.html
+        window.location.href = "Dashboard.html";
+      };
+    </script>
   </body>
 </html>
