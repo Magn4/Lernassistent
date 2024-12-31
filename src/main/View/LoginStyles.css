@@ -46,6 +46,10 @@ body {
   padding-right: 25px;
 }
 
+.login-input:focus {
+  outline: none;
+}
+
 .login-button {
   border-radius: 6px;
   padding: 10px 65px;
@@ -53,6 +57,14 @@ body {
   background-color: #bfbbbc;
   color: white;
   font-family: "Quicksand", sans-serif;
+}
+
+.login-button:hover {
+  background-color: #f68464;
+}
+
+.login-button:active {
+  background-color: #eb7351;
 }
 
 .login-right-side{

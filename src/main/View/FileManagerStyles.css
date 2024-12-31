@@ -1,5 +1,6 @@
 #modules-box {
     flex-basis: 300px;
+    max-width: 450px;
 }
 
 #modules-container {
@@ -30,8 +31,13 @@
     margin-top: 0px;
 }
 
-#folders-container {
+#folders-paragraph {
     display: flex;
+}
+
+#folders-container {
+    /* display: flex; */
+    display: none;
     flex-wrap: wrap;
     padding: 20px 0px 20px 20px;
     height: 190px;
@@ -58,10 +64,19 @@
     color: #98a55d;
 }
 
+#files-header {
+    display: none;
+}
+
 #files-container {
+    display: none;
     height: 100px;
     overflow: auto;
     padding: 20px 0px 20px 20px;
+}
+
+#files-paragraph {
+    display: none;
 }
 
 #files-container ul {
@@ -70,8 +85,9 @@
 }
 
 #files-container li {
-    padding: 0px;
+    padding: 0px 10px 0px 5px;
     margin: 10px 10px 10px 0px;
+    width: fit-content;
     cursor: pointer;
     border-radius: 6px;
     background-color: #fafafa;

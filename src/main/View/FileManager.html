@@ -46,6 +46,7 @@
               <div>
                 <!-- class="row" -->
                 <h2>Ordner</h2>
+                <p id="folders-paragraph">Select a module.</p>
                 <div id="folders-container">
                   <div class="folder">
                     <i class="fas fa-folder icon-design"></i>
@@ -70,7 +71,8 @@
                 </div>
                 <div>
                   <!-- class="row"  -->
-                  <h2>Dateien</h2>
+                  <h2 id="files-header">Dateien</h2>
+                  <p id="files-paragraph">Select a folder.</p>
                   <div id="files-container">
                     <ul id="files-list">
                       <li>Vorlesungsfolien</li>
@@ -94,6 +96,38 @@
             document.getElementById("Navigation").innerHTML = html;
           })
           .catch((error) => console.error("Error loading navigation:", error));
+      });
+
+      //Make folders-container visible when a module is clicked
+      document.addEventListener("DOMContentLoaded", () => {
+        const modulesListItems = document.querySelectorAll("#modules-list li");
+        const foldersContainer = document.getElementById("folders-container");
+        const foldersParagraph = document.getElementById("folders-paragraph");
+        const filesHeader = document.getElementById("files-header");
+        const filesParagraph = document.getElementById("files-paragraph");
+
+        modulesListItems.forEach((item) => {
+          item.addEventListener("click", () => {
+            foldersParagraph.style.display = "none";
+            foldersContainer.style.display = "flex";
+            filesHeader.style.display = "flex";
+            filesParagraph.style.display = "flex";
+          });
+        });
+      });
+
+      //Make files-container visible when a folder is clicked
+      document.addEventListener("DOMContentLoaded", () => {
+        const folders = document.querySelectorAll(".folder");
+        const filesParagraph = document.getElementById("files-paragraph");
+        const filesContainer = document.getElementById("files-container");
+
+        folders.forEach((folder) => {
+          folder.addEventListener("click", () => {
+            filesParagraph.style.display = "none";
+            filesContainer.style.display = "flex";
+          });
+        });
       });
     </script>
   </body>
