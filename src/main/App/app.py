@@ -1,5 +1,8 @@
 from flask import Flask, request, jsonify
 
+from Controllers.DashboardController import DashboardController
+
+
 from Database.DatabaseContext import DatabaseContext
 
 from Controllers.TextController import TextController
@@ -14,6 +17,14 @@ from Services.UserService import UserService
 
 # Flask Setup
 app = Flask(__name__)
+
+# Create an instance of the DatabaseContext
+db_context = DatabaseContext()
+
+
+# Create an instance of the DashboardController (with the db_context passed in)
+dashboard_controller = DashboardController(db_context)
+
 
 # Create instances of the services
 api_key = "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"
@@ -32,10 +43,50 @@ AI_text_processor = AITextProcessor(ai_controller)
 text_controller = TextController(text_extractor, AI_text_processor)
 
 # Create the UserService and UserController
-db_context = DatabaseContext()
 user_service = UserService(db_context)
 user_controller = UserController(user_service)
 
+
+# **New Endpoint for Dashboard File Upload (This is the new part)**
+
+@app.route('/upload_dashboard', methods=['POST'])
+def upload_dashboard():
+    # Retrieve form data from the request (sent from the frontend)
+    data = request.form
+    module_name = data.get('moduleName')  # Get the module name
+    directory_name = data.get('directoryName')  # Get the directory name
+
+    # Check if the required data is provided
+    if not module_name or not directory_name:
+        return jsonify({"error": "Module name and Directory name are required"}), 400
+
+    # Retrieve the PDF file uploaded from the frontend
+    pdf_file = request.files.get('file')
+    if not pdf_file:
+        return jsonify({"error": "No PDF file provided"}), 400
+
+    # Ensure the file is in PDF format
+    if not pdf_file.filename.endswith('.pdf'):
+        return jsonify({"error": "The file must be in PDF format"}), 400
+
+    # Set the module name and directory name in the DashboardController
+    dashboard_controller.set_module_name(module_name)
+    dashboard_controller.set_directory_name(directory_name)
+
+    # Extract text from the PDF file using the method from the DashboardController
+    extracted_text = dashboard_controller.extract_text_from_pdf(pdf_file)
+
+    # If there's an error while extracting text, return it
+    if "Error" in extracted_text:
+        return jsonify({"error": extracted_text}), 500
+
+    # Send a successful response with the extracted text and the set names
+    return jsonify({
+        "message": "File uploaded successfully",
+        "module_name": dashboard_controller.module_name,
+        "directory_name": dashboard_controller.directory_name,
+        "extracted_text": extracted_text  # Optional, depending if you want to return the extracted text
+    }), 200
 
 
 @app.route('/process_pdf', methods=['POST'])
