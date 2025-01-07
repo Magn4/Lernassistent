@@ -54,13 +54,23 @@ body {
   border-radius: 6px;
   padding: 10px 65px;
   border: none;
-  background-color: #bfbbbc;
+  /* background-color: #bfbbbc; */
   color: white;
   font-family: "Quicksand", sans-serif;
 }
 
-.login-button:hover {
+/* .login-button:hover {
   background-color: #f68464;
+} */
+
+.login-button:disabled {
+  background-color: #bfbbbc;
+  cursor: not-allowed;
+}
+
+.login-button:enabled {
+  background-color: #f68464;
+  cursor: pointer;
 }
 
 .login-button:active {
