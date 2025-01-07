@@ -28,7 +28,7 @@
           id="password"
           placeholder="Password"
         />
-        <button class="login-button" id="loginButton">Sign in</button>
+        <button class="login-button" id="loginButton" disabled>Sign in</button>
         <p>No account yet? <a href="Register.html">Register</a></p>
       </div>
       <div class="login-right-side">
@@ -41,6 +41,22 @@
     </div>
     <script>
       const loginButton = document.getElementById("loginButton");
+
+      //enable login button only if username and password are not empty
+      document.addEventListener("DOMContentLoaded", function () {
+        const usernameInput = document.getElementById("username");
+        const passwordInput = document.getElementById("password");
+        const loginButton = document.getElementById("loginButton");
+
+        function validateInputs() {
+          const username = usernameInput.value.trim();
+          const password = passwordInput.value.trim();
+          loginButton.disabled = !(username && password);
+        }
+
+        usernameInput.addEventListener("input", validateInputs);
+        passwordInput.addEventListener("input", validateInputs);
+      });
 
       loginButton.onclick = () => {
         const username = document.getElementById("username").value;

@@ -3,6 +3,28 @@
     max-width: 450px;
 }
 
+#header {
+    display: flex;
+    align-items: center;
+}
+
+.ellipsis-icon-design {
+    font-size: 17px;
+    color: #dbdbd9;
+    margin-left: auto;
+    margin-right: 75px;
+    margin-top: 10px;
+    cursor: pointer;
+}
+
+.ellipsis-icon-design:hover {
+    color: #98a55d;
+}
+
+.ellipsis-icon-design:active {
+    color: #dbdbd9;
+}
+
 #modules-container {
     height: 440px;
     overflow: auto;
@@ -25,6 +47,10 @@
 #modules-container li:hover {
     border-radius: 6px;
     box-shadow: 10px 10px 25px 5px #dbdbd9;
+}
+
+#modules-container li:active {
+    background-color: #dbdbd9;
 }
 
 #modules-list {
@@ -51,7 +77,7 @@
     cursor: pointer;
     border-radius: 6px;
     /* background-color: #fafafa; */
-    transition: background-color 0.3s;
+    /* transition: background-color 0.3s; */
 }
 
 .folder:hover {
@@ -59,18 +85,24 @@
     box-shadow: 10px 10px 25px 5px #dbdbd9;
 }
 
-.icon-design {
+.folder:active {
+    background-color: #dbdbd9;
+}
+
+.folder-icon-design {
     font-size: 70px;
     color: #98a55d;
 }
 
 #files-header {
     display: none;
+    align-items: center;
+    margin-top: 10px;
 }
 
 #files-container {
     display: none;
-    height: 100px;
+    height: 110px;
     overflow: auto;
     padding: 20px 0px 20px 20px;
 }
@@ -97,6 +129,10 @@
 #files-container li:hover {
     border-radius: 6px;
     box-shadow: 0px 10px 30px 0px #dbdbd9;
+}
+
+#files-container li:active {
+    background-color: #dbdbd9;
 }
 
 #files-list {

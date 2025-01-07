@@ -49,13 +49,35 @@
           id="passwordRepeated"
           placeholder="Repeat password"
         />
-        <button class="login-button" id="registerButton">Sign up</button>
+        <button class="login-button" id="registerButton" disabled>Sign up</button>
         <p>Already have an account? <a href="Login.html">Back</a></p>
       </div>
     </div>
 
     <script>
       const registerButton = document.getElementById("registerButton");
+
+      //enable register button only if username, email, password and password repeat are not empty
+      document.addEventListener("DOMContentLoaded", function () {
+        const usernameInput = document.getElementById("username");
+        const emailInput = document.getElementById("email");
+        const passwordInput = document.getElementById("password");
+        const passwordRepeatedInput = document.getElementById("passwordRepeated");
+        const registerButton = document.getElementById("registerButton");
+
+        function validateInputs() {
+          const username = usernameInput.value.trim();
+          const email = emailInput.value.trim();
+          const password = passwordInput.value.trim();
+          const passwordRepeated = passwordRepeatedInput.value.trim();
+          registerButton.disabled = !(username && email && password && passwordRepeated);
+        }
+
+        usernameInput.addEventListener("input", validateInputs);
+        emailInput.addEventListener("input", validateInputs);
+        passwordInput.addEventListener("input", validateInputs);
+        passwordRepeatedInput.addEventListener("input", validateInputs);
+      });
 
       registerButton.onclick = () => {
         const password = document.getElementById("password").value;
