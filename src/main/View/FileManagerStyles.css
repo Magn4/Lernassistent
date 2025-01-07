@@ -3,6 +3,20 @@
     max-width: 450px;
 }
 
+#header {
+    display: flex;
+    align-items: center;
+}
+
+.ellipsis-icon-design {
+    font-size: 17px;
+    color: #98a55d;
+    margin-left: auto;
+    margin-right: 75px;
+    margin-top: 10px;
+    cursor: pointer;
+}
+
 #modules-container {
     height: 440px;
     overflow: auto;
@@ -67,18 +81,20 @@
     background-color: #dbdbd9;
 }
 
-.icon-design {
+.folder-icon-design {
     font-size: 70px;
     color: #98a55d;
 }
 
 #files-header {
     display: none;
+    align-items: center;
+    margin-top: 10px;
 }
 
 #files-container {
     display: none;
-    height: 100px;
+    height: 110px;
     overflow: auto;
     padding: 20px 0px 20px 20px;
 }
