@@ -21,7 +21,7 @@
 
                 <div class="row">
 
-                    <div class="module-card-area column">
+                    <div class="module-card-area">
                         <div class="module-card-container">
                             <div class="module-card-header">
                                 <h2>Analysis</h2>
@@ -69,6 +69,35 @@
                                     <div class="module-card-list-item">
                                         Hallo
                                     </div>
+                                    <div class="module-card-list-item">
+                                        Hallo
+                                    </div>
+                                    <div class="module-card-list-item">
+                                        Hallo
+                                    </div>
+                                    <div class="module-card-list-item">
+                                        Hallo
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="module-card-container">
+                            <div class="module-card-header">
+                                <h2>Analysis</h2>
+                                <div class="module-card-list">
+                                    <div class="module-card-list-item" onclick="startLearingSession()">
+                                        Hallo
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="module-card-container">
+                            <div class="module-card-header">
+                                <h2>Analysis</h2>
+                                <div class="module-card-list">
+                                    <div class="module-card-list-item" onclick="startLearingSession()">
+                                        Hallo
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -88,8 +117,7 @@
                 <div class="current-card-area">
                     <button class="answer-button" onclick="switchBack()">Zurück</button>
 
-                    <div class="current-card column">
-                        <button class="clickable-card" onclick="toggleAnswer()">
+                    <div class="current-card" onclick="toggleAnswer()">
                         <div class="row">
                             <div class="current-card-question">
                                 Hier steht eine Frage?
@@ -98,7 +126,6 @@
                                 Hier steht ein langer Antworttext! Hier steht ein langer Antworttext! Hier steht ein langer Antworttext! Hier steht ein langer Antworttext.
                             </div>
                         </div>
-                        </button>
                     </div>
 
                     <div class="answer-button-area column">
@@ -137,14 +164,12 @@
         function startLearingSession() {
             currentCard.style.display = currentCard.style.display === 'none' || currentCard.style.display === '' ? 'block' : 'none';
             chooseWindow.style.display = currentCard.style.display === 'none' || currentCard.style.display === '' ? 'flex' : 'none';
-
         }
 
         //Switch back
         function switchBack() {
             currentCard.style.display = currentCard.style.display === 'none' || currentCard.style.display === '' ? 'block' : 'none';
             chooseWindow.style.display = currentCard.style.display === 'none' || currentCard.style.display === '' ? 'flex' : 'none';
-
         }
 
      </script>

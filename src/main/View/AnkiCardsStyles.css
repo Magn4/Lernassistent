@@ -1,16 +1,19 @@
-.moudle-card-area {
+.module-card-area {
+    flex-basis: 100%;
+    max-width: fit-content;
+    max-height: 600px;
     display: flex;
-    flex-direction: row;
     flex-wrap: wrap;
-    overflow: scroll;
+    overflow: auto;
 }
 
 .module-card-container {
-    width: 250px;
+    width: 200px;
+    max-height: 650px;
     border-radius: 20px;
-    margin-left: 10px;
-    margin-right: 10px;
+    margin: 0px 10px 20px 10px;
     background-color: #fafafa;
+    overflow: hidden;
 }
 
 .module-card-header {
@@ -18,7 +21,7 @@
 }
 
 .module-card-list {
-    overflow: scroll;
+    overflow: auto;
     height: 500px;
     border-top: solid 1px;
     margin-top: 15px;
@@ -27,40 +30,34 @@
 .module-card-list-item {
     margin: 10px;
     padding: 5px;
-    border: none;
     border-radius: 5px;
     cursor: pointer;
     font-size: 15px;
 }
 
 .module-card-list-item:hover {
-    box-shadow: 10px 10px 25px 5px #dbdbd9;
-
+    
 }
 
 .current-card-area {
     display: none;
+    flex-direction: column;
+    align-self: center;
 }
 
 .current-card {
-    align-self: center;
     margin: 50px;
     padding: 20px;
+    align-content: center;
     border-radius: 15px;
     min-width: 300px;
     max-width: 600px;
     background-color: #fafafa;
+    cursor: pointer;
 }
 
 .current-card:hover {
     box-shadow: 10px 10px 25px 5px #dbdbd9;
-
-}
-
-.clickable-card {
-    border: none;
-    background-color: #fafafa;
-    cursor: pointer;
 }
 
 .current-card-question {
@@ -78,9 +75,10 @@
 }
 
 .answer-button-area {
-    align-self: center;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
     gap: 10px;
-    margin-bottom: 50px;
 }
 
 .answer-button {
