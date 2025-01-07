@@ -105,6 +105,7 @@
         const foldersParagraph = document.getElementById("folders-paragraph");
         const filesHeader = document.getElementById("files-header");
         const filesParagraph = document.getElementById("files-paragraph");
+        const filesContainer = document.getElementById("files-container");
 
         modulesListItems.forEach((item) => {
           item.addEventListener("click", () => {
@@ -112,6 +113,7 @@
             foldersContainer.style.display = "flex";
             filesHeader.style.display = "flex";
             filesParagraph.style.display = "flex";
+            filesContainer.style.display = "none";
           });
         });
       });
@@ -131,6 +133,4 @@
       });
     </script>
   </body>
-
-  <!-- <i class="fa-regular fa-user" style="color: red; border: 5px solid aqua;"></i> -->
 </html>
