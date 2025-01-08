@@ -1,11 +1,14 @@
+import os
 from sqlalchemy import create_engine, Column, Integer, String
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
+from sqlalchemy.exc import SQLAlchemyError
 
-# Database connection settings
-DATABASE_URL = "postgresql://postgres:postgres@localhost:5433/Lernassistent"
+# Dynamically construct DATABASE_URL
+DATABASE_URL = f"postgresql://{os.getenv('DB_USER', 'db_user')}:{os.getenv('DB_PASSWORD', 'password123')}@{os.getenv('DB_HOST', 'database')}:{os.getenv('DB_PORT', '5432')}/{os.getenv('DB_NAME', 'app_db')}"
+# DATABASE_URL = "postgresql://db_user:password123@localhost:5432/app_db"
+print(DATABASE_URL)
 
-# SQLAlchemy setup
 Base = declarative_base()
 
 class User(Base):
@@ -15,36 +18,32 @@ class User(Base):
     email = Column(String, unique=True)
     password = Column(String)
 
-class DatabaseContext:
+class DatabaseContext: 
     def __init__(self, db_url=DATABASE_URL):
         self.engine = create_engine(db_url)
         self.Session = sessionmaker(bind=self.engine)
         self._initialize_database()
 
     def _initialize_database(self):
-        """ Create the necessary tables if they do not exist. """
         Base.metadata.create_all(self.engine)
 
     def get_all_users(self):
         session = self.Session()
         try:
-            return session.query(User).all()  # Fetch all users from the database
+            return session.query(User).all()
+        except SQLAlchemyError as e:
+            print(f"Error getting all users: {e}")
+            return []
         finally:
             session.close()
 
     def get_user_by_email(self, email):
-        """ Query the database to find a user by their email. """
         session = self.Session()
         try:
             return session.query(User).filter_by(email=email).first()
-        finally:
-            session.close()
-
-    def get_user_by_username_or_email(self, user_name, email):
-        """ Query the database to find a user by either their username or email. """
-        session = self.Session()
-        try:
-            return session.query(User).filter((User.user_name == user_name) | (User.email == email)).first()
+        except SQLAlchemyError as e:
+            print(f"Error getting user by email: {e}")
+            return None
         finally:
             session.close()
 
@@ -54,7 +53,8 @@ class DatabaseContext:
             new_user = User(user_name=user_name, email=email, password=password)
             session.add(new_user)
             session.commit()
+        except SQLAlchemyError as e:
+            print(f"Error creating user: {e}")
+            session.rollback()
         finally:
             session.close()
-
-

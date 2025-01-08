@@ -4,7 +4,7 @@ services:
   # LLM API Service
   llm_api:
     build:
-      context: ./Services/AI  # Directory containing Dockerfile and LLM_API.jar
+      context: ./Services/AI
       dockerfile: Dockerfile
     ports:
       - "9191:9191"
@@ -14,7 +14,7 @@ services:
   # PDF Extraction Service
   extract_pdf:
     build:
-      context: ./Services/PdfExtractor  # Directory containing Dockerfile and ExtractPdf.py
+      context: ./Services/PdfExtractor
       dockerfile: Dockerfile
     ports:
       - "5001:5001"
@@ -24,23 +24,34 @@ services:
   # Main Controller Service
   main_controller:
     build:
-      context: ./App  # Directory containing Dockerfile and MainController.py
+      context: ./App
       dockerfile: Dockerfile
     ports:
       - "5002:5002"
-    container_name: main_controller
+    container_name: app
+    depends_on:
+      - db
+    environment:
+      DB_HOST: ${DB_HOST}  # Uses value from .env file
+      DB_PORT: ${DB_PORT}
+      DB_NAME: ${DB_NAME}
+      DB_USER: ${DB_USER}
+      DB_PASSWORD: ${DB_PASSWORD}
+    entrypoint: ["./wait-for-it.sh", "database", "5432", "--", "python", "app.py"]
     restart: unless-stopped
 
   # PostgreSQL Database
   db:
-    image: postgres:latest
-    container_name: db
+    build:
+      context: ./Services/Database
+      dockerfile: Dockerfile.db
+    container_name: database
     environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: Lernassistent
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_NAME}
     ports:
-      - "5433:5433"
+      - "5432:5432"
     volumes:
       - db_data:/var/lib/postgresql/data
     restart: unless-stopped
@@ -48,21 +59,18 @@ services:
   # Nginx Reverse Proxy for all services
   nginx:
     build:
-      context: .  # Directory containing Dockerfile.nginx
+      context: .
       dockerfile: Dockerfile.nginx
     container_name: nginx
     ports:
-      - "80:80"    # HTTP
-    #   - "443:443"  # HTTPS (commented out)
+      - "80:80"
     depends_on:
       - llm_api
       - extract_pdf
       - main_controller
-      # Uncomment below when you decide to use the db-dependent app
-      # - app_with_db
     volumes:
-      - ./docs:/usr/share/nginx/html:ro  # Mount the docs directory to Nginx web root
-      - ./nginx.conf:/etc/nginx/nginx.conf:ro  # Custom Nginx config
+      - ./docs:/usr/share/nginx/html:ro
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
     restart: unless-stopped
 
 # Persistent volume for PostgreSQL data

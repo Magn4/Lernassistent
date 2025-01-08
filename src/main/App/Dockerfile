@@ -13,8 +13,7 @@ COPY requirements.txt /app/
 # Install dependencies from requirements.txt
 RUN pip install --no-cache-dir -r requirements.txt
 
+RUN apt-get update && apt-get install -y netcat-openbsd
+
 # Expose the port the app runs on
 EXPOSE 5002
-
-# Command to run the application
-CMD ["python", "./Controllers/MainController.py"]
