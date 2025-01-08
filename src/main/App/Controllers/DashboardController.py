@@ -1,8 +1,7 @@
 # app/Controllers/DashboardController.py
 
-import pdfplumber  # Used to extract text from PDFs
-from Database.DatabaseContext import DatabaseContext
 
+from Database.DatabaseContext import DatabaseContext
 
 class DashboardController:
     def __init__(self, db_context):
@@ -21,18 +20,17 @@ class DashboardController:
         self.directory_name = directory_name  # Set the directory name
         print(f"Directory name set: {self.directory_name}")
 
-    # Function to extract text from a PDF file
+    # Extract text from a given PDF file using the TextExtractor service.
+    
     def extract_text_from_pdf(self, pdf_data):
         try:
-            # Open the provided PDF file using pdfplumber
-            with pdfplumber.open(pdf_data) as pdf:
-                text = ''
-                # Iterate through each page of the PDF and extract text
-                for page in pdf.pages:
-                    text += page.extract_text()
-            return text  # Return the extracted text from the PDF
+            # Importiere TextExtractor innerhalb der Methode, nicht oben
+            from Services.TextExtractor import TextExtractor
+            
+            # Verwende TextExtractor hier
+            text_extractor = TextExtractor("http://209.38.252.155/extract_pdf/api/extract")
+            return text_extractor.convert_to_text(pdf_data)
         except Exception as e:
-            # Return an error message if the text extraction fails
             return f"Error during text extraction: {str(e)}"
 
     # Function to save the dashboard upload data to the database
