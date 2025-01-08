@@ -33,9 +33,9 @@
 }
 
 .left {
-  min-width: 300px;
   max-width: 700px;
   margin-right: 40px;
+  flex-basis: 250px;
 }
 
 .list-items {
@@ -44,7 +44,7 @@
 }
 
 .right {
-  min-width: 300px;
+  flex-basis: 250px;
 }
 
 .centered {

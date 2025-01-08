@@ -8,7 +8,7 @@
 }
 
 .module-card-container {
-    width: 200px;
+    width: 269px;
     max-height: 650px;
     border-radius: 20px;
     margin: 0px 10px 20px 10px;
@@ -36,7 +36,12 @@
 }
 
 .module-card-list-item:hover {
-    
+    background-color: #dbdbd9;
+}
+
+.module-card-list-item:active {
+    background-color: #98a55d;
+
 }
 
 .current-card-area {
