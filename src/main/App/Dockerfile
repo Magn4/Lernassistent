@@ -9,6 +9,9 @@ COPY . /app
 
 # Copy the requirements file to the working directory
 COPY requirements.txt /app/
+# Copy wait-for-it.sh script and make it executable
+COPY wait-for-it.sh /app/
+RUN chmod +x /app/wait-for-it.sh
 
 # Install dependencies from requirements.txt
 RUN pip install --no-cache-dir -r requirements.txt
