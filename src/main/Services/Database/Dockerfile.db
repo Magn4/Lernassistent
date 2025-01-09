@@ -1,11 +1,14 @@
 # Use the official PostgreSQL image as the base
 FROM postgres:latest
 
+<<<<<<< HEAD
 # Set environment variables for the database
 ENV POSTGRES_USER=postgres
 ENV POSTGRES_PASSWORD=postgres
 ENV POSTGRES_DB=Lernassistent
 
+=======
+>>>>>>> d7edf03bfcdf47d0065ccee46b98f372c0c3d078
 # Expose the database port
 EXPOSE 5433
 
