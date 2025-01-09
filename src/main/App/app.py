@@ -8,6 +8,8 @@ from Database.DatabaseContext import DatabaseContext
 from Controllers.TextController import TextController
 from Controllers.AIController import AIController
 from Controllers.UserController import UserController
+from Controllers.FileManagerController import FileManagerController
+
 
 from Services.TextExtractor import TextExtractor
 from Services.AITextProcessor import AITextProcessor
@@ -45,6 +47,8 @@ text_controller = TextController(text_extractor, AI_text_processor)
 # Create the UserService and UserController
 user_service = UserService(db_context)
 user_controller = UserController(user_service)
+file_manager_controller = FileManagerController(db_context)
+
 
 
 # **New Endpoint for Dashboard File Upload (This is the new part)**
@@ -54,11 +58,11 @@ def upload_dashboard():
     # Retrieve form data from the request (sent from the frontend)
     data = request.form
     module_name = data.get('moduleName')  # Get the module name
-    directory_name = data.get('directoryName')  # Get the directory name
+    topic_name = data.get('topicName')  # Get the topic name
 
     # Check if the required data is provided
-    if not module_name or not directory_name:
-        return jsonify({"error": "Module name and Directory name are required"}), 400
+    if not module_name or not topic_name:
+        return jsonify({"error": "Module name and topic name are required"}), 400
 
     # Retrieve the PDF file uploaded from the frontend
     pdf_file = request.files.get('file')
@@ -69,9 +73,9 @@ def upload_dashboard():
     if not pdf_file.filename.endswith('.pdf'):
         return jsonify({"error": "The file must be in PDF format"}), 400
 
-    # Set the module name and directory name in the DashboardController
+    # Set the module name and topic name in the DashboardController
     dashboard_controller.set_module_name(module_name)
-    dashboard_controller.set_directory_name(directory_name)
+    dashboard_controller.set_topic_name(topic_name)
 
     # Extract text from the PDF file using the method from the DashboardController
     extracted_text = dashboard_controller.extract_text_from_pdf(pdf_file)
@@ -84,7 +88,7 @@ def upload_dashboard():
     return jsonify({
         "message": "File uploaded successfully",
         "module_name": dashboard_controller.module_name,
-        "directory_name": dashboard_controller.directory_name,
+        "topic_name": dashboard_controller.topic_name,
         "extracted_text": extracted_text  # Optional, depending if you want to return the extracted text
     }), 200
 
@@ -126,6 +130,26 @@ def login():
 @app.route('/users', methods=['GET'])
 def get_all_users():
     return user_controller.get_all_users()
+
+@app.route('/create_module', methods=['POST'])
+def create_module():
+    return file_manager_controller.create_module()
+
+@app.route('/create_topic', methods=['POST'])
+def create_topic():
+    return file_manager_controller.create_topic()
+
+@app.route('/upload_file', methods=['POST'])
+def upload_file():
+    return file_manager_controller.upload_file()
+
+@app.route('/delete_module', methods=['DELETE'])
+def delete_module():
+    return file_manager_controller.delete_module()
+
+@app.route('/delete_topic', methods=['DELETE'])
+def delete_topic():
+    return file_manager_controller.delete_topic()
 
 # Run the Flask app
 if __name__ == "__main__":
