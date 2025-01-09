@@ -38,7 +38,7 @@ services:
       DB_USER: ${DB_USER}
       DB_PASSWORD: ${DB_PASSWORD}
     entrypoint: ["./wait-for-it.sh", "database", "5432", "--", "python", "app.py"]
-    restart: unless-stopped
+     # restart: unless-stopped
 
   # PostgreSQL Database
   db:
