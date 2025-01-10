@@ -103,6 +103,16 @@
           <div id="myModal" class="modal">
             <!-- Modal content -->
             <div class="modal-content-box">
+              
+              <div class="sticky">
+                <div class="modal-header">
+                  <button class="modal-button" id="quit">Quit</button>
+                  <!-- <button class="btn"><i class="fa-solid fa-arrow-left"></i></button> -->
+                   <p class="modal-title">Zusammenfassung</p>
+                  <button class="modal-button" id="save">Save</button>
+                </div>
+              </div>
+              
               <p>
                 der text
               </p>
@@ -344,6 +354,20 @@
       // When the user clicks on the button, open the modal
       btn.onclick = () => {
         modal.style.display = "block";
+      };
+
+      const quit = document.getElementById("quit");
+
+      // When the user clicks on the quit button, close the modal
+      quit.onclick = () => {
+        modal.style.display = "none";
+      };
+
+      const save = document.getElementById("save");
+
+      // When the user clicks on the save button, save and close the modal
+      save.onclick = () => {
+        modal.style.display = "none";
       };
     </script>
   </body>
