@@ -139,3 +139,29 @@
     margin-top: 0px;
     /* width: 250px; */
 }
+
+/* The Modal (background) */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgb(0, 0, 0); /* Fallback color */
+    background-color: rgba(0, 0, 0, 0.4); /* Black w/ opacity */
+  }
+  
+  .modal-content-box {
+    background-color: #fefefe;
+    margin: auto; /* left and right, centered */
+    margin-top: 20px;
+    margin-bottom: 20px;
+    padding: 20px;
+    min-height: 90vh;
+    flex-basis: 300px;
+    max-width: 816px;
+    border-radius: 10px;
+  }

@@ -22,11 +22,16 @@
       <div class="content-box">
         <div class="row">
           <h1>File Manager</h1>
+          <!-- Button to open Modal -->
+          <button id="myBtn">Open Modal</button>
           <div class="column">
             <div class="row" id="modules-box">
               <div id="header">
                 <h2>Module</h2>
-                <i class="fas fa-ellipsis ellipsis-icon-design" id="add-module"></i>
+                <i
+                  class="fas fa-ellipsis ellipsis-icon-design"
+                  id="add-module"
+                ></i>
               </div>
               <div id="modules-container">
                 <ul id="modules-list">
@@ -46,7 +51,10 @@
               <div>
                 <div id="header">
                   <h2>Folder</h2>
-                  <i class="fas fa-ellipsis ellipsis-icon-design" id="add-folder"></i>
+                  <i
+                    class="fas fa-ellipsis ellipsis-icon-design"
+                    id="add-folder"
+                  ></i>
                 </div>
                 <p id="folders-paragraph">Select a module.</p>
                 <div id="folders-container">
@@ -74,7 +82,10 @@
                 <div>
                   <div id="files-header">
                     <h2>Files</h2>
-                    <i class="fas fa-ellipsis ellipsis-icon-design" id="add-file"></i>
+                    <i
+                      class="fas fa-ellipsis ellipsis-icon-design"
+                      id="add-file"
+                    ></i>
                   </div>
                   <p id="files-paragraph">Select a folder.</p>
                   <div id="files-container">
@@ -86,6 +97,147 @@
                   </div>
                 </div>
               </div>
+            </div>
+          </div>
+          <!-- The Modal -->
+          <div id="myModal" class="modal">
+            <!-- Modal content -->
+            <div class="modal-content-box">
+              <p>
+                der text
+              </p>
+              <p>
+                der text
+              </p>
+              <p>
+                der text
+              </p>
+              <p>
+                der text
+              </p>
+              <p>
+                der text
+              </p>
+              <p>
+                der text
+              </p>
+              <p>
+                der text
+              </p>
+              <p>
+                der text
+              </p>
+              <p>
+                der text
+              </p>
+              <p>
+                der text
+              </p>
+              <p>
+                der text
+              </p>
+              <p>
+                der text
+              </p>
+              <p>
+                der text
+              </p>
+              <p>
+                der text
+              </p>
+              <p>
+                der text
+              </p>
+              <p>
+                der text
+              </p>
+              <p>
+                der text
+              </p>
+              <p>
+                der text
+              </p>
+              <p>
+                der text
+              </p>
+              <p>
+                der text
+              </p>
+              <p>
+                der text
+              </p>
+              <p>
+                der text
+              </p>
+              <p>
+                der text
+              </p>
+              <p>
+                der text
+              </p>
+              <p>
+                der text
+              </p>
+              <p>
+                der text
+              </p>
+              <p>
+                der text
+              </p>
+              <p>
+                der text
+              </p>
+              <p>
+                der text
+              </p>
+              <p>
+                der text
+              </p>
+              <p>
+                der text
+              </p>
+              <p>
+                der text
+              </p>
+              <p>
+                der text
+              </p>
+              <p>
+                der text
+              </p>
+              <p>
+                der text
+              </p>
+              <p>
+                der text
+              </p>
+              <p>
+                der text
+              </p>
+              <p>
+                der text
+              </p>
+              <p>
+                der text
+              </p>
+              <p>
+                der text
+              </p>
+              <p>
+                der text
+              </p>
+              <p>
+                der text
+              </p>
+              <p>
+                der text
+              </p>
+              <p>
+                der text
+              </p>
+              <p>
+                der text
+              </p>
             </div>
           </div>
         </div>
@@ -183,6 +335,16 @@
           });
         });
       });
+
+      //Modal Code
+      const modal = document.getElementById("myModal");
+
+      const btn = document.getElementById("myBtn");
+
+      // When the user clicks on the button, open the modal
+      btn.onclick = () => {
+        modal.style.display = "block";
+      };
     </script>
   </body>
 </html>
