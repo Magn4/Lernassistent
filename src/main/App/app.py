@@ -20,6 +20,9 @@ from Services.UserService import UserService
 # Flask Setup
 app = Flask(__name__)
 
+# Configuration
+app.config['UPLOAD_FOLDER'] = 'C:/Users/hp/Desktop/Uploads'  # Set this to the desired upload folder path
+
 # Create an instance of the DatabaseContext
 db_context = DatabaseContext()
 
@@ -119,6 +122,16 @@ async def process_pdf():
 
     return jsonify({"result": result})
 
+
+
+@app.route('/files/<module_name>/<topic_name>/<filename>', methods=['GET'])
+def open_file(module_name, topic_name, filename):
+    return file_manager_controller.open_file(module_name, topic_name, filename)
+
+@app.route('/download_file/<module_name>/<topic_name>/<filename>', methods=['GET'])
+def download_file(module_name, topic_name, filename):
+    return file_manager_controller.download_file(module_name, topic_name, filename)
+
 @app.route('/register', methods=['POST'])
 def register():
     return user_controller.register()
@@ -126,10 +139,6 @@ def register():
 @app.route('/login', methods=['POST'])
 def login():
     return user_controller.login()
-
-@app.route('/users', methods=['GET'])
-def get_all_users():
-    return user_controller.get_all_users()
 
 @app.route('/create_module', methods=['POST'])
 def create_module():
@@ -143,13 +152,35 @@ def create_topic():
 def upload_file():
     return file_manager_controller.upload_file()
 
-@app.route('/delete_module', methods=['DELETE'])
-def delete_module():
-    return file_manager_controller.delete_module()
+@app.route('/users', methods=['GET'])
+def get_all_users():
+    return user_controller.get_all_users()
 
-@app.route('/delete_topic', methods=['DELETE'])
-def delete_topic():
-    return file_manager_controller.delete_topic()
+@app.route('/modules', methods=['GET'])
+def list_modules():
+    return file_manager_controller.list_modules()
+
+@app.route('/modules/<module_name>/topics', methods=['GET'])
+def list_topics(module_name):
+    return file_manager_controller.list_topics(module_name)
+
+@app.route('/modules/<module_name>/topics/<topic_name>/files', methods=['GET'])
+def list_files(module_name, topic_name):
+    return file_manager_controller.list_files(module_name, topic_name)
+
+@app.route('/delete_module/<module_name>', methods=['DELETE'])
+def delete_module(module_name):
+    return file_manager_controller.delete_module(module_name)
+
+@app.route('/delete_topic/ ', methods=['DELETE'])
+def delete_topic(module_name, topic_name):
+    return file_manager_controller.delete_topic(module_name, topic_name)
+
+@app.route('/files/<module_name>/<topic_name>/<filename>', methods=['DELETE'])
+def delete_file(module_name, topic_name, filename):
+    return file_manager_controller.delete_file(module_name, topic_name, filename)
+
+
 
 # Run the Flask app
 if __name__ == "__main__":

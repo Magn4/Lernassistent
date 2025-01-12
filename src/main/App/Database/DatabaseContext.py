@@ -27,8 +27,8 @@ class Module(Base):
 class Topic(Base):
     __tablename__ = 'topics'
     id = Column(Integer, primary_key=True)
-    name = Column(String(255), nullable=False)
     module_id = Column(Integer, ForeignKey('modules.id', ondelete="CASCADE"))
+    name = Column(String(255), nullable=False)
     files = relationship("File", back_populates="topic", cascade="all, delete-orphan")
     module = relationship("Module", back_populates="topics")
 
@@ -40,7 +40,7 @@ class File(Base):
     id = Column(Integer, primary_key=True)
     name = Column(String(255), nullable=False)
     topic_id = Column(Integer, ForeignKey('topics.id', ondelete="CASCADE"))
-    content = Column(Text, nullable=True)
+    path = Column(String(255), nullable=True)
     topic = relationship("Topic", back_populates="files")
 
     def __repr__(self):
@@ -126,8 +126,27 @@ class DatabaseContext:
             session.commit()
         finally:
             session.close()
+
+    def list_modules(self):
+        session = self.Session()
+        try:
+            modules = session.query(Module).all()
+            return [module.name for module in modules]
+        finally:
+            session.close()
     
-    def upload_file(self, module_name, topic_name, file_name, file_content):
+    def list_topics(self, module_name):
+        session = self.Session()
+        try:
+            module = session.query(Module).filter_by(name=module_name).first()
+            if not module:
+                raise ValueError(f"Module '{module_name}' does not exist.")
+            topics = session.query(Topic).filter_by(module=module).all()
+            return [topic.name for topic in topics]
+        finally:
+            session.close()
+    
+    def list_files(self, module_name, topic_name):
         session = self.Session()
         try:
             module = session.query(Module).filter_by(name=module_name).first()
@@ -136,7 +155,21 @@ class DatabaseContext:
             topic = session.query(Topic).filter_by(name=topic_name, module=module).first()
             if not topic:
                 raise ValueError(f"Topic '{topic_name}' does not exist in module '{module_name}'.")
-            new_file = File(name=file_name, content=file_content, topic=topic)
+            files = session.query(File).filter_by(topic=topic).all()
+            return [file.name for file in files]
+        finally:
+            session.close()
+        
+    def upload_file(self, module_name, topic_name, file_name, file_path):
+        session = self.Session()
+        try:
+            module = session.query(Module).filter_by(name=module_name).first()
+            if not module:
+                raise ValueError(f"Module '{module_name}' does not exist.")
+            topic = session.query(Topic).filter_by(name=topic_name, module=module).first()
+            if not topic:
+                raise ValueError(f"Topic '{topic_name}' does not exist in module '{module_name}'.")
+            new_file = File(name=file_name, path=file_path, topic=topic)
             session.add(new_file)
             session.commit()
         finally:
@@ -164,6 +197,39 @@ class DatabaseContext:
                 raise ValueError(f"topic '{topic_name}' does not exist in module '{module_name}'.")
             session.delete(topic)
             session.commit()
+        finally:
+            session.close()
+    
+    def delete_file(self, module_name, topic_name, file_name):
+        session = self.Session()
+        try:
+            module = session.query(Module).filter_by(name=module_name).first()
+            if not module:
+                raise ValueError(f"Module '{module_name}' does not exist.")
+            topic = session.query(Topic).filter_by(name=topic_name, module=module).first()
+            if not topic:
+                raise ValueError(f"Topic '{topic_name}' does not exist in module '{module_name}'.")
+            file = session.query(File).filter_by(name=file_name, topic=topic).first()
+            if not file:
+                raise ValueError(f"File '{file_name}' does not exist in topic '{topic_name}' of module '{module_name}'.")
+            session.delete(file)
+            session.commit()
+        finally:
+            session.close()
+    
+    def get_file_path(self, module_name, topic_name, file_name):
+        session = self.Session()
+        try:
+            module = session.query(Module).filter_by(name=module_name).first()
+            if not module:
+                raise ValueError(f"Module '{module_name}' does not exist.")
+            topic = session.query(Topic).filter_by(name=topic_name, module=module).first()
+            if not topic:
+                raise ValueError(f"Topic '{topic_name}' does not exist in module '{module_name}'.")
+            file = session.query(File).filter_by(name=file_name, topic=topic).first()
+            if not file:
+                raise ValueError(f"File '{file_name}' does not exist in topic '{topic_name}' of module '{module_name}'.")
+            return file.path
         finally:
             session.close()
 
