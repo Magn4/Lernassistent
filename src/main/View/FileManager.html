@@ -102,152 +102,17 @@
           <!-- The Modal -->
           <div id="myModal" class="modal">
             <!-- Modal content -->
-            <div class="modal-content-box">
-              
+            <div class="modal-content-box row">
               <div class="sticky">
                 <div class="modal-header">
                   <button class="modal-button" id="quit">Quit</button>
                   <!-- <button class="btn"><i class="fa-solid fa-arrow-left"></i></button> -->
-                   <p class="modal-title">Zusammenfassung</p>
+                  <p class="modal-title">Zusammenfassung</p>
                   <button class="modal-button" id="save">Save</button>
                 </div>
               </div>
-              
-              <p>
-                der text
-              </p>
-              <p>
-                der text
-              </p>
-              <p>
-                der text
-              </p>
-              <p>
-                der text
-              </p>
-              <p>
-                der text
-              </p>
-              <p>
-                der text
-              </p>
-              <p>
-                der text
-              </p>
-              <p>
-                der text
-              </p>
-              <p>
-                der text
-              </p>
-              <p>
-                der text
-              </p>
-              <p>
-                der text
-              </p>
-              <p>
-                der text
-              </p>
-              <p>
-                der text
-              </p>
-              <p>
-                der text
-              </p>
-              <p>
-                der text
-              </p>
-              <p>
-                der text
-              </p>
-              <p>
-                der text
-              </p>
-              <p>
-                der text
-              </p>
-              <p>
-                der text
-              </p>
-              <p>
-                der text
-              </p>
-              <p>
-                der text
-              </p>
-              <p>
-                der text
-              </p>
-              <p>
-                der text
-              </p>
-              <p>
-                der text
-              </p>
-              <p>
-                der text
-              </p>
-              <p>
-                der text
-              </p>
-              <p>
-                der text
-              </p>
-              <p>
-                der text
-              </p>
-              <p>
-                der text
-              </p>
-              <p>
-                der text
-              </p>
-              <p>
-                der text
-              </p>
-              <p>
-                der text
-              </p>
-              <p>
-                der text
-              </p>
-              <p>
-                der text
-              </p>
-              <p>
-                der text
-              </p>
-              <p>
-                der text
-              </p>
-              <p>
-                der text
-              </p>
-              <p>
-                der text
-              </p>
-              <p>
-                der text
-              </p>
-              <p>
-                der text
-              </p>
-              <p>
-                der text
-              </p>
-              <p>
-                der text
-              </p>
-              <p>
-                der text
-              </p>
-              <p>
-                der text
-              </p>
-              <p>
-                der text
-              </p>
+              <p id="Titel_1">Hallo</p>
+              <textarea class="modal-textarea" id="Untertitel_1"></textarea>
             </div>
           </div>
         </div>
@@ -368,6 +233,54 @@
       // When the user clicks on the save button, save and close the modal
       save.onclick = () => {
         modal.style.display = "none";
+      };
+
+      // Resize textarea automatically
+      const jsonData = {
+        Untertitel_1:
+          "Dies ist ein Beispieltext aus den JSON-Daten.\nEr wird dynamisch geladen und die Höhe der Textarea passt sich automatisch an.\nDies ist ein Beispieltext aus den JSON-Daten.\nEr wird dynamisch geladen und die Höhe der Textarea passt sich automatisch an.\nDies ist ein Beispieltext aus den JSON-Daten.\nEr wird dynamisch geladen und die Höhe der Textarea passt sich automatisch an.\nDies ist ein Beispieltext aus den JSON-Daten.\nEr wird dynamisch geladen und die Höhe der Textarea passt sich automatisch an.\nDies ist ein Beispieltext aus den JSON-Daten. Er wird dynamisch geladen und die Höhe der Textarea passt sich automatisch an.",
+      };
+
+      function resizeTextarea(textarea) {
+        textarea.style.height = "auto"; // Höhe zurücksetzen, um die tatsächliche Höhe zu messen
+        textarea.style.height = textarea.scrollHeight + "px"; // Höhe auf Inhalt setzen
+      }
+
+      function loadJsonToTextarea(json, textareaId) {
+        const textarea = document.getElementById(textareaId);
+        /* if (textarea && json[textareaId]) {
+          textarea.value = json[textareaId]; // Lade den JSON-Wert in die Textarea
+          resizeTextarea(textarea); // Passe die Höhe der Textarea an
+        } */
+        if (textarea) {
+          console.log(`Textarea with ID ${textareaId} found.`);
+          if (json[textareaId]) {
+            console.log(`JSON data for ${textareaId} found.`);
+            textarea.value = json[textareaId]; // Lade den JSON-Wert in die Textarea
+            resizeTextarea(textarea); // Passe die Höhe der Textarea an
+          } else {
+            console.error(`JSON data for ${textareaId} not found.`);
+          }
+        } else {
+          console.error(`Textarea with ID ${textareaId} not found.`);
+        }
+      }
+
+      window.onload = () => {
+        /* loadJsonToTextarea(jsonData, "Untertitel_1");
+        const textarea = document.getElementById("Untertitel_1");
+        textarea.addEventListener("input", () => resizeTextarea(textarea)); */ // Dynamische Höhe bei Benutzereingaben
+        try {
+          loadJsonToTextarea(jsonData, "Untertitel_1");
+          const textarea = document.getElementById("Untertitel_1");
+          if (textarea) {
+            textarea.addEventListener("input", () => resizeTextarea(textarea)); // Dynamische Höhe bei Benutzereingaben
+          } else {
+            console.error("Textarea with ID 'Untertitel_1' not found.");
+          }
+        } catch (error) {
+          console.error("Error loading navigation:", error);
+        }
       };
     </script>
   </body>

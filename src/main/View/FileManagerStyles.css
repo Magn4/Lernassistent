@@ -196,9 +196,24 @@
 }
 
 .modal-button:hover {
-    background-color: lightgray;
-  }
+  background-color: lightgray;
+}
 
 .modal-button:active {
-    background-color: #f0f0f0;
-  }
+  background-color: #f0f0f0;
+}
+
+.modal-textarea {
+  display: flex;
+  padding: 12px 20px;
+  border-radius: 5px;
+  border: none;
+  background-color: #fafafa;
+  font-family: QuickSand;
+  resize: none;
+  overflow-y: hidden;
+}
+
+.modal-textarea:focus {
+  border: 1px solid #fafafa;
+}
