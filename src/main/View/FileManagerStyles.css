@@ -203,17 +203,31 @@
   background-color: #f0f0f0;
 }
 
-.modal-textarea {
-  display: flex;
-  padding: 12px 20px;
-  border-radius: 5px;
-  border: none;
-  background-color: #fafafa;
-  font-family: QuickSand;
-  resize: none;
-  overflow-y: hidden;
+#save {
+  display: none;
 }
 
-.modal-textarea:focus {
+
+
+.modal-read-only {
+  display: flex;
+  margin-top: 20px;
+  padding: 12px 20px;
+  font-family: QuickSand;
+  font-size: 20px;
+}
+
+.modal-textarea {
+  /* display: flex; */
+  display: none;
+  height: 77vh;
+  margin-top: 20px;
+  padding: 12px 20px;
+  border-radius: 10px;
   border: 1px solid #fafafa;
+  background-color: #fafafa;
+  font-family: QuickSand;
+  font-size: 20px;
+  resize: none;
+  overflow: auto;
 }
