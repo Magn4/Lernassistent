@@ -47,7 +47,7 @@
 .current-card-area {
     display: none;
     flex-direction: column;
-    align-self: center;
+    /* align-self: center; */
 }
 
 .current-card {
@@ -84,6 +84,14 @@
     justify-content: center;
     align-items: center;
     gap: 10px;
+}
+
+.goBack-button {
+    height: 40px;
+    border: none;
+    background-color: #fafafa;
+    cursor: pointer;
+    border-radius: 5px;
 }
 
 .answer-button {
