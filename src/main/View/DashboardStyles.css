@@ -126,6 +126,10 @@
   background-color: lightgray;
 }
 
+.modal-button:active {
+  background-color: #f0f0f0;
+}
+
 .dropdown-container {
   position: relative;
   margin-bottom: 15px;
