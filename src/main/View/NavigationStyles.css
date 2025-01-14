@@ -20,11 +20,13 @@
     list-style-type: none;
     margin: 18px;
     padding: 0px;
+    height: 500px;
   }
   
-  .navbar li:last-child {
-    margin-top: auto;
-  }
+  /* In case we need it */
+  /* .navbar li:last-child {
+    margin-top: 300px;
+  } */
   
   .navbar a {
     color: white;

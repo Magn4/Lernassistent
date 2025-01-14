@@ -60,11 +60,17 @@
   cursor: pointer;
   border-radius: 6px;
   background-color: #fafafa;
+  border: 1px solid #ccc;
 }
 
 .upload-button label:hover {
   border-radius: 6px;
+  background-color: lightgray;
   box-shadow: 0px 10px 30px 0px #dbdbd9;
+}
+
+.upload-button label:active {
+  background-color: #fafafa;
 }
 
 /* The Modal (background) */
