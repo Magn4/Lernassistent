@@ -23,99 +23,40 @@
 
                     <div class="module-card-area">
                         <div class="module-card-container">
-                            <div class="module-card-header">
-                                <h2>Analysis</h2>
-                                <div class="module-card-list">
-                                    <div class="module-card-list-item" onclick="startLearingSession()">
-                                        Hier ist ein File
-                                    </div>
-                                </div>
+                            <h2 class="module-card-header">Analysis</h2>
+                            <div class="module-card-list">
+                                <ul>
+                                    <li>AnkiCards</li>
+                                    <li>AnkiCards</li>
+                                    <li>AnkiCards</li>
+                                </ul>
                             </div>
                         </div>
                         <div class="module-card-container">
-                                <div class="module-card-header">
-                                    <h2>Analysis</h2>
-                                <div class="module-card-list">
-                                    <div class="module-card-list-item">
-                                        Hallo
-                                    </div>
-                                    <div class="module-card-list-item">
-                                        Hallo
-                                    </div>
-                                    <div class="module-card-list-item">
-                                        Hallo
-                                    </div>
-                                    <div class="module-card-list-item">
-                                        Hallo
-                                    </div>
-                                    <div class="module-card-list-item">
-                                        Hallo
-                                    </div>
-                                    <div class="module-card-list-item">
-                                        Hallo
-                                    </div>
-                                    <div class="module-card-list-item">
-                                        Hallo
-                                    </div>
-                                    <div class="module-card-list-item">
-                                        Hallo
-                                    </div>
-                                    <div class="module-card-list-item">
-                                        Hallo
-                                    </div>
-                                    <div class="module-card-list-item">
-                                        Hallo
-                                    </div>
-                                    <div class="module-card-list-item">
-                                        Hallo
-                                    </div>
-                                    <div class="module-card-list-item">
-                                        Hallo
-                                    </div>
-                                    <div class="module-card-list-item">
-                                        Hallo
-                                    </div>
-                                    <div class="module-card-list-item">
-                                        Hallo
-                                    </div>
-                                </div>
+                            <h2 class="module-card-header">It-Security</h2>
+                            <div class="module-card-list">
+                                <ul>
+                                    <li>AnkiCards</li>
+                                    <li>AnkiCards</li>
+                                    <li>AnkiCards</li>
+                                </ul>
                             </div>
                         </div>
                         <div class="module-card-container">
-                            <div class="module-card-header">
-                                <h2>Analysis</h2>
-                                <div class="module-card-list">
-                                    <div class="module-card-list-item" onclick="startLearingSession()">
-                                        Hallo
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="module-card-container">
-                            <div class="module-card-header">
-                                <h2>Analysis</h2>
-                                <div class="module-card-list">
-                                    <div class="module-card-list-item" onclick="startLearingSession()">
-                                        Hallo
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="module-card-container">
-                            <div class="module-card-header">
-                                <h2>Analysis</h2>
-                                <div class="module-card-list">
-                                    <div class="module-card-list-item" onclick="startLearingSession()">
-                                        Hallo
-                                    </div>
-                                </div>
+                            <h2 class="module-card-header">Computer Networks</h2>
+                            <div class="module-card-list">
+                                <ul>
+                                    <li>AnkiCards</li>
+                                    <li>AnkiCards</li>
+                                    <li>AnkiCards</li>
+                                </ul>
                             </div>
                         </div>
                             
                     </div>
 
                 <div class="current-card-area">
-                    <button class="goBack-button" onclick="switchBack()">Zurück</button>
+                        <button class="goBack-button" onclick="quitLearningSession()">Quit</button>
 
                     <div class="current-card" onclick="toggleAnswer()">
                         <div class="row">
@@ -128,7 +69,7 @@
                         </div>
                     </div>
 
-                    <div class="answer-button-area column">
+                    <div class="answer-button-area">
                         <button class="answer-button">Very hard</button>
                         <button class="answer-button">Okay</button>
                         <button class="answer-button">Easy</button>
@@ -151,26 +92,42 @@
             .catch(error => console.error('Error loading navigation:', error));
         });
 
-        //Clickable card
-        function toggleAnswer() {
-            const answer = document.querySelector('.current-card-answer');
-            answer.style.display = answer.style.display === 'none' || answer.style.display === '' ? 'block' : 'none';
-        }
-
         const chooseWindow = document.querySelector('.module-card-area');
         const currentCard = document.querySelector('.current-card-area');
+        const answerButton = document.querySelector('.answer-button-area');
+        const answer = document.querySelector('.current-card-answer');
+
+        //Clickable card
+        function toggleAnswer() {
+            answer.style.display = answer.style.display === 'none' || answer.style.display === '' ? 'block' : 'none';
+            answerButton.style.display = "flex";
+        }
 
         //Switch to Learing Session
         function startLearingSession() {
-            currentCard.style.display = currentCard.style.display === 'none' || currentCard.style.display === '' ? 'block' : 'none';
-            chooseWindow.style.display = currentCard.style.display === 'none' || currentCard.style.display === '' ? 'flex' : 'none';
+            currentCard.style.display = "flex";
+            chooseWindow.style.display = "none";
         }
 
         //Switch back
-        function switchBack() {
-            currentCard.style.display = currentCard.style.display === 'none' || currentCard.style.display === '' ? 'block' : 'none';
-            chooseWindow.style.display = currentCard.style.display === 'none' || currentCard.style.display === '' ? 'flex' : 'none';
+        function quitLearningSession() {
+            currentCard.style.display = "none";
+            chooseWindow.style.display = "flex";
+            answer.style.display = "none";
+            answerButton.style.display = "none";
+
         }
+
+        //ForEach 
+        document.addEventListener("DOMContentLoaded", () => {
+            const moduleCardListItems = document.querySelectorAll(".module-card-list li");
+
+            moduleCardListItems.forEach((item) => {
+                item.addEventListener("click", () => {
+                    startLearingSession();
+                })
+            })
+        })
 
      </script>
 </body>
