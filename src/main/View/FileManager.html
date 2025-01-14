@@ -106,14 +106,13 @@
               <div class="sticky">
                 <div class="modal-header">
                   <button class="modal-button" id="quit">Quit</button>
-                  <!-- <button class="btn"><i class="fa-solid fa-arrow-left"></i></button> -->
                   <p class="modal-title">Zusammenfassung</p>
                   <button class="modal-button" id="edit">Edit</button>
                   <button class="modal-button" id="save">Save</button>
                 </div>
               </div>
-              <p class="modal-read-only" id="Untertitel_1"></p>
-              <textarea class="modal-textarea" id="Untertitel_1"></textarea>
+              <p class="modal-read-only" id="read-text"></p>
+              <textarea class="modal-textarea" id="edit-text"></textarea>
             </div>
           </div>
         </div>
@@ -253,51 +252,18 @@
 
       // Load JSON data
       const jsonData = {
-        Untertitel_1:
-          "Dies ist ein Beispieltext aus den JSON-Daten.\nEr wird dynamisch geladen und die Höhe der Textarea passt sich automatisch an.\nDies ist ein Beispieltext aus den JSON-Daten.\nEr wird dynamisch geladen und die Höhe der Textarea passt sich automatisch an.\nDies ist ein Beispieltext aus den JSON-Daten.\nEr wird dynamisch geladen und die Höhe der Textarea passt sich automatisch an.\nDies ist ein Beispieltext aus den JSON-Daten.\nEr wird dynamisch geladen und die Höhe der Textarea passt sich automatisch an.\nDies ist ein Beispieltext aus den JSON-Daten. Er wird dynamisch geladen und die Höhe der Textarea passt sich automatisch an.",
+        title: "JSON-Inhalt",
+        description: "Dies ist ein Beispieltext aus einem JSON-Objekt.",
+        author: "Max Mustermann",
       };
 
-      function loadJsonToTextarea(json, containerId) {
-        const textarea = document.getElementById(containerId);
+      // JSON-Daten in den Paragraphen laden
+      const paragraph = document.getElementById("read-text");
+      paragraph.textContent = jsonData.description;
 
-        if (textarea) {
-          console.log(`Textarea with ID ${containerId} found.`);
-          if (json[containerId]) {
-            console.log(`JSON data for ${containerId} found.`);
-            textarea.value = json[containerId]; // Lade den JSON-Wert in die Textarea
-          } else {
-            console.error(`JSON data for ${containerId} not found.`);
-          }
-        } else {
-          console.error(`Textarea with ID ${containerId} not found.`);
-        }
-      }
-
-      function loadJsonToParagraph(json, containerId) {
-        const paragraph = document.getElementById(containerId);
-
-        if (paragraph) {
-          console.log(`Paragraph with ID ${containerId}_paragraph found.`);
-          if (json[containerId]) {
-            console.log(`JSON data for ${containerId} found.`);
-            paragraph.textContent = json[containerId]; // Lade den JSON-Wert in den Paragraph
-          } else {
-            console.error(`JSON data for ${containerId} not found.`);
-          }
-        } else {
-          console.error(
-            `Paragraph with ID ${containerId}_paragraph not found.`
-          );
-        }
-      }
-
-      window.onload = () => {
-        try {
-          loadJsonToParagraph(jsonData, "Untertitel_1");
-        } catch (error) {
-          console.error("Error loading navigation:", error);
-        }
-      };
+      // JSON-Daten als String in das Textarea-Feld laden
+      const textarea = document.getElementById("edit-text");
+      textarea.value = jsonData["description"];
     </script>
   </body>
 </html>

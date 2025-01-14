@@ -76,8 +76,6 @@
   height: fit-content;
   cursor: pointer;
   border-radius: 6px;
-  /* background-color: #fafafa; */
-  /* transition: background-color 0.3s; */
 }
 
 .folder:hover {
@@ -205,9 +203,8 @@
 
 #save {
   display: none;
+  padding: 10px 16.5px;
 }
-
-
 
 .modal-read-only {
   display: flex;
@@ -215,6 +212,7 @@
   padding: 12px 20px;
   font-family: QuickSand;
   font-size: 20px;
+  border: 1px solid white;
 }
 
 .modal-textarea {
