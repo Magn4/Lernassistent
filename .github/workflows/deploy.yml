@@ -55,6 +55,7 @@ jobs:
           key: ${{ secrets.SERVER_SSH_KEY }}
           port: 22
           script: |
+            cd Lernassistent
             git pull
             
             # Pull the latest images
