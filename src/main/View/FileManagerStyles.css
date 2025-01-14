@@ -183,6 +183,10 @@
   font-size: 30px;
   font-weight: bold;
   margin: 0px;
+  padding: 0px 10px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .modal-button {

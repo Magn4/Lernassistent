@@ -106,7 +106,7 @@
               <div class="sticky">
                 <div class="modal-header">
                   <button class="modal-button" id="quit">Quit</button>
-                  <p class="modal-title">Zusammenfassung</p>
+                  <p class="modal-title" id="file-name"></p>
                   <button class="modal-button" id="edit">Edit</button>
                   <button class="modal-button" id="save">Save</button>
                 </div>
@@ -252,10 +252,13 @@
 
       // Load JSON data
       const jsonData = {
-        title: "JSON-Inhalt",
-        description: "Dies ist ein Beispieltext aus einem JSON-Objekt.",
-        author: "Max Mustermann",
+        title: "Zusammenfassung Vorlesung 1",
+        description: "Hier steht der Inhalt der Zusammenfassung.",
       };
+
+      //JSON-Daten in den Header laden
+      const fileTitle = document.getElementById("file-name");
+      fileTitle.textContent = jsonData.title;
 
       // JSON-Daten in den Paragraphen laden
       const paragraph = document.getElementById("read-text");
