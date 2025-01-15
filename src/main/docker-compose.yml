@@ -40,7 +40,25 @@ services:
       DB_PASSWORD: ${DB_PASSWORD}
     entrypoint: ["./wait-for-it.sh", "database", "5432", "--", "python", "app.py"]
     restart: unless-stopped
-
+  auth:
+    build:
+      context: ./Services/Auth
+      dockerfile: Dockerfile
+    ports:
+      - "5003:5003"
+    container_name: auth
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      DB_HOST: ${DB_HOST}
+      DB_PORT: ${DB_PORT}
+      DB_NAME: ${DB_NAME}
+      DB_USER: ${DB_USER}
+      DB_PASSWORD: ${DB_PASSWORD}
+    entrypoint: ["./wait-for-it.sh", "database", "5432", "--", "python", "auth.py"]
+    restart: unless-stopped
+  
   # PostgreSQL Database
   db:
     build:
