@@ -54,9 +54,6 @@ user_service = UserService(db_context)
 user_controller = UserController(user_service)
 file_manager_controller = FileManagerController(db_context)
 
-<<<<<<< HEAD
-
-=======
 @app.errorhandler(Exception)
 def handle_exception(e):
     response = {
@@ -67,7 +64,6 @@ def handle_exception(e):
     else:
         response["code"] = 500
     return jsonify(response), response["code"]
->>>>>>> d7edf03bfcdf47d0065ccee46b98f372c0c3d078
 
 # **New Endpoint for Dashboard File Upload (This is the new part)**
 
@@ -119,13 +115,6 @@ async def process_pdf():
         use_local = data.get('use_local', 'false').lower() == 'true'
         instruction = data.get('instruction', '')
 
-<<<<<<< HEAD
-
-    pdf_file = request.files.get('file')
-    if not pdf_file:
-        return jsonify({"error": "No PDF file provided"}), 400
-=======
->>>>>>> d7edf03bfcdf47d0065ccee46b98f372c0c3d078
 
         pdf_file = request.files.get('file')
         if not pdf_file:
@@ -220,7 +209,3 @@ def delete_file(module_name, topic_name, filename):
 if __name__ == "__main__":
     app.run(host='0.0.0.0', port=5002, debug=True)
 
-<<<<<<< HEAD
- 
-=======
->>>>>>> d7edf03bfcdf47d0065ccee46b98f372c0c3d078
