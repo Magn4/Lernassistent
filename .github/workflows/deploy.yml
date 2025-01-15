@@ -55,13 +55,14 @@ jobs:
           key: ${{ secrets.SERVER_SSH_KEY }}
           port: 22
           script: |
+            cd Lernassistent
             git pull
             
             # Pull the latest images
-            docker-compose -f Lernassistent/src/main/docker-compose.yml pull
+            docker-compose -f src/main/docker-compose.yml pull
             
             # Stop and remove old containers
-            docker-compose -f Lernassistent/src/main/docker-compose.yml down
+            docker-compose -f src/main/docker-compose.yml down
             
             # Start the updated services
-            docker-compose -f Lernassistent/src/main/docker-compose.yml up -d
+            docker-compose -f src/main/docker-compose.yml up -d

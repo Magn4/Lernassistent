@@ -37,9 +37,10 @@ services:
       - "5002:5002"
     container_name: app
     depends_on:
-      - db
+      db:
+        condition: service_healthy
     environment:
-      DB_HOST: ${DB_HOST}  # Uses value from .env file
+      DB_HOST: ${DB_HOST}
       DB_PORT: ${DB_PORT}
       DB_NAME: ${DB_NAME}
       DB_USER: ${DB_USER}
@@ -47,7 +48,25 @@ services:
     entrypoint: ["./wait-for-it.sh", "database", "5432", "--", "python", "app.py"]
 >>>>>>> d7edf03bfcdf47d0065ccee46b98f372c0c3d078
     restart: unless-stopped
-
+  auth:
+    build:
+      context: ./Services/Auth
+      dockerfile: Dockerfile
+    ports:
+      - "5003:5003"
+    container_name: auth
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      DB_HOST: ${DB_HOST}
+      DB_PORT: ${DB_PORT}
+      DB_NAME: ${DB_NAME}
+      DB_USER: ${DB_USER}
+      DB_PASSWORD: ${DB_PASSWORD}
+    entrypoint: ["./wait-for-it.sh", "database", "5432", "--", "python", "auth.py"]
+    restart: unless-stopped
+  
   # PostgreSQL Database
   db:
 <<<<<<< HEAD
@@ -67,6 +86,30 @@ services:
       - "5433:5433"
     volumes:
       - db_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+  # Anki Cards Service
+  anki_service:
+    build:
+      context: ./Services/Anki
+      dockerfile: Dockerfile.anki
+    ports:
+      - "8000:8000"
+    container_name: anki_service
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      DB_HOST: ${DB_HOST}
+      DB_PORT: ${DB_PORT}
+      DB_NAME: ${DB_NAME}
+      DB_USER: ${DB_USER}
+      DB_PASSWORD: ${DB_PASSWORD}
     restart: unless-stopped
 
   # Nginx Reverse Proxy for all services
@@ -81,11 +124,7 @@ services:
       - llm_api
       - extract_pdf
       - main_controller
-<<<<<<< HEAD
-      # Uncomment below when you decide to use the db-dependent app
-      # - app_with_db
-=======
->>>>>>> d7edf03bfcdf47d0065ccee46b98f372c0c3d078
+      - anki_service
     volumes:
       - ./docs:/usr/share/nginx/html:ro
       - ./nginx.conf:/etc/nginx/nginx.conf:ro
