@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Anki Cards</title>
+    <link rel="stylesheet" href="Styles.css" />
+    <link rel="stylesheet" href="AnkiCardsStyles.css" />
+    <link
+      href="https://fonts.googleapis.com/css?family=Quicksand"
+      rel="stylesheet"
+    />
+    <script src="https://kit.fontawesome.com/3ff8e8ca0d.js" crossorigin="anonymous"></script>
+</head>
+<body>
+    <div class="main-box">
+        <div id="Navigation"></div>
+        <div class="content-box">
+            <div class="row">
+                <h1>Anki Cards</h1>
+
+                <div class="row">
+
+                    <div class="module-card-area">
+                        <div class="module-card-container">
+                            <h2 class="module-card-header">Analysis</h2>
+                            <div class="module-card-list">
+                                <ul>
+                                    <li>AnkiCards</li>
+                                    <li>AnkiCards</li>
+                                    <li>AnkiCards</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="module-card-container">
+                            <h2 class="module-card-header">It-Security</h2>
+                            <div class="module-card-list">
+                                <ul>
+                                    <li>AnkiCards</li>
+                                    <li>AnkiCards</li>
+                                    <li>AnkiCards</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="module-card-container">
+                            <h2 class="module-card-header">Computer Networks</h2>
+                            <div class="module-card-list">
+                                <ul>
+                                    <li>AnkiCards</li>
+                                    <li>AnkiCards</li>
+                                    <li>AnkiCards</li>
+                                </ul>
+                            </div>
+                        </div>
+                            
+                    </div>
+
+                <div class="current-card-area">
+                        <button class="goBack-button" onclick="quitLearningSession()">Quit</button>
+
+                    <div class="current-card" onclick="toggleAnswer()">
+                        <div class="row">
+                            <div class="current-card-question">
+                                Hier steht eine Frage?
+                            </div>
+                            <div class="current-card-answer">
+                                Hier steht ein langer Antworttext! Hier steht ein langer Antworttext! Hier steht ein langer Antworttext! Hier steht ein langer Antworttext.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="answer-button-area">
+                        <button class="answer-button">Very hard</button>
+                        <button class="answer-button">Okay</button>
+                        <button class="answer-button">Easy</button>
+                        <button class="answer-button">Very easy</button>
+
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <script>
+        //Navigation Code
+        document.addEventListener('DOMContentLoaded', () => {
+            fetch('Navigation.html')
+            .then(response => response.text())
+            .then(html => {
+                document.getElementById('Navigation').innerHTML = html;
+            })
+            .catch(error => console.error('Error loading navigation:', error));
+        });
+
+        const chooseWindow = document.querySelector('.module-card-area');
+        const currentCard = document.querySelector('.current-card-area');
+        const answerButton = document.querySelector('.answer-button-area');
+        const answer = document.querySelector('.current-card-answer');
+
+        //Clickable card
+        function toggleAnswer() {
+            answer.style.display = answer.style.display === 'none' || answer.style.display === '' ? 'block' : 'none';
+            answerButton.style.display = "flex";
+        }
+
+        //Switch to Learing Session
+        function startLearingSession() {
+            currentCard.style.display = "flex";
+            chooseWindow.style.display = "none";
+        }
+
+        //Switch back
+        function quitLearningSession() {
+            currentCard.style.display = "none";
+            chooseWindow.style.display = "flex";
+            answer.style.display = "none";
+            answerButton.style.display = "none";
+
+        }
+
+        //ForEach 
+        document.addEventListener("DOMContentLoaded", () => {
+            const moduleCardListItems = document.querySelectorAll(".module-card-list li");
+
+            moduleCardListItems.forEach((item) => {
+                item.addEventListener("click", () => {
+                    startLearingSession();
+                })
+            })
+        })
+
+     </script>
+</body>

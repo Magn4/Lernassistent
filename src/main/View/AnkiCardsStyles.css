@@ -1,0 +1,136 @@
+.module-card-area {
+    flex-basis: 100%;
+    max-width: fit-content;
+    max-height: 600px;
+    display: flex;
+    flex-wrap: wrap;
+    overflow: auto;
+}
+
+.module-card-container {
+    width: 220px;
+    max-height: 650px;
+    border-radius: 20px;
+    margin: 0px 10px 20px 10px;
+    padding: 15px;
+    background-color: #fafafa;
+    overflow: hidden;
+}
+
+.module-card-header {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.module-card-list {
+    overflow: auto;
+    height: 500px;
+    margin-top: 15px;
+    list-style-type: none;
+    padding: 0px;
+    border-top: #98a55d 2px solid;
+}
+
+.module-card-list ul {
+    overflow: auto;
+    margin-top: 5px;
+    list-style-type: none;
+    padding: 0px;
+}
+
+.module-card-list li {
+    margin: 5px 5px; 
+    padding: 5px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 15px;
+}
+
+.module-card-list li:hover {
+    background-color: #dbdbd9;
+}
+
+.module-card-list li:active {
+    background-color: #98a55d;
+
+}
+
+.current-card-area {
+    display: none;
+    flex-direction: column;
+    /* align-self: center; */
+}
+
+.goBack-button {
+    height: 40px;
+    border: none;
+    background-color: #fafafa;
+    border: 1px solid #ccc;
+    cursor: pointer;
+    border-radius: 5px;
+    margin-right: auto;
+}
+
+.goBack-button:hover {
+    background-color: lightgray;
+}
+
+.goBack-button:active {
+    background-color: #fafafa;
+}
+
+.current-card {
+    margin: 20px auto 20px auto;
+    padding: 20px;
+    align-content: center;
+    border-radius: 15px;
+    min-width: 300px;
+    max-width: 600px;
+    background-color: #fafafa;
+    cursor: pointer;
+}
+
+.current-card:hover {
+    box-shadow: 10px 10px 25px 5px #dbdbd9;
+}
+
+.current-card-question {
+    border-bottom: #98a55d 2px solid;
+    align-self: center;
+    font-size: 40px;
+    padding-bottom: 10px;
+}
+
+.current-card-answer {
+    font-size: 20px;
+    align-self: center;
+    padding-top: 10px;
+    display: none;
+}
+
+.answer-button-area {
+    display: none;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+}
+
+.answer-button {
+    height: 40px;
+    border: none;
+    background-color: #fafafa;
+    border: 1px solid #ccc;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+.answer-button:hover {
+    box-shadow: 10px 10px 25px 5px #dbdbd9;
+    background-color: lightgray;
+}
+
+.answer-button:active {
+    background-color: #fafafa;
+}
