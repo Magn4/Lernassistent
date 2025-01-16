@@ -96,6 +96,38 @@
           window.location.href = "Dashboard.html";
         }
       };
+
+      //Endpoint DRAFT
+      /* const registerUser = async () => {
+            const url = '/register'; // Ersetze durch den tatsächlichen Endpunkt
+            const userData = {
+                userName: 'exampleUser',
+                eMail: 'example@example.com',
+                password: 'examplePassword'
+            };
+
+            try {
+                const response = await fetch(url, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(userData)
+                });
+
+                const result = await response.json();
+                if (response.ok) {
+                    console.log('Account created successfully:', result);
+                } else {
+                    console.error('Error:', result);
+                }
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        };
+
+        registerUser();
+ */
     </script>
   </body>
 </html>
