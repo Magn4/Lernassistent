@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="de">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="Styles.css" />
+    <link rel="stylesheet" href="DashboardStyles.css" />
+    <link
+      href="https://fonts.googleapis.com/css?family=Quicksand"
+      rel="stylesheet"
+    />
+    <script
+      src="https://kit.fontawesome.com/3ff8e8ca0d.js"
+      crossorigin="anonymous"
+    ></script>
+  </head>
+  <body>
+    <div class="main-box">
+      <div id="Navigation"></div>
+      <div class="content-box">
+        <div class="row">
+          <h1>Dashboard</h1>
+
+          <div class="column">
+            <div class="row left">
+              <p class="description-text">
+                Der Lernassistent erstellt Dir mit Hilfe einer künstlichen
+                Intelligenz Zusammenfassungen zu deinen Vorlesungsfolien.
+                <!-- The "Learning Assistent" works with a artificial intelligence
+                that creates summarys based on the PDFs that you upload. -->
+              </p>
+              <div class="list-container">
+                <ul>
+                  <li class="list-items">
+                    <b>Dashboard:</b> Lade deine erste Vorlesungsfolie hoch und
+                    sei gespannt, was das Programm zu bieten hat!
+                    <!-- Try it yourself. Upload your first PDF! -->
+                  </li>
+                  <li class="list-items">
+                    <b>File Manager:</b> Hier findest du alle bereits
+                    hochgeladenen Folien / Zusammenfassungen.
+                  </li>
+                  <li class="list-items">
+                    <b>Anki Cards:</b> Es ist noch kein Meister vom Himmel
+                    gefallen! Lerne mit Anki Cards, um für deine Prüfungen
+                    bestens vorbereitet zu sein.
+                  </li>
+                  <!-- <li class="list-items">
+                    <b>Profil:</b> Du möchtest deine persönlichen Daten ändern
+                    oder einsehen?
+                  </li> -->
+                </ul>
+              </div>
+            </div>
+            <div class="row right">
+              <div class="row centered">
+                <div class="upload-container">
+                  <div class="drag-drop-area" id="drag-drop-area">
+                    <i class="fas fa-upload fa-2xl"></i>
+                    <p class="description-text">Trau dich</p>
+                  </div>
+                  <div class="upload-button">
+                    <input type="file" id="file-input" />
+                    <label for="file-input">Explorer durchsuchen</label>
+                  </div>
+
+                  <!-- Trigger/Open The Modal -->
+                  <button id="myBtn">Open Modal</button>
+                  <!-- The Modal -->
+                  <div id="myModal" class="modal">
+                    <!-- Modal content -->
+                    <div class="modal-content">
+                      <!-- <p style="font-size: large;"><b>Store File</b></p> -->
+                      <h2 class="modal-title"><b>Store File</b></h2>
+                      <!-- <input
+                        class="modal-input"
+                        type="text"
+                        id="Modulename"
+                        placeholder="Modulename"
+                      />
+                      <input
+                        class="modal-input"
+                        type="text"
+                        id="Directoryname"
+                        placeholder="Directoryname"
+                      /> -->
+
+                      <!-- <label for="browser">Choose your browser from the list:</label>
+                      <input list="browsers" name="browser" id="browser">
+                      
+                      <datalist id="browsers">
+                        <option value="Edge">
+                        <option value="Firefox">
+                        <option value="Chrome">
+                        <option value="Opera">
+                        <option value="Safari">
+                      </datalist>  -->
+
+                      <div class="dropdown-container">
+                        <!-- <label for="input1">Wähle oder gib ein (1):</label> -->
+                        <input
+                          type="text"
+                          class="modal-input"
+                          id="input1"
+                          placeholder="Modulename"
+                          oninput="filterOptions('input1', 'dropdown1')"
+                          onfocus="showDropdown('dropdown1')"
+                          onblur="hideDropdown('dropdown1')"
+                        />
+                        <ul id="dropdown1" class="dropdown-list">
+                          <li onclick="selectOption('input1', 'Option A')">
+                            Option A
+                          </li>
+                          <li onclick="selectOption('input1', 'Option B')">
+                            Option B
+                          </li>
+                          <li onclick="selectOption('input1', 'Option C')">
+                            Option C
+                          </li>
+                        </ul>
+                      </div>
+
+                      <div class="dropdown-container">
+                        <!-- <label for="input2">Wähle oder gib ein (2):</label> -->
+                        <input
+                          type="text"
+                          class="modal-input"
+                          id="input2"
+                          placeholder="Directoryname"
+                          oninput="filterOptions('input2', 'dropdown2')"
+                          onfocus="showDropdown('dropdown2')"
+                          onblur="hideDropdown('dropdown2')"
+                        />
+                        <ul id="dropdown2" class="dropdown-list">
+                          <li onclick="selectOption('input2', 'Option X')">
+                            Option X
+                          </li>
+                          <li onclick="selectOption('input2', 'Option Y')">
+                            Option Y
+                          </li>
+                          <li onclick="selectOption('input2', 'Option Z')">
+                            Option Z
+                          </li>
+                        </ul>
+                      </div>
+
+                      <div class="modal-buttons">
+                        <button class="modal-button" id="quit">Quit</button>
+                        <button class="modal-button" id="save">Save</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <p class="description-text">Hier könnten unsere Namen stehen</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      //Navigation Code
+      document.addEventListener("DOMContentLoaded", () => {
+        fetch("Navigation.html")
+          .then((response) => response.text())
+          .then((html) => {
+            document.getElementById("Navigation").innerHTML = html;
+          })
+          .catch((error) => console.error("Error loading navigation:", error));
+      });
+
+      //Drag / Drop Code
+      const dropArea = document.getElementById("drag-drop-area");
+
+      dropArea.addEventListener("dragover", (event) => {
+        event.preventDefault();
+        dropArea.style.backgroundColor = "#e8e8e8";
+      });
+
+      dropArea.addEventListener("dragleave", () => {
+        dropArea.style.backgroundColor = "#ffffff";
+      });
+
+      dropArea.addEventListener("drop", (event) => {
+        event.preventDefault();
+        dropArea.style.backgroundColor = "#ffffff";
+        const files = event.dataTransfer.files;
+        alert(`You dropped ${files.length} file(s).`);
+      });
+
+      //Modal Code
+      const modal = document.getElementById("myModal");
+
+      const btn = document.getElementById("myBtn");
+
+      // When the user clicks on the button, open the modal
+      btn.onclick = () => {
+        modal.style.display = "block";
+      };
+
+      const quit = document.getElementById("quit");
+
+      // When the user clicks on the quit button, close the modal
+      quit.onclick = () => {
+        document.getElementById("input1").value = "";
+        document.getElementById("input2").value = "";
+        modal.style.display = "none";
+      };
+
+      const save = document.getElementById("save");
+
+      // When the user clicks on the save button, save and close the modal
+      save.onclick = () => {
+        const modulename = document.getElementById("input1").value;
+        const directoryname = document.getElementById("input2").value;
+        alert(`Modulename: ${modulename}, Directoryname: ${directoryname}`); //TODO: Send to backend
+        document.getElementById("input1").value = "";
+        document.getElementById("input2").value = "";
+        modal.style.display = "none";
+      };
+
+      //Get the dropdown lists
+      const dropdownList1 = document.getElementById("dropdown1");
+      const dropdownList2 = document.getElementById("dropdown2");
+
+      dropdownList1.addEventListener("mousedown", (event) => {
+        event.preventDefault(); // Prevents the input field from losing focus
+      });
+
+      dropdownList2.addEventListener("mousedown", (event) => {
+        event.preventDefault(); // Prevents the input field from losing focus
+      });
+
+      /* // When the user clicks anywhere outside of the modal, close it
+      window.onclick = function (event) {
+        if (event.target == modal) {
+          modal.style.display = "none";
+        }
+      }; */
+
+      //Dropdown Code
+      // Zeigt die Dropdown-Liste an
+      function showDropdown(dropdownId) {
+        const dropdown = document.getElementById(dropdownId);
+        dropdown.style.display = "block";
+        [...dropdown.children].forEach((option) => {
+          option.style.display = "block";
+        });
+      }
+
+      // Versteckt die Dropdown-Liste
+      function hideDropdown(dropdownId) {
+        const dropdown = document.getElementById(dropdownId);
+        dropdown.style.display = "none";
+      }
+
+      // Filtert die Dropdown-Liste basierend auf der Benutzereingabe
+      function filterOptions(inputId, dropdownId) {
+        const input = document.getElementById(inputId);
+        const dropdown = document.getElementById(dropdownId);
+        const value = input.value.toLowerCase();
+        dropdown.style.display = "block";
+        [...dropdown.children].forEach((option) => {
+          option.style.display = option.textContent
+            .toLowerCase()
+            .includes(value)
+            ? "block"
+            : "none";
+        });
+      }
+
+      // Wählt eine Option aus und blendet die Dropdown-Liste aus
+      function selectOption(inputId, value) {
+        const input = document.getElementById(inputId);
+        input.value = value;
+        const dropdown = input.nextElementSibling;
+        dropdown.style.display = "none";
+      }
+
+      document.addEventListener("click", (event) => {
+        if (!event.target.closest(".dropdown-container")) {
+          document.querySelectorAll(".dropdown-list").forEach((dropdown) => {
+            dropdown.style.display = "none";
+          });
+        }
+      });
+
+      /* // Versteckt das Dropdown, wenn das Input-Feld den Fokus verliert
+      input.addEventListener("blur", () => {
+        setTimeout(() => (dropdown.style.display = "none"), 200); // Verzögerung für Klicks
+      }); */
+    </script>
+  </body>
+</html>

@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="de">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login</title>
+    <link rel="stylesheet" href="LoginStyles.css" />
+    <link
+      href="https://fonts.googleapis.com/css?family=Quicksand"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <div class="login-box">
+      <div class="login-left-side">
+        <h1 class="login-header">Get started</h1>
+        <label for="username"></label>
+        <input
+          class="login-input"
+          type="text"
+          id="username"
+          placeholder="Username"
+        />
+        <label for="password"></label>
+        <input
+          class="login-input"
+          type="text"
+          id="password"
+          placeholder="Password"
+        />
+        <button class="login-button" id="loginButton" disabled>Sign in</button>
+        <p>No account yet? <a href="Register.html">Register</a></p>
+      </div>
+      <div class="login-right-side">
+        <img
+          class="login-image"
+          src="/src/main/View/assets/images/login-image.jpg"
+          alt="Login Image"
+        />
+      </div>
+    </div>
+    <script>
+      const loginButton = document.getElementById("loginButton");
+
+      //enable login button only if username and password are not empty
+      document.addEventListener("DOMContentLoaded", function () {
+        const usernameInput = document.getElementById("username");
+        const passwordInput = document.getElementById("password");
+        const loginButton = document.getElementById("loginButton");
+
+        function validateInputs() {
+          const username = usernameInput.value.trim();
+          const password = passwordInput.value.trim();
+          loginButton.disabled = !(username && password);
+        }
+
+        usernameInput.addEventListener("input", validateInputs);
+        passwordInput.addEventListener("input", validateInputs);
+      });
+
+      loginButton.onclick = () => {
+        const username = document.getElementById("username").value;
+        const password = document.getElementById("password").value;
+        // TODO: Implement login logic
+
+        // Redirect to Dashboard.html
+        window.location.href = "Dashboard.html";
+      };
+    </script>
+  </body>
+</html>

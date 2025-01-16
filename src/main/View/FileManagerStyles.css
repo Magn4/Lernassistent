@@ -1,0 +1,235 @@
+#modules-box {
+  flex-basis: 300px;
+  max-width: 450px;
+}
+
+#header {
+  display: flex;
+  align-items: center;
+}
+
+.ellipsis-icon-design {
+  font-size: 17px;
+  color: #dbdbd9;
+  margin-left: auto;
+  margin-right: 75px;
+  margin-top: 10px;
+  cursor: pointer;
+}
+
+.ellipsis-icon-design:hover {
+  color: #98a55d;
+}
+
+.ellipsis-icon-design:active {
+  color: #dbdbd9;
+}
+
+#modules-container {
+  height: 440px;
+  overflow: auto;
+}
+
+#modules-container ul {
+  list-style-type: none;
+  padding: 20px 40px 0px 20px;
+}
+
+#modules-container li {
+  padding: 15px;
+  margin: 0px 15px 20px 0px;
+  cursor: pointer;
+  border-radius: 6px;
+  background-color: #fafafa;
+  transition: background-color 0.3s;
+}
+
+#modules-container li:hover {
+  border-radius: 6px;
+  box-shadow: 10px 10px 25px 5px #dbdbd9;
+}
+
+#modules-container li:active {
+  background-color: #dbdbd9;
+}
+
+#modules-list {
+  margin-top: 0px;
+}
+
+#folders-paragraph {
+  display: flex;
+}
+
+#folders-container {
+  /* display: flex; */
+  display: none;
+  flex-wrap: wrap;
+  padding: 20px 0px 20px 20px;
+  height: 190px;
+  overflow: auto;
+}
+
+.folder {
+  padding: 5px 5px 0px 10px;
+  margin: 0px 10px 10px 0px;
+  height: fit-content;
+  cursor: pointer;
+  border-radius: 6px;
+}
+
+.folder:hover {
+  border-radius: 6px;
+  box-shadow: 10px 10px 25px 5px #dbdbd9;
+}
+
+.folder:active {
+  background-color: #dbdbd9;
+}
+
+.folder-icon-design {
+  font-size: 70px;
+  color: #98a55d;
+}
+
+#files-header {
+  display: none;
+  align-items: center;
+  margin-top: 10px;
+}
+
+#files-container {
+  display: none;
+  height: 110px;
+  overflow: auto;
+  padding: 20px 0px 20px 20px;
+}
+
+#files-paragraph {
+  display: none;
+}
+
+#files-container ul {
+  list-style-type: none;
+  padding: 0px;
+}
+
+#files-container li {
+  padding: 0px 10px 0px 5px;
+  margin: 10px 10px 10px 0px;
+  width: fit-content;
+  cursor: pointer;
+  border-radius: 6px;
+  background-color: #fafafa;
+  transition: background-color 0.3s;
+}
+
+#files-container li:hover {
+  border-radius: 6px;
+  box-shadow: 0px 10px 30px 0px #dbdbd9;
+}
+
+#files-container li:active {
+  background-color: #dbdbd9;
+}
+
+#files-list {
+  margin-top: 0px;
+  /* width: 250px; */
+}
+
+/* The Modal (background) */
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 1;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgb(0, 0, 0); /* Fallback color */
+  background-color: rgba(0, 0, 0, 0.4); /* Black w/ opacity */
+}
+
+.modal-content-box {
+  background-color: #fefefe;
+  margin: auto; /* left and right, centered */
+  margin-top: 20px;
+  margin-bottom: 20px;
+  padding: 20px;
+  min-height: 90vh;
+  flex-basis: 300px;
+  max-width: 816px;
+  border-radius: 10px;
+}
+
+.sticky {
+  position: sticky;
+  top: 0;
+}
+
+.modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 0px 10px 0px;
+  background-color: #fefefe;
+  /* background-color: #98a55d; */
+  border-bottom: #98a55d 2px solid;
+}
+
+.modal-title {
+  font-size: 30px;
+  font-weight: bold;
+  margin: 0px;
+  padding: 0px 10px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.modal-button {
+  padding: 10px 20px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  font-family: QuickSand;
+  cursor: pointer;
+}
+
+.modal-button:hover {
+  background-color: lightgray;
+}
+
+.modal-button:active {
+  background-color: #f0f0f0;
+}
+
+#save {
+  display: none;
+  padding: 10px 16.5px;
+}
+
+.modal-read-only {
+  display: flex;
+  margin-top: 20px;
+  padding: 12px 20px;
+  font-family: QuickSand;
+  font-size: 20px;
+  border: 1px solid white;
+}
+
+.modal-textarea {
+  /* display: flex; */
+  display: none;
+  height: 77vh;
+  margin-top: 20px;
+  padding: 12px 20px;
+  border-radius: 10px;
+  border: 1px solid #fafafa;
+  background-color: #fafafa;
+  font-family: QuickSand;
+  font-size: 20px;
+  resize: none;
+  overflow: auto;
+}

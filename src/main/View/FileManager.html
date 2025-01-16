@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="de">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>File Manager</title>
+    <link rel="stylesheet" href="Styles.css" />
+    <link rel="stylesheet" href="FileManagerStyles.css" />
+
+    <link
+      href="https://fonts.googleapis.com/css?family=Quicksand"
+      rel="stylesheet"
+    />
+    <script
+      src="https://kit.fontawesome.com/3ff8e8ca0d.js"
+      crossorigin="anonymous"
+    ></script>
+  </head>
+  <body>
+    <div class="main-box">
+      <div id="Navigation"></div>
+      <div class="content-box">
+        <div class="row">
+          <h1>File Manager</h1>
+          <!-- Button to open Modal -->
+          <button id="myBtn">Open Modal</button>
+          <div class="column">
+            <div class="row" id="modules-box">
+              <div id="header">
+                <h2>Module</h2>
+                <i
+                  class="fas fa-ellipsis ellipsis-icon-design"
+                  id="add-module"
+                ></i>
+              </div>
+              <div id="modules-container">
+                <ul id="modules-list">
+                  <li>Analysis</li>
+                  <li>IT-Security</li>
+                  <li>CompNet</li>
+                  <li>Statistics</li>
+                  <li>OpSys</li>
+                  <li>Algebra</li>
+                  <li>Programmieren C</li>
+                  <li>TI</li>
+                  <li>SWEA</li>
+                </ul>
+              </div>
+            </div>
+            <div class="row">
+              <div>
+                <div id="header">
+                  <h2>Folder</h2>
+                  <i
+                    class="fas fa-ellipsis ellipsis-icon-design"
+                    id="add-folder"
+                  ></i>
+                </div>
+                <p id="folders-paragraph">Select a module.</p>
+                <div id="folders-container">
+                  <div class="folder">
+                    <i class="fas fa-folder folder-icon-design"></i>
+                    <p>Vorlesung 01</p>
+                  </div>
+                  <div class="folder">
+                    <i class="fas fa-folder folder-icon-design"></i>
+                    <p>Vorlesung 02</p>
+                  </div>
+                  <div class="folder">
+                    <i class="fas fa-folder folder-icon-design"></i>
+                    <p>Vorlesung 03</p>
+                  </div>
+                  <div class="folder">
+                    <i class="fas fa-folder folder-icon-design"></i>
+                    <p>Vorlesung 04</p>
+                  </div>
+                  <div class="folder">
+                    <i class="fas fa-folder folder-icon-design"></i>
+                    <p>Vorlesung 05</p>
+                  </div>
+                </div>
+                <div>
+                  <div id="files-header">
+                    <h2>Files</h2>
+                    <i
+                      class="fas fa-ellipsis ellipsis-icon-design"
+                      id="add-file"
+                    ></i>
+                  </div>
+                  <p id="files-paragraph">Select a folder.</p>
+                  <div id="files-container">
+                    <ul id="files-list">
+                      <li>Vorlesungsfolien</li>
+                      <li>Zusammenfassung</li>
+                      <li>AnkiCards</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- The Modal -->
+          <div id="myModal" class="modal">
+            <!-- Modal content -->
+            <div class="modal-content-box row">
+              <div class="sticky">
+                <div class="modal-header">
+                  <button class="modal-button" id="quit">Quit</button>
+                  <p class="modal-title" id="file-name"></p>
+                  <button class="modal-button" id="edit">Edit</button>
+                  <button class="modal-button" id="save">Save</button>
+                </div>
+              </div>
+              <p class="modal-read-only" id="read-text"></p>
+              <textarea class="modal-textarea" id="edit-text"></textarea>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        fetch("Navigation.html")
+          .then((response) => response.text())
+          .then((html) => {
+            document.getElementById("Navigation").innerHTML = html;
+          })
+          .catch((error) => console.error("Error loading navigation:", error));
+      });
+
+      //Make folders-container visible when a module is clicked
+      document.addEventListener("DOMContentLoaded", () => {
+        const modulesListItems = document.querySelectorAll("#modules-list li");
+        const foldersContainer = document.getElementById("folders-container");
+        const foldersParagraph = document.getElementById("folders-paragraph");
+        const filesHeader = document.getElementById("files-header");
+        const filesParagraph = document.getElementById("files-paragraph");
+        const filesContainer = document.getElementById("files-container");
+
+        modulesListItems.forEach((item) => {
+          item.addEventListener("click", () => {
+            foldersParagraph.style.display = "none";
+            foldersContainer.style.display = "flex";
+            filesHeader.style.display = "flex";
+            filesParagraph.style.display = "flex";
+            filesContainer.style.display = "none";
+          });
+        });
+      });
+
+      //Make files-container visible when a folder is clicked
+      document.addEventListener("DOMContentLoaded", () => {
+        const folders = document.querySelectorAll(".folder");
+        const filesParagraph = document.getElementById("files-paragraph");
+        const filesContainer = document.getElementById("files-container");
+
+        folders.forEach((folder) => {
+          folder.addEventListener("click", () => {
+            filesParagraph.style.display = "none";
+            filesContainer.style.display = "flex";
+          });
+        });
+      });
+
+      //Delete modules on right-click
+      document.addEventListener("DOMContentLoaded", () => {
+        const modulesListItems = document.querySelectorAll("#modules-list li");
+
+        modulesListItems.forEach((item) => {
+          item.addEventListener("contextmenu", (event) => {
+            event.preventDefault();
+
+            const deleteOption = confirm("Möchten Sie dieses Element löschen?");
+            if (deleteOption) {
+              item.remove();
+            }
+          });
+        });
+      });
+
+      //Delete folders on right-click
+      document.addEventListener("DOMContentLoaded", () => {
+        const folders = document.querySelectorAll(".folder");
+
+        folders.forEach((folder) => {
+          folder.addEventListener("contextmenu", (event) => {
+            event.preventDefault();
+
+            const deleteOption = confirm("Möchten Sie dieses Element löschen?");
+            if (deleteOption) {
+              folder.remove();
+            }
+          });
+        });
+      });
+
+      //Delete files on right-click
+      document.addEventListener("DOMContentLoaded", () => {
+        const filesListItems = document.querySelectorAll("#files-list li");
+
+        filesListItems.forEach((item) => {
+          item.addEventListener("contextmenu", (event) => {
+            event.preventDefault();
+
+            const deleteOption = confirm("Möchten Sie dieses Element löschen?");
+            if (deleteOption) {
+              item.remove();
+            }
+          });
+        });
+      });
+
+      //Modal Code
+      const modal = document.getElementById("myModal");
+
+      const btn = document.getElementById("myBtn");
+
+      // When the user clicks on the button, open the modal
+      btn.onclick = () => {
+        modal.style.display = "block";
+      };
+
+      const quitButton = document.getElementById("quit");
+      const editButton = document.getElementById("edit");
+      const saveButton = document.getElementById("save");
+
+      const modalReadOnly = document.querySelector(".modal-read-only");
+      const modalTextarea = document.querySelector(".modal-textarea");
+
+      // When the user clicks on the quit button, close the modal
+      quitButton.onclick = () => {
+        modalReadOnly.style.display = "flex";
+        modalTextarea.style.display = "none";
+        modal.style.display = "none";
+      };
+
+      // When the user clicks on the edit button, switch to textarea
+      editButton.onclick = () => {
+        modalReadOnly.style.display = "none";
+        modalTextarea.style.display = "flex";
+        saveButton.style.display = "flex";
+        editButton.style.display = "none";
+      };
+
+      saveButton.onclick = () => {
+        modalReadOnly.style.display = "flex";
+        modalTextarea.style.display = "none";
+        saveButton.style.display = "none";
+        editButton.style.display = "flex";
+      };
+
+      // Load JSON data
+      const jsonData = {
+        title: "Zusammenfassung Vorlesung 1",
+        description: "Hier steht der Inhalt der Zusammenfassung.",
+      };
+
+      //JSON-Daten in den Header laden
+      const fileTitle = document.getElementById("file-name");
+      fileTitle.textContent = jsonData.title;
+
+      // JSON-Daten in den Paragraphen laden
+      const paragraph = document.getElementById("read-text");
+      paragraph.textContent = jsonData.description;
+
+      // JSON-Daten als String in das Textarea-Feld laden
+      const textarea = document.getElementById("edit-text");
+      textarea.value = jsonData["description"];
+    </script>
+  </body>
+</html>
