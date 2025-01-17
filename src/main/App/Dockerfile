@@ -20,9 +20,3 @@ RUN apt-get update && apt-get install -y netcat-openbsd
 
 # Expose the port the app runs on
 EXPOSE 5002
-<<<<<<< HEAD
-
-# Command to run the application
-CMD ["python", "./Controllers/MainController.py"]
-=======
->>>>>>> d7edf03bfcdf47d0065ccee46b98f372c0c3d078

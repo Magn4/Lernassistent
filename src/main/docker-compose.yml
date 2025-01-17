@@ -2,14 +2,14 @@ version: '3.8'
 
 services:
   # LLM API Service
-  llm_api:
-    build:
-      context: ./Services/AI
-      dockerfile: Dockerfile
-    ports:
-      - "9191:9191"
-    container_name: llm_api
-    restart: unless-stopped
+  # llm_api:
+  #   build:
+  #     context: ./Services/AI
+  #     dockerfile: Dockerfile
+  #   ports:
+  #     - "9191:9191"
+  #   container_name: llm_api
+  #   restart: unless-stopped
 
   # PDF Extraction Service
   extract_pdf:
@@ -24,13 +24,6 @@ services:
   # Main Controller Service
   main_controller:
     build:
-<<<<<<< HEAD
-      context: ./App  # Directory containing Dockerfile and MainController.py
-      dockerfile: Dockerfile
-    ports:
-      - "5002:5002"
-    container_name: main_controller
-=======
       context: ./App
       dockerfile: Dockerfile
     ports:
@@ -46,7 +39,6 @@ services:
       DB_USER: ${DB_USER}
       DB_PASSWORD: ${DB_PASSWORD}
     entrypoint: ["./wait-for-it.sh", "database", "5432", "--", "python", "app.py"]
->>>>>>> d7edf03bfcdf47d0065ccee46b98f372c0c3d078
     restart: unless-stopped
   auth:
     build:
@@ -69,21 +61,16 @@ services:
   
   # PostgreSQL Database
   db:
-<<<<<<< HEAD
-    image: postgres:latest
-    container_name: db
-=======
     build:
       context: ./Services/Database
       dockerfile: Dockerfile.db
     container_name: database
->>>>>>> d7edf03bfcdf47d0065ccee46b98f372c0c3d078
     environment:
       POSTGRES_USER: ${DB_USER}
       POSTGRES_PASSWORD: ${DB_PASSWORD}
       POSTGRES_DB: ${DB_NAME}
     ports:
-      - "5433:5433"
+      - "5432:5432"
     volumes:
       - db_data:/var/lib/postgresql/data
     healthcheck:
@@ -121,7 +108,7 @@ services:
     ports:
       - "80:80"
     depends_on:
-      - llm_api
+      # - llm_api
       - extract_pdf
       - main_controller
       - anki_service
@@ -132,8 +119,4 @@ services:
 
 # Persistent volume for PostgreSQL data
 volumes:
-<<<<<<< HEAD
   db_data:
-=======
-  db_data:
->>>>>>> d7edf03bfcdf47d0065ccee46b98f372c0c3d078

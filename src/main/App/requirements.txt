@@ -1,7 +1,5 @@
 flask[async]==3.1.0
 requests==2.31.0
 psycopg2-binary==2.9.8
-<<<<<<< HEAD
-=======
 sqlalchemy>=2.0.0
->>>>>>> d7edf03bfcdf47d0065ccee46b98f372c0c3d078
+pdfplumber
