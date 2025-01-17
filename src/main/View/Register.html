@@ -49,7 +49,9 @@
           id="passwordRepeated"
           placeholder="Repeat password"
         />
-        <button class="login-button" id="registerButton" disabled>Sign up</button>
+        <button class="login-button" id="registerButton" disabled>
+          Sign up
+        </button>
         <p>Already have an account? <a href="Login.html">Back</a></p>
       </div>
     </div>
@@ -62,7 +64,8 @@
         const usernameInput = document.getElementById("username");
         const emailInput = document.getElementById("email");
         const passwordInput = document.getElementById("password");
-        const passwordRepeatedInput = document.getElementById("passwordRepeated");
+        const passwordRepeatedInput =
+          document.getElementById("passwordRepeated");
         const registerButton = document.getElementById("registerButton");
 
         function validateInputs() {
@@ -70,7 +73,12 @@
           const email = emailInput.value.trim();
           const password = passwordInput.value.trim();
           const passwordRepeated = passwordRepeatedInput.value.trim();
-          registerButton.disabled = !(username && email && password && passwordRepeated);
+          registerButton.disabled = !(
+            username &&
+            email &&
+            password &&
+            passwordRepeated
+          );
         }
 
         usernameInput.addEventListener("input", validateInputs);
@@ -81,53 +89,52 @@
 
       registerButton.onclick = () => {
         const password = document.getElementById("password").value;
-        const passwordRepeated = document.getElementById(
-          "passwordRepeated"
-        ).value;
+        const passwordRepeated =
+          document.getElementById("passwordRepeated").value;
 
         if (password !== passwordRepeated) {
           alert("Passwörter stimmen nicht überein");
         } else {
           const username = document.getElementById("username").value;
           const email = document.getElementById("email").value;
-          //TODO: Implement register logic
 
-          // Redirect to Dashboard.html
+          /* if(registerUser(username, email, password)){
+            window.location.href = "Dashboard.html";
+          } */
+
           window.location.href = "Dashboard.html";
         }
       };
 
       //Endpoint DRAFT
-      /* const registerUser = async () => {
-            const url = '/register'; // Ersetze durch den tatsächlichen Endpunkt
-            const userData = {
-                userName: 'exampleUser',
-                eMail: 'example@example.com',
-                password: 'examplePassword'
-            };
-
-            try {
-                const response = await fetch(url, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify(userData)
-                });
-
-                const result = await response.json();
-                if (response.ok) {
-                    console.log('Account created successfully:', result);
-                } else {
-                    console.error('Error:', result);
-                }
-            } catch (error) {
-                console.error('Error:', error);
-            }
+      const registerUser = async (username, email, password) => {
+        const url = "http://127.0.0.1:5002/register"; // Ersetze durch den tatsächlichen Endpunkt
+        const userData = {
+          userName: username,
+          eMail: email,
+          password: password,
         };
 
-        registerUser();
- */
+        try {
+          const response = await fetch(url, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(userData),
+          });
+
+          const result = await response.json();
+          if (response.ok) {
+            console.log("Account created successfully:", result);
+            return true;
+          } else {
+            console.log("Account already exists:", result);
+          }
+        } catch (error) {
+          console.error("Error:", error);
+        }
+      };
     </script>
   </body>
 </html>
