@@ -37,6 +37,12 @@ body {
   margin-bottom: 50px;
 }
 
+.input-wrapper {
+  display: flex;
+  flex-direction: row;
+  width: 168px;
+}
+
 .login-input {
   border: none;
   border-bottom: grey 1px solid;
@@ -48,6 +54,16 @@ body {
 
 .login-input:focus {
   outline: none;
+}
+
+.fa-eye {
+  display: flex;
+  cursor: pointer;
+}
+
+.fa-eye-slash {
+  display: none;
+  cursor: pointer;
 }
 
 .login-button {
