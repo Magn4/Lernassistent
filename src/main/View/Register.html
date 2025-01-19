@@ -4,11 +4,15 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Register</title>
-    <link rel="stylesheet" href="LoginStyles.css" />
+    <link rel="stylesheet" href="RegisterStyles.css" />
     <link
       href="https://fonts.googleapis.com/css?family=Quicksand"
       rel="stylesheet"
     />
+    <script
+    src="https://kit.fontawesome.com/3ff8e8ca0d.js"
+    crossorigin="anonymous"
+  ></script>
   </head>
   <body>
     <div class="login-box">
@@ -35,6 +39,7 @@
           id="email"
           placeholder="E-Mail"
         />
+        <div class="input-wrapper">
         <label for="password"></label>
         <input
           class="login-input"
@@ -42,6 +47,10 @@
           id="password"
           placeholder="Password"
         />
+        <i class="fa fa-eye fa-xs" onclick="showPassword()"></i>
+        <i class="fa fa-eye-slash fa-xs" style="display: none" onclick="showPassword()"></i>
+        </div>
+        <div class="input-wrapper">
         <label for="passwordRepeated"></label>
         <input
           class="login-input"
@@ -49,6 +58,9 @@
           id="passwordRepeated"
           placeholder="Repeat password"
         />
+        <i class="fa fa-eye fa-xs" onclick="showPassword()"></i>
+        <i class="fa fa-eye-slash fa-xs" style="display: none" onclick="showPassword()"></i>
+        </div>
         <button class="login-button" id="registerButton" disabled>Sign up</button>
         <p>Already have an account? <a href="Login.html">Back</a></p>
       </div>
@@ -128,6 +140,26 @@
 
         registerUser();
  */
+ //Show password
+      const eye = document.querySelector('.fa-eye');
+      const eyeSlash = document.querySelector('.fa-eye-slash');
+
+      function showPassword() {
+        const password = document.getElementById("password");
+        const passwordRepeated = document.getElementById("passwordRepeated");
+        if(password.type === "password") {
+          password.type = "text";
+          passwordRepeated.type = "text";
+          eye.style.display = 'none';
+          eyeSlash.style.display = 'flex';
+
+        } else {
+          password.type = "password";
+          passwordRepeated.type = "password";
+          eye.style.display = 'flex';
+          eyeSlash.style.display = 'none';
+        }
+      }
     </script>
   </body>
 </html>

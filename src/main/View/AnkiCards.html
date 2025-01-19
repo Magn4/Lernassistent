@@ -70,10 +70,10 @@
                     </div>
 
                     <div class="answer-button-area">
-                        <button class="answer-button">Very hard</button>
-                        <button class="answer-button">Okay</button>
-                        <button class="answer-button">Easy</button>
-                        <button class="answer-button">Very easy</button>
+                        <button class="answer-button" onclick="verHard()">Very hard</button>
+                        <button class="answer-button" onclick="okay()">Okay</button>
+                        <button class="answer-button" onclick="easy()">Easy</button>
+                        <button class="answer-button" onclick="veryEasy()">Very easy</button>
 
                     </div>
                 </div>
@@ -115,7 +115,27 @@
             chooseWindow.style.display = "flex";
             answer.style.display = "none";
             answerButton.style.display = "none";
+        }
 
+        //Answer button functions
+        function verHard() {
+            answer.style.display = "none";
+            answerButton.style.display = "none";
+        }
+
+        function okay() {
+            answer.style.display = "none";
+            answerButton.style.display = "none";
+        }
+
+        function easy() {
+            answer.style.display = "none";
+            answerButton.style.display = "none";
+        }
+
+        function veryEasy() {
+            answer.style.display = "none";
+            answerButton.style.display = "none";
         }
 
         //ForEach 
