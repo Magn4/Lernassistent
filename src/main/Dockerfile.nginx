@@ -6,7 +6,7 @@ FROM nginx:latest
 COPY nginx.conf /etc/nginx/nginx.conf
 
 # Optionally, you can copy static content (e.g., a website's HTML files) to the Nginx server
-COPY ./docs /usr/share/nginx/html
+COPY ./View /usr/share/nginx/html
 
 # Expose the HTTP port (default is 80)
 EXPOSE 80

@@ -72,7 +72,20 @@ class DatabaseContext:
     def _initialize_database(self):
         """ Create the necessary tables if they do not exist. """
         Base.metadata.create_all(self.engine)
-
+    def _handle_session(self, operation):
+        """Helper to manage database sessions."""
+        session = self.Session()
+        try:
+            result = operation(session)
+            session.commit()
+            return result
+        except SQLAlchemyError as e:
+            logger.error(f"Database operation failed: {e}")
+            session.rollback()
+            raise
+        finally:
+            session.close()
+    
     def get_all_users(self):
         session = self.Session()
         try:
@@ -93,6 +106,18 @@ class DatabaseContext:
             return None
         finally:
             session.close()
+   # User Operations
+    def get_user_by_username_or_email(self, username=None, email=None):
+        def operation(session):
+            if username:
+                user = session.query(User).filter_by(user_name=username).first()
+                if user:
+                    return user
+            if email:
+                user = session.query(User).filter_by(email=email).first()
+                return user
+            return None
+        return self._handle_session(operation)
 
     def create_user(self, user_name, email, password):
         session = self.Session()
