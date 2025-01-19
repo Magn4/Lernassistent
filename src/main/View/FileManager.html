@@ -129,37 +129,46 @@
           .catch((error) => console.error("Error loading navigation:", error));
       });
 
+      const foldersContainer = document.getElementById("folders-container");
+      const foldersParagraph = document.getElementById("folders-paragraph");
+      const filesHeader = document.getElementById("files-header");
+      const filesParagraph = document.getElementById("files-paragraph");
+      const filesContainer = document.getElementById("files-container");
+
+      //Modules Code
       //Make folders-container visible when a module is clicked
       document.addEventListener("DOMContentLoaded", () => {
         const modulesListItems = document.querySelectorAll("#modules-list li");
-        const foldersContainer = document.getElementById("folders-container");
-        const foldersParagraph = document.getElementById("folders-paragraph");
-        const filesHeader = document.getElementById("files-header");
-        const filesParagraph = document.getElementById("files-paragraph");
-        const filesContainer = document.getElementById("files-container");
 
-        modulesListItems.forEach((item) => {
-          item.addEventListener("click", () => {
-            foldersParagraph.style.display = "none";
-            foldersContainer.style.display = "flex";
-            filesHeader.style.display = "flex";
-            filesParagraph.style.display = "flex";
-            filesContainer.style.display = "none";
+        modulesListItems.forEach((module) => {
+          module.addEventListener("click", () => {
+            makeFoldersVisible(module);
           });
         });
       });
 
-      //Make files-container visible when a folder is clicked
+      //Add modules by pressing the add-module icon
       document.addEventListener("DOMContentLoaded", () => {
-        const folders = document.querySelectorAll(".folder");
-        const filesParagraph = document.getElementById("files-paragraph");
-        const filesContainer = document.getElementById("files-container");
+        const addModuleIcon = document.getElementById("add-module");
+        const modulesContainer = document
+          .getElementById("modules-container")
+          .querySelector("ul");
 
-        folders.forEach((folder) => {
-          folder.addEventListener("click", () => {
-            filesParagraph.style.display = "none";
-            filesContainer.style.display = "flex";
-          });
+        addModuleIcon.addEventListener("click", () => {
+          const moduleName = prompt("Enter the name for the new module:");
+          if (moduleName) {
+            const newListItem = document.createElement("li");
+            newListItem.textContent = moduleName;
+            modulesContainer.appendChild(newListItem);
+
+            // Make the new child clickable
+            newListItem.addEventListener("click", () => {
+              makeFoldersVisible();
+            });
+
+            // Make the new child deletable
+            deleteModule(newListItem);
+          }
         });
       });
 
@@ -168,14 +177,70 @@
         const modulesListItems = document.querySelectorAll("#modules-list li");
 
         modulesListItems.forEach((item) => {
-          item.addEventListener("contextmenu", (event) => {
-            event.preventDefault();
+          deleteModule(item);
+        });
+      });
 
-            const deleteOption = confirm("Möchten Sie dieses Element löschen?");
-            if (deleteOption) {
-              item.remove();
-            }
+      //Helper functions
+      makeFoldersVisible = () => {
+        foldersParagraph.style.display = "none";
+        foldersContainer.style.display = "flex";
+        filesHeader.style.display = "flex";
+        filesParagraph.style.display = "flex";
+        filesContainer.style.display = "none";
+      };
+
+      makeFoldersInvisible = () => {
+        foldersParagraph.style.display = "flex";
+        foldersContainer.style.display = "none";
+        filesHeader.style.display = "none";
+        filesParagraph.style.display = "none";
+        filesContainer.style.display = "none";
+      };
+
+      deleteModule = (module) => {
+        module.addEventListener("contextmenu", (event) => {
+          event.preventDefault();
+
+          const deleteOption = confirm("Möchten Sie dieses Element löschen?");
+          if (deleteOption) {
+            module.remove();
+            makeFoldersInvisible();
+          }
+        });
+      };
+
+      //Folders Code
+      //Make files-container visible when a folder is clicked
+      document.addEventListener("DOMContentLoaded", () => {
+        const folders = document.querySelectorAll(".folder");
+
+        folders.forEach((folder) => {
+          folder.addEventListener("click", () => {
+            makeFilesVisible();
           });
+        });
+      });
+
+      //Add folders by pressing the add-folder icon
+      document.addEventListener("DOMContentLoaded", () => {
+        const addFolderIcon = document.getElementById("add-folder");
+
+        addFolderIcon.addEventListener("click", () => {
+          const folderName = prompt("Enter the name for the new folder:");
+          if (folderName) {
+            const newFolder = document.createElement("div");
+            newFolder.className = "folder";
+            newFolder.innerHTML = `<i class="fas fa-folder folder-icon-design"></i><p>${folderName}</p>`;
+            foldersContainer.appendChild(newFolder);
+            // Make the new folder clickable
+            newFolder.addEventListener("click", () => {
+              makeFilesVisible(newFolder);
+            });
+
+            // Make the new folder deletable
+            deleteFolder(newFolder);
+          }
         });
       });
 
@@ -184,17 +249,34 @@
         const folders = document.querySelectorAll(".folder");
 
         folders.forEach((folder) => {
-          folder.addEventListener("contextmenu", (event) => {
-            event.preventDefault();
-
-            const deleteOption = confirm("Möchten Sie dieses Element löschen?");
-            if (deleteOption) {
-              folder.remove();
-            }
-          });
+          deleteFolder(folder);
         });
       });
 
+      //Helper functions
+      makeFilesVisible = () => {
+        filesParagraph.style.display = "none";
+        filesContainer.style.display = "flex";
+      };
+
+      makeFilesInvisible = () => {
+        filesParagraph.style.display = "flex";
+        filesContainer.style.display = "none";
+      };
+
+      deleteFolder = (folder) => {
+        folder.addEventListener("contextmenu", (event) => {
+          event.preventDefault();
+
+          const deleteOption = confirm("Möchten Sie dieses Element löschen?");
+          if (deleteOption) {
+            folder.remove();
+            makeFilesInvisible();
+          }
+        });
+      };
+
+      //Files Code
       //Delete files on right-click
       document.addEventListener("DOMContentLoaded", () => {
         const filesListItems = document.querySelectorAll("#files-list li");
