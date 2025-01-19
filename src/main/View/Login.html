@@ -70,10 +70,43 @@
       loginButton.onclick = () => {
         const username = document.getElementById("username").value;
         const password = document.getElementById("password").value;
+      
         // TODO: Implement login logic
-
+        /* if(loginUser(username, password)) {
+          window.location.href = "Dashboard.html";
+        } */
+        
         // Redirect to Dashboard.html
         window.location.href = "Dashboard.html";
+      };
+
+      //backend conntection: Endpoint für login
+      const loginUser = async (username, password) => {
+        const url = "http://209.38.252.155/main_controller/login"; // Ersetze durch den tatsächlichen Endpunkt
+        const userData = {
+          userName: username,
+          password: password,
+        };
+
+        try {
+          const response = await fetch(url, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              "Authorization": "Bearer 1q0Md3McyGa6cOJ9EXx3sk5GF5AZoaku",
+            },
+            body: JSON.stringify(userData),
+          });
+
+          const result = await response.json();
+          if (response.ok) {
+            console.log("Account created successfully:", result);
+            return true;
+          }
+        } catch (error) {
+          console.error("Error:", error);
+          alert("Error:", error);
+        }
       };
 
       //Show password

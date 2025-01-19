@@ -127,7 +127,7 @@
 
       // backend connection: Endpoint for registration
       const registerUser = async (username, email, password) => {
-        const url = "http://209.38.252.155/register"; // Ersetze durch den tatsächlichen Endpunkt
+        const url = "http://209.38.252.155/main_controller/register"; // Ersetze durch den tatsächlichen Endpunkt
         const userData = {
           userName: username,
           eMail: email,
@@ -159,24 +159,6 @@
       };
 
  //Show password
-      /* 
-      function showPassword() {
-        const password = document.getElementById("password");
-        const passwordRepeated = document.getElementById("passwordRepeated");
-        if(password.type === "password") {
-          password.type = "text";
-          passwordRepeated.type = "text";
-          eye.style.display = 'none';
-          eyeSlash.style.display = 'flex';
-
-        } else {
-          password.type = "password";
-          passwordRepeated.type = "password";
-          eye.style.display = 'flex';
-          eyeSlash.style.display = 'none';
-        }
-      } */
-
       const passwordHidden = document.querySelector('.password-hidden-icon');
       const passwordShown = document.querySelector('.password-shown-icon');
       const passwordRepeatedHidden = document.querySelector('.password-repeated-hidden-icon');
