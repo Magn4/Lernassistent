@@ -47,8 +47,12 @@
           id="password"
           placeholder="Password"
         />
-        <i class="fa fa-eye fa-xs" onclick="showPassword()"></i>
-        <i class="fa fa-eye-slash fa-xs" style="display: none" onclick="showPassword()"></i>
+        <div class="password-hidden-icon" onclick="showPassword()">
+          <i class="fa fa-eye fa-xs"></i>
+          </div>
+          <div class="password-shown-icon" onclick="showPassword()">
+          <i class="fa fa-eye-slash fa-xs"></i>
+          </div>
         </div>
         <div class="input-wrapper">
         <label for="passwordRepeated"></label>
@@ -58,8 +62,12 @@
           id="passwordRepeated"
           placeholder="Repeat password"
         />
-        <i class="fa fa-eye fa-xs" onclick="showPassword()"></i>
-        <i class="fa fa-eye-slash fa-xs" style="display: none" onclick="showPassword()"></i>
+        <div class="password-repeated-hidden-icon" onclick="showPasswordRepeated()">
+        <i class="fa fa-eye fa-xs"></i>
+        </div>
+        <div class="password-repeated-shown-icon" onclick="showPasswordRepeated()">
+        <i class="fa fa-eye-slash fa-xs"></i>
+        </div>
         </div>
         <button class="login-button" id="registerButton" disabled>Sign up</button>
         <p>Already have an account? <a href="Login.html">Back</a></p>
@@ -151,9 +159,7 @@
       };
 
  //Show password
-      const eye = document.querySelector('.fa-eye');
-      const eyeSlash = document.querySelector('.fa-eye-slash');
-
+      /* 
       function showPassword() {
         const password = document.getElementById("password");
         const passwordRepeated = document.getElementById("passwordRepeated");
@@ -169,7 +175,42 @@
           eye.style.display = 'flex';
           eyeSlash.style.display = 'none';
         }
+      } */
+
+      const passwordHidden = document.querySelector('.password-hidden-icon');
+      const passwordShown = document.querySelector('.password-shown-icon');
+      const passwordRepeatedHidden = document.querySelector('.password-repeated-hidden-icon');
+      const passwordRepeatedShown = document.querySelector('.password-repeated-shown-icon');
+
+      function showPassword() {
+        const password = document.getElementById("password");
+
+        if(password.type === "password") {
+          password.type = "text";
+          passwordHidden.style.display = 'none';
+          passwordShown.style.display = 'flex';
+        } else {
+          password.type = "password";
+          passwordHidden.style.display = 'flex';
+          passwordShown.style.display = 'none';
+        }
       }
+
+      function showPasswordRepeated() {
+        const passwordRepeated = document.getElementById("passwordRepeated");
+
+        if(passwordRepeated.type === "password") {
+          passwordRepeated.type = "text";
+          passwordRepeatedHidden.style.display = 'none';
+          passwordRepeatedShown.style.display = 'flex';
+        } else {
+          passwordRepeated.type = "password";
+          passwordRepeatedHidden.style.display = 'flex';
+          passwordRepeatedShown.style.display = 'none';
+        }
+      }
+
+
     </script>
   </body>
 </html>

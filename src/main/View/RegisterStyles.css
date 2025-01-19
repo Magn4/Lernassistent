@@ -91,12 +91,22 @@ body {
     background-color: #eb7351;
   }
 
-  .fa-eye {
+  .password-hidden-icon {
     display: flex;
     cursor: pointer;
   }
   
-  .fa-eye-slash {
+  .password-shown-icon {
+    display: none;
+    cursor: pointer;
+  }
+
+  .password-repeated-hidden-icon {
+    display: flex;
+    cursor: pointer;
+  }
+  
+  .password-repeated-shown-icon {
     display: none;
     cursor: pointer;
   }
