@@ -74,7 +74,8 @@
         const usernameInput = document.getElementById("username");
         const emailInput = document.getElementById("email");
         const passwordInput = document.getElementById("password");
-        const passwordRepeatedInput = document.getElementById("passwordRepeated");
+        const passwordRepeatedInput =
+          document.getElementById("passwordRepeated");
         const registerButton = document.getElementById("registerButton");
 
         function validateInputs() {
@@ -82,7 +83,12 @@
           const email = emailInput.value.trim();
           const password = passwordInput.value.trim();
           const passwordRepeated = passwordRepeatedInput.value.trim();
-          registerButton.disabled = !(username && email && password && passwordRepeated);
+          registerButton.disabled = !(
+            username &&
+            email &&
+            password &&
+            passwordRepeated
+          );
         }
 
         usernameInput.addEventListener("input", validateInputs);
@@ -93,9 +99,8 @@
 
       registerButton.onclick = () => {
         const password = document.getElementById("password").value;
-        const passwordRepeated = document.getElementById(
-          "passwordRepeated"
-        ).value;
+        const passwordRepeated =
+          document.getElementById("passwordRepeated").value;
 
         if (password !== passwordRepeated) {
           alert("Passwörter stimmen nicht überein");
