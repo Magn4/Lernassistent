@@ -1,15 +1,13 @@
-version: '3.8'
-
 services:
   # LLM API Service
-  llm_api:
-    build:
-      context: ./Services/AI
-      dockerfile: Dockerfile
-    ports:
-      - "9191:9191"
-    container_name: llm_api
-    restart: unless-stopped
+  # llm_api:
+  #   build:
+  #     context: ./Services/AI
+  #     dockerfile: Dockerfile
+  #   ports:
+  #     - "9191:9191"
+  #   container_name: llm_api
+  #   restart: unless-stopped
 
   # PDF Extraction Service
   extract_pdf:
@@ -108,13 +106,13 @@ services:
     ports:
       - "80:80"
     depends_on:
-      - llm_api
+      # - llm_api
       - extract_pdf
       - main_controller
       - anki_service
-    volumes:
-      - ./docs:/usr/share/nginx/html:ro
-      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+    # volumes:
+    #  - ./View:/usr/share/nginx/html:ro
+    #  - ./nginx.conf:/etc/nginx/nginx.conf:ro
     restart: unless-stopped
 
 # Persistent volume for PostgreSQL data
