@@ -117,17 +117,17 @@
           const email = document.getElementById("email").value;
           
           // with backend connection
-          /* if(registerUser(username, email, password)){
-            window.location.href = "Dashboard.html";
-          } */
+          if(registerUser(username, email, password)){
+            /* window.location.href = "Dashboard.html"; */
+          }
 
-          window.location.href = "Dashboard.html";
+          /* window.location.href = "Dashboard.html"; */
         }
       };
 
       // backend connection: Endpoint for registration
       const registerUser = async (username, email, password) => {
-        const url = "http://209.38.252.155/main_controller/register"; // Ersetze durch den tatsächlichen Endpunkt
+        const url = "http://maguna.me/main_controller/register"; // Ersetze durch den tatsächlichen Endpunkt
         const userData = {
           userName: username,
           eMail: email,
@@ -139,7 +139,7 @@
             method: "POST",
             headers: {
               "Content-Type": "application/json",
-              "Authorization": "Bearer 1q0Md3McyGa6cOJ9EXx3sk5GF5AZoaku",
+              "Authorization": "Bearer Token",
             },
             body: JSON.stringify(userData),
           });
