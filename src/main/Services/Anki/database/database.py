@@ -126,3 +126,91 @@ class AnkiDatabaseContext:
             print(f"Error updating deck: {e}")
         finally:
             session.close()
+# get_next_review_card 
+    def get_next_review_card(self):
+        session = self.Session()
+        try:
+            # Fetch the next card to review
+            return session.query(Card).filter(Card.next_review <= datetime.utcnow()).first()
+        except Exception as e:
+            print(f"Error fetching next review card: {e}")
+        finally:
+            session.close()
+
+    def get_deck(self, deck_id):
+        session = self.Session()
+        try:
+            # Fetch the deck by ID
+            return session.query(Deck).get(deck_id)
+        except Exception as e:
+            print(f"Error fetching deck: {e}")
+        finally:
+            session.close()
+
+    def get_all_decks(self):
+        session = self.Session()
+        try:
+            # Fetch all decks
+            return session.query(Deck).all()
+        except Exception as e:
+            print(f"Error fetching decks: {e}")
+        finally:
+            session.close()
+
+    def get_cards_in_deck(self, deck_id):
+        session = self.Session()
+        try:
+            # Fetch all cards in a deck
+            return session.query(Card).filter(Card.deck_id == deck_id).all()
+        except Exception as e:
+            print(f"Error fetching cards in deck: {e}")
+        finally:
+            session.close()
+
+    def delete_card(self, card_id):
+        session = self.Session()
+        try:
+            # Fetch the card and delete it
+            card = session.query(Card).get(card_id)
+            if not card:
+                return None
+
+            session.delete(card)
+            session.commit()
+            return card
+        except Exception as e:
+            session.rollback()
+            print(f"Error deleting card: {e}")
+        finally:
+            session.close()
+
+    def delete_deck(self, deck_id):
+        session = self.Session()
+        try:
+            # Fetch the deck and delete it
+            deck = session.query(Deck).get(deck_id)
+            if not deck:
+                return None
+
+            session.delete(deck)
+            session.commit()
+            return deck
+        except Exception as e:
+            session.rollback()
+            print(f"Error deleting deck: {e}")
+        finally:
+            session.close()
+
+    def delete_all_decks(self):
+        session = self.Session()
+        try:
+            # Delete all decks
+            session.query(Deck).delete()
+            session.commit()
+        except Exception as e:
+            session.rollback()
+            print(f"Error deleting all decks: {e}")
+        finally:
+            session.close()
+
+

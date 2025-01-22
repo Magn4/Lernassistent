@@ -36,7 +36,7 @@ dashboard_controller = DashboardController(db_context)
 api_key = "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"
 api_url = "https://api.groq.com/openai/v1/chat/completions"
 local_api_url = "http://127.0.0.1:9191/api/generate"
-text_extractor_url = "http://127.0.0.1/extract_pdf/api/extract"
+text_extractor_url = "http://127.0.0.1:5001/api/extract"
 
 
 

@@ -98,23 +98,42 @@ services:
     restart: unless-stopped
 
   # Nginx Reverse Proxy for all services
-  nginx:
-    build:
-      context: .
-      dockerfile: Dockerfile.nginx
-    container_name: nginx
+  # nginx:
+  #   build:
+  #     context: .
+  #     dockerfile: Dockerfile.nginx
+  #   container_name: nginx
+  #   ports:
+  #     - "80:80"
+  #   depends_on:
+  #     # - llm_api
+  #     - extract_pdf
+  #     - main_controller
+  #     - anki_service
+  #   # volumes:
+  #   #  - ./View:/usr/share/nginx/html:ro
+  #   #  - ./nginx.conf:/etc/nginx/nginx.conf:ro
+  #   restart: unless-stopped
+
+  # Caddy Reverse Proxy for all services
+  caddy:
+    image: caddy:latest
+    container_name: caddy
     ports:
       - "80:80"
+      - "443:443"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile
+      - caddy_data:/data
+      - caddy_config:/config
     depends_on:
-      # - llm_api
       - extract_pdf
       - main_controller
       - anki_service
-    # volumes:
-    #  - ./View:/usr/share/nginx/html:ro
-    #  - ./nginx.conf:/etc/nginx/nginx.conf:ro
     restart: unless-stopped
 
 # Persistent volume for PostgreSQL data
 volumes:
   db_data:
+  caddy_data:
+  caddy_config:

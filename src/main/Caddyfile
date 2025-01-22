@@ -1,0 +1,57 @@
+{
+    email tahatoo25@gmail.com
+}
+# Add local development config
+localhost, 127.0.0.1 {
+    reverse_proxy /validate-token auth:5003 {
+        header_up Host {host}
+        header_up X-Real-IP {remote}
+        header_up Authorization {>Authorization}
+    }
+
+    reverse_proxy /extract_pdf/* extract_pdf:5001 {
+        header_up Host {host}
+        header_up X-Real-IP {remote}
+    }
+
+    reverse_proxy /main_controller/* main_controller:5002 {
+        header_up Host {host}
+        header_up X-Real-IP {remote}
+    }
+
+    reverse_proxy /anki_service/* anki_service:8000 {
+        header_up Host {host}
+        header_up X-Real-IP {remote}
+    }
+
+    file_server {
+        root /usr/share/caddy
+    }
+}
+
+maguna.me {
+    reverse_proxy /validate-token auth:5003 {
+        header_up Host {host}
+        header_up X-Real-IP {remote}
+        header_up Authorization {>Authorization}
+    }
+
+    reverse_proxy /extract_pdf/* extract_pdf:5001 {
+        header_up Host {host}
+        header_up X-Real-IP {remote}
+    }
+
+    reverse_proxy /main_controller/* main_controller:5002 {
+        header_up Host {host}
+        header_up X-Real-IP {remote}
+    }
+
+    reverse_proxy /anki_service/* anki_service:8000 {
+        header_up Host {host}
+        header_up X-Real-IP {remote}
+    }
+
+    file_server {
+        root /usr/share/caddy
+    }
+}
