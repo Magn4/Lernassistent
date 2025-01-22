@@ -20,7 +20,7 @@ from Services.UserService import UserService
 
 # Flask Setup
 app = Flask(__name__)
-
+CORS(app)  # Aktiviert CORS für alle Routen
 # Configuration
 app.config['UPLOAD_FOLDER'] = 'C:/Users/hp/Desktop/Uploads'  # Set this to the desired upload folder path
 
