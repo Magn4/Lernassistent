@@ -1,0 +1,93 @@
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.nio.charset.StandardCharsets;
+import java.util.Scanner;
+
+public class Main {
+
+    private static final String HOST = "http://localhost:11434/api/generate";
+
+    public enum Model {
+        TINY_LLAMA("tinyllama"),
+        LLAMA3_1("llama3.1"),
+
+        LLAMA3_2_3b("llama3.2:3b"),
+
+        MOONDREAM("moondream");
+
+        private final String modelName;
+
+        Model(String modelName) {
+            this.modelName = modelName;
+        }
+
+        public String getModelName() {
+            return modelName;
+        }
+    }
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+
+        while (true) {
+            System.out.println("Enter your prompt (or type 'exit' to quit):");
+            String promptText = scanner.nextLine();
+
+            if (promptText.equalsIgnoreCase("exit")) {
+                System.out.println("Exiting...");
+                break;
+            }
+
+            try {
+                String response = sendRequest(HOST, Model.LLAMA3_1, promptText);
+                System.out.println("Response: " + response);
+            } catch (IOException e) {
+                System.out.println("Error occurred: " + e.getMessage());
+            }
+        }
+
+        scanner.close();
+    }
+
+    public static String sendRequest(String host, Model model, String promptText) throws IOException {
+        URL url = new URL(host);
+        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+        conn.setRequestMethod("POST");
+        conn.setRequestProperty("Content-Type", "application/json; utf-8");
+        conn.setRequestProperty("Accept", "application/json");
+        conn.setDoOutput(true);
+
+        String jsonInputString = String.format(
+                "{\"model\": \"%s\", \"prompt\":\"%s\", \"stream\": false}", model.getModelName(), promptText
+        );
+
+        try (OutputStream os = conn.getOutputStream()) {
+            byte[] input = jsonInputString.getBytes(StandardCharsets.UTF_8);
+            os.write(input, 0, input.length);
+        }
+
+        int responseCode = conn.getResponseCode();
+        if (responseCode != 200) {
+            throw new IOException("HTTP error code: " + responseCode);
+        }
+
+        BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream(), StandardCharsets.UTF_8));
+        StringBuilder response = new StringBuilder();
+        String line;
+        while ((line = in.readLine()) != null) {
+            response.append(line);
+        }
+        in.close();
+
+        conn.disconnect();
+
+        JSONObject jsonResponse = new JSONObject(response.toString());
+        return jsonResponse.getString("response");
+    }
+}
