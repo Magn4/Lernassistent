@@ -37,6 +37,12 @@ body {
   margin-bottom: 50px;
 }
 
+.input-wrapper {
+  display: flex;
+  flex-direction: row;
+  width: 168px;
+}
+
 .login-input {
   border: none;
   border-bottom: grey 1px solid;
@@ -48,6 +54,16 @@ body {
 
 .login-input:focus {
   outline: none;
+}
+
+.fa-eye {
+  display: flex;
+  cursor: pointer;
+}
+
+.fa-eye-slash {
+  display: none;
+  cursor: pointer;
 }
 
 .login-button {
@@ -88,29 +104,3 @@ body {
   padding: 35px;
   border-radius: 55px;
 }
-
-.register-right-side {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  flex-grow: 1;
-  flex-shrink: 4;
-  margin-right: 30px;
-}
-
-.register-left-side{
-  display: flex;
-  justify-content: stretch;
-  align-items: stretch;
-  flex: 1;
-}
-
-.register-image {
-  padding: 35px;
-  border-radius: 55px;
-}
-
-
-/*  * {
-    outline: 2px solid red;
-}  */
