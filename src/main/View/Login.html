@@ -82,7 +82,12 @@
 
       //backend conntection: Endpoint für login
       const loginUser = async (username, password) => {
-        const url = "http://maguna.me/main_controller/login"; // Ersetze durch den tatsächlichen Endpunkt
+        
+        // Message from Taha 
+        
+        const url = "http://localhost:5002/login"; // Leave this uncommented for local testing
+        //const url = "http://maguna.me:5002/login"; // User this for production
+
         const userData = {
           userName: username,
           password: password,

@@ -127,7 +127,12 @@
 
       // backend connection: Endpoint for registration
       const registerUser = async (username, email, password) => {
-        const url = "http://maguna.me/main_controller/register"; // Ersetze durch den tatsächlichen Endpunkt
+        
+        // Message from Taha: 
+        // const url = "http://localhost:5002/register"; // Leave this uncommented for local testing
+        const url = "http://maguna.me:5002/register"; // Use this for production
+
+
         const userData = {
           userName: username,
           eMail: email,

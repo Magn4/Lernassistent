@@ -23,7 +23,8 @@ from Services.UserService import UserService
 app = Flask(__name__)
 CORS(app, resources={
     r"/*": {
-        "origins": ["http://127.0.0.1:3000", "http://localhost:3000", "https://maguna.me"],
+        # "origins": ["http://127.0.0.1:3000", "http://localhost:3000", "https://maguna.me"],
+        "origins": "*",
         "methods": ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
         "allow_headers": ["Content-Type", "Authorization"]
     }

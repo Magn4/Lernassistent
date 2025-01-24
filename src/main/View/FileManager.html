@@ -190,7 +190,12 @@
 
       // backend connection: Endpoint for create_module
       createModuleInBackend = async (moduleName) => {
-        const url = "http://maguna.me/main_controller/create_module";
+        
+        
+        // Message from Taha
+        const url = "http://localhost:5002/create_module"; // Leave this uncommented for local testing
+        //const url = "http://maguna.me:5002/create_module"; // Use this for production
+        
         const moduleData = {
           module_name: moduleName
         };
