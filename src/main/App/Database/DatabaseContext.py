@@ -3,6 +3,7 @@ from sqlalchemy import create_engine, Column, Integer, String, ForeignKey, Text
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship, sessionmaker
 from sqlalchemy.exc import SQLAlchemyError
+from datetime import datetime
 
 # Dynamically construct DATABASE_URL
 DATABASE_URL = f"postgresql://{os.getenv('DB_USER', 'db_user')}:{os.getenv('DB_PASSWORD', 'password123')}@{os.getenv('DB_HOST', 'database')}:{os.getenv('DB_PORT', '5432')}/{os.getenv('DB_NAME', 'app_db')}"
@@ -10,6 +11,24 @@ DATABASE_URL = f"postgresql://{os.getenv('DB_USER', 'db_user')}:{os.getenv('DB_P
 print(DATABASE_URL)
 
 Base = declarative_base()
+
+
+class Summary(Base):
+    __tablename__ = 'summaries'
+
+    id = Column(Integer, primary_key=True)  # Unique ID
+    original_text = Column(Text, nullable=False)  # Original content
+    summary_text = Column(Text, nullable=False)  # Generated summary
+    title = Column(String(255), nullable=True)  # Optional title for the summary
+    created_at = Column(String, nullable=False)  # Timestamp when the summary was created
+
+    def __init__(self, original_text, summary_text, title, created_at):
+        self.original_text = original_text
+        self.summary_text = summary_text
+        self.title = title
+        self.created_at = created_at
+
+
 
 class User(Base):
     __tablename__ = 'users'
@@ -49,7 +68,7 @@ class File(Base):
     def __repr__(self):
         return f"<File(name={self.name}, topic_id={self.topic_id})>"
 
-# ADD: New class for Dashboard uploads (Ni)
+# ADD: New class for Dashboard uploads 
 class DashboardUpload(Base):
     __tablename__ = 'dashboard_uploads'
 
@@ -290,4 +309,34 @@ class DatabaseContext:
         finally:
             session.close()
 
-#
+    def save_summary(self, original_text, summary_text, title=None):
+        """Saves a new summary to the database."""
+        session = self.Session()
+        try:
+            new_summary = Summary(
+                original_text=original_text,
+                summary_text=summary_text,
+                title=title,
+                created_at=datetime.utcnow().isoformat()  # Timestamp
+            )
+            session.add(new_summary)
+            session.commit()
+            return new_summary.id  # Return the ID of the new summary
+        finally:
+            session.close()
+
+    def get_summary_by_id(self, summary_id):
+        """Fetch a summary by its ID."""
+        session = self.Session()
+        try:
+            return session.query(Summary).filter_by(id=summary_id).first()
+        finally:
+            session.close()
+
+    def find_summary_by_text(self, original_text):
+        """Search for a summary by the original text."""
+        session = self.Session()
+        try:
+            return session.query(Summary).filter_by(original_text=original_text).first()
+        finally:
+            session.close()
