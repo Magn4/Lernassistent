@@ -1,5 +1,6 @@
 from flask import Flask, request, jsonify
 from werkzeug.exceptions import HTTPException
+from flask_cors import CORS
 
 from Controllers.DashboardController import DashboardController
 
@@ -21,7 +22,14 @@ from Services.InstructionProcessor import InstructionProcessor  # Import the new
 
 # Flask Setup
 app = Flask(__name__)
-
+CORS(app, resources={
+    r"/*": {
+        # "origins": ["http://127.0.0.1:3000", "http://localhost:3000", "https://maguna.me"],
+        "origins": "*",
+        "methods": ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+        "allow_headers": ["Content-Type", "Authorization"]
+    }
+})
 # Configuration
 app.config['UPLOAD_FOLDER'] = 'C:/Users/hp/Desktop/Uploads'  # Set this to the desired upload folder path
 

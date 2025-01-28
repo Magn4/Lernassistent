@@ -9,6 +9,10 @@
       href="https://fonts.googleapis.com/css?family=Quicksand"
       rel="stylesheet"
     />
+    <script
+      src="https://kit.fontawesome.com/3ff8e8ca0d.js"
+      crossorigin="anonymous"
+    ></script>
   </head>
   <body>
     <div class="login-box">
@@ -21,13 +25,18 @@
           id="username"
           placeholder="Username"
         />
-        <label for="password"></label>
-        <input
-          class="login-input"
-          type="text"
-          id="password"
-          placeholder="Password"
-        />
+        <div class="input-wrapper">
+          <label for="password"></label>
+          <input
+            class="login-input"
+            type="password"
+            id="password"
+            placeholder="Password"
+          />
+          <i class="fa fa-eye fa-xs" onclick="showPassword()"></i>
+          <i class="fa fa-eye-slash fa-xs" style="display: none" onclick="showPassword()"></i>
+
+        </div>
         <button class="login-button" id="loginButton" disabled>Sign in</button>
         <p>No account yet? <a href="Register.html">Register</a></p>
       </div>
@@ -61,11 +70,67 @@
       loginButton.onclick = () => {
         const username = document.getElementById("username").value;
         const password = document.getElementById("password").value;
+      
         // TODO: Implement login logic
-
+        /* if(loginUser(username, password)) {
+          window.location.href = "Dashboard.html";
+        } */
+        
         // Redirect to Dashboard.html
         window.location.href = "Dashboard.html";
       };
+
+      //backend conntection: Endpoint für login
+      const loginUser = async (username, password) => {
+        
+        // Message from Taha 
+        
+        const url = "http://localhost:5002/login"; // Leave this uncommented for local testing
+        //const url = "http://maguna.me:5002/login"; // User this for production
+
+        const userData = {
+          userName: username,
+          password: password,
+        };
+
+        try {
+          const response = await fetch(url, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              "Authorization": "Bearer 1q0Md3McyGa6cOJ9EXx3sk5GF5AZoaku",
+            },
+            body: JSON.stringify(userData),
+          });
+
+          const result = await response.json();
+          if (response.ok) {
+            console.log("Account created successfully:", result);
+            return true;
+          }
+        } catch (error) {
+          console.error("Error:", error);
+          alert("Error:", error);
+        }
+      };
+
+      //Show password
+      const eye = document.querySelector('.fa-eye');
+      const eyeSlash = document.querySelector('.fa-eye-slash');
+
+      function showPassword() {
+        const password = document.getElementById("password");
+        if(password.type === "password") {
+          password.type = "text";
+          eye.style.display = 'none';
+          eyeSlash.style.display = 'flex';
+
+        } else {
+          password.type = "password";
+          eye.style.display = 'flex';
+          eyeSlash.style.display = 'none';
+        }
+      }
     </script>
   </body>
 </html>
