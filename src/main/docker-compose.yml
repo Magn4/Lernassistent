@@ -1,6 +1,6 @@
 services:
   # LLM API Service
-   llm_api:
+  llm_api:
      build:
        context: ./Services/AI
        dockerfile: Dockerfile
