@@ -158,7 +158,7 @@
           const moduleName = prompt("Enter the name for the new module:");
           if (moduleName) {
             
-            // with backend connection
+            // with backend connection (POST: create_module)
             /* if (createModuleInBackend(moduleName)) {
               const newListItem = document.createElement("li");
               newListItem.textContent = moduleName;
@@ -173,6 +173,7 @@
               deleteModule(newListItem);
             } */
 
+            // without backend connection
             const newListItem = document.createElement("li");
             newListItem.textContent = moduleName;
             modulesContainer.appendChild(newListItem);
@@ -188,7 +189,7 @@
         });
       });
 
-      // backend connection: Endpoint for create_module
+      // backend connection (POST: create_module)
       createModuleInBackend = async (moduleName) => {
         const url = "http://maguna.me/main_controller/create_module";
         const moduleData = {
@@ -314,10 +315,29 @@
         addFolderIcon.addEventListener("click", () => {
           const folderName = prompt("Enter the name for the new folder:");
           if (folderName) {
+
+            // with backend connection (POST: create_topic)   // TODO: get module name
+            /* if(createTopicInBackend(moduleName, folderName)) {
+              const newFolder = document.createElement("div");
+              newFolder.className = "folder";
+              newFolder.innerHTML = `<i class="fas fa-folder folder-icon-design"></i><p>${folderName}</p>`;
+              foldersContainer.appendChild(newFolder);
+              
+              // Make the new folder clickable
+              newFolder.addEventListener("click", () => {
+                makeFilesVisible(newFolder);
+              });
+
+              // Make the new folder deletable
+              deleteFolder(newFolder);
+            } */
+
+            // without backend connection
             const newFolder = document.createElement("div");
             newFolder.className = "folder";
             newFolder.innerHTML = `<i class="fas fa-folder folder-icon-design"></i><p>${folderName}</p>`;
             foldersContainer.appendChild(newFolder);
+
             // Make the new folder clickable
             newFolder.addEventListener("click", () => {
               makeFilesVisible(newFolder);
@@ -328,6 +348,38 @@
           }
         });
       });
+
+      // backend connection (POST: create_topic)
+      createTopicInBackend = async (moduleName, folderName) => {
+        const url = "http://maguna.me/main_controller/create_topic";
+        const topicData = {
+          module_name: moduleName,
+          topic_name: folderName
+        };
+
+        try {
+          const response = await fetch(url, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json", /* ; charset=UTF-8" */
+              "Authorization": "Bearer 1q0Md3McyGa6cOJ9EXx3sk5GF5AZoaku",
+            },
+            body: JSON.stringify(topicData),
+          });
+
+          const result = await response.json();
+          if (response.ok) {
+            console.log("Account created successfully:", result);
+            return true;
+          } else {
+            console.log("Topic already exists:", result);
+            alert("Topic already exists");
+          }
+        } catch (error) {
+          console.error("Error:", error);
+          alert("Error:", error);
+        }
+      };
 
       //Delete folders on right-click
       document.addEventListener("DOMContentLoaded", () => {
