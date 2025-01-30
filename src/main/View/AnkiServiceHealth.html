@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Anki Service Health</title>
+    <link rel="stylesheet" href="Styles.css" />
+    <link
+      href="https://fonts.googleapis.com/css?family=Quicksand"
+      rel="stylesheet"
+    />
+</head>
+<body>
+    <div class="health-box">
+        <h1>Anki Service Health Status</h1>
+        <p id="health-status">Loading...</p>
+        <p id="error-message" style="color: red;"></p>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const targetUrl = 'http://127.0.0.1:8000/health';
+
+            fetch(targetUrl, {
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+                const healthStatus = document.getElementById('health-status');
+                healthStatus.textContent = data.status || 'Unknown';
+            })
+            .catch(error => {
+                console.error('Error fetching health status:', error);
+                const healthStatus = document.getElementById('health-status');
+                const errorMessage = document.getElementById('error-message');
+                healthStatus.textContent = 'Error fetching health status';
+                errorMessage.textContent = error.message;
+                console.error('Error message:', error.message);
+            });
+        });
+    </script>
+</body>
+</html>
