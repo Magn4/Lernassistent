@@ -1,13 +1,13 @@
 services:
   # LLM API Service
-  # llm_api:
-  #   build:
-  #     context: ./Services/AI
-  #     dockerfile: Dockerfile
-  #   ports:
-  #     - "9191:9191"
-  #   container_name: llm_api
-  #   restart: unless-stopped
+   llm_api:
+     build:
+       context: ./Services/AI
+       dockerfile: Dockerfile
+     ports:
+       - "9191:9191"
+     container_name: llm_api
+     restart: unless-stopped
 
   # PDF Extraction Service
   extract_pdf:
