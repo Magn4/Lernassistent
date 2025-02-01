@@ -129,6 +129,355 @@
           .catch((error) => console.error("Error loading navigation:", error));
       });
 
+/*    // with backend connection -- start
+      //Modules Code
+      //Display modules and make folders-container visible when a module is clicked
+      document.addEventListener("DOMContentLoaded", async () => {
+        const modules = await getModules();
+        displayModules(modules);
+      });
+
+      // backend connection: (GET: list_all_modules)
+      async function getModules() {
+        const url = "http://maguna.me/main_controller/modules ";
+        try {
+          const response = await fetch(url, {
+            method: "GET",
+            headers: {
+              Authorization: "Bearer 1q0Md3McyGa6cOJ9EXx3sk5GF5AZoaku",
+            },
+          });
+
+          if (response.ok) {
+            const modules = await response.json();
+            return modules;
+          } else {
+            console.error("Failed to fetch modules:", response.statusText);
+            return [];
+          }
+        } catch (error) {
+          console.error("Error fetching modules:", error);
+          return [];
+        }
+      }
+
+      function displayModules(modules) {
+        const modulesList = document.getElementById("modules-list");
+        modulesList.innerHTML = ""; // Clear existing modules
+
+        modules.forEach((module) => {
+          // fill modules list
+          const moduleItem = document.createElement("li");
+          moduleItem.textContent = module;
+          modulesList.appendChild(moduleItem);
+
+          // Make the module clickable
+          moduleItem.addEventListener("click", async () => {
+            const topics = await getTopics(module);
+            displayTopics(topics);
+          });
+
+          // Make the module deletable
+          deleteModule(moduleItem); // <--
+        });
+      }
+
+      //Add modules by pressing the add-module icon
+      document.addEventListener("DOMContentLoaded", () => {
+        const addModuleIcon = document.getElementById("add-module");
+        const modulesContainer = document
+          .getElementById("modules-container")
+          .querySelector("ul");
+
+        addModuleIcon.addEventListener("click", () => {
+          const moduleName = prompt("Enter the name for the new module:");
+          if (moduleName) {
+            if (createModuleInBackend(moduleName)) {
+              const newListItem = document.createElement("li");
+              newListItem.textContent = moduleName;
+              modulesContainer.appendChild(newListItem);
+
+              // Make the new child clickable
+              newListItem.addEventListener("click", async  () => {
+                const topics = await getTopics(module);
+                displayTopics(topics);
+              });
+
+              // Make the new child deletable
+              deleteModule(newListItem);
+            }
+          }
+        });
+      });
+
+      // backend connection (POST: create_module)
+      createModuleInBackend = async (moduleName) => {
+        const url = "http://maguna.me/main_controller/create_module";
+        const moduleData = {
+          module_name: moduleName,
+        };
+
+        try {
+          const response = await fetch(url, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: "Bearer 1q0Md3McyGa6cOJ9EXx3sk5GF5AZoaku",
+            },
+            body: JSON.stringify(moduleData),
+          });
+
+          const result = await response.json();
+          if (response.ok) {
+            console.log("Module created successfully:", result);
+            return true;
+          } else {
+            console.log("Module already exists:", result);
+            alert("Module already exists");
+          }
+        } catch (error) {
+          console.error("Error:", error);
+          alert("Error:", error);
+        }
+      };
+
+      // Delete module on right-click
+      deleteModule = (module) => {
+        module.addEventListener("contextmenu", (event) => {
+          event.preventDefault();
+
+          const deleteOption = confirm("Möchten Sie dieses Element löschen?");
+          if (deleteOption) {
+            if (deleteModuleInBackend(moduleName)) {
+              module.remove();
+              makeFoldersInvisible();
+            }
+          }
+        });
+      };
+
+      // backend connection: (DEL: delete_module)
+      deleteModuleInBackend = async (moduleName) => {
+        const url = "http://127.0.0.1:5002/delete_module/" + moduleName;
+
+        try {
+          const response = await fetch(url, {
+            method: "DELETE",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: "Bearer 1q0Md3McyGa6cOJ9EXx3sk5GF5AZoaku",
+            },
+          });
+
+          const result = await response.json();
+          if (response.ok) {
+            console.log("Module deleted successfully:", result);
+            return true;
+          } else {
+            console.log("Failed to delete module:", result);
+            alert("Failed to delete module");
+          }
+        } catch (error) {
+          console.error("Error:", error);
+          alert("Error:", error);
+        }
+      };
+
+      // Folders Code
+      // Display folders and make files-container visible when a module is clicked
+      // backend connection: (GET: list_all_topics_in_a_module)
+      async function getTopics(moduleName) {
+        const url = `http://127.0.0.1:5002/modules/${moduleName}/topics`;
+        try {
+          const response = await fetch(url, {
+            method: "GET",
+            headers: {
+              Authorization: "Bearer 1q0Md3McyGa6cOJ9EXx3sk5GF5AZoaku",
+            },
+          });
+
+          if (response.ok) {
+            const topics = await response.json();
+            return topics;
+          } else {
+            console.error("Failed to fetch topics:", response.statusText);
+            return [];
+          }
+        } catch (error) {
+          console.error("Error fetching topics:", error);
+          return [];
+        }
+      }
+
+      function displayTopics(topics) {
+        const foldersContainer = document.getElementById("folders-container");
+        foldersContainer.innerHTML = ""; // Clear existing folders
+
+        topics.forEach((topic) => {
+          // fill folders container
+          const newFolder = document.createElement("div");
+          newFolder.className = "folder";
+          newFolder.innerHTML = `<i class="fas fa-folder folder-icon-design"></i><p>${topic}</p>`;
+          foldersContainer.appendChild(newFolder);
+
+          // Make the new folder clickable
+          newFolder.addEventListener("click", () => {
+            makeFilesVisible(newFolder);
+          });
+
+          // Make the new folder deletable
+          deleteFolder(newFolder);
+        });
+
+        makeFoldersVisible();
+      }
+
+      //Add folders by pressing the add-folder icon
+      document.addEventListener("DOMContentLoaded", () => {
+        const addFolderIcon = document.getElementById("add-folder");
+
+        addFolderIcon.addEventListener("click", () => {
+          const folderName = prompt("Enter the name for the new folder:");
+          if (folderName) {
+            if(createTopicInBackend(moduleName, folderName)) {   // TODO: get module name
+              const newFolder = document.createElement("div");
+              newFolder.className = "folder";
+              newFolder.innerHTML = `<i class="fas fa-folder folder-icon-design"></i><p>${folderName}</p>`;
+              foldersContainer.appendChild(newFolder);
+              
+              // Make the new folder clickable
+              newFolder.addEventListener("click", () => {
+                makeFilesVisible(newFolder);
+              });
+
+              // Make the new folder deletable
+              deleteFolder(newFolder);
+            }
+          }
+        });
+      });
+
+      // backend connection (POST: create_topic)
+      createTopicInBackend = async (moduleName, folderName) => {
+        const url = "http://maguna.me/main_controller/create_topic";
+        const topicData = {
+          module_name: moduleName,
+          topic_name: folderName,
+        };
+
+        try {
+          const response = await fetch(url, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: "Bearer 1q0Md3McyGa6cOJ9EXx3sk5GF5AZoaku",
+            },
+            body: JSON.stringify(topicData),
+          });
+
+          const result = await response.json();
+          if (response.ok) {
+            console.log("Topic created successfully:", result);
+            return true;
+          } else {
+            console.log("Topic already exists:", result);
+            alert("Topic already exists");
+          }
+        } catch (error) {
+          console.error("Error:", error);
+          alert("Error:", error);
+        }
+      };
+
+      //Delete folder on right-click
+      function deleteFolder(folder) {
+        folder.addEventListener("contextmenu", (event) => {
+          event.preventDefault();
+
+          const deleteOption = confirm("Möchten Sie dieses Element löschen?");
+          if (deleteOption) {
+            if (deleteTopicInBackend(moduleName, folder)) {  // TODO: get moduleName 
+              module.remove();
+              makeFoldersInvisible();
+            }
+          }
+        });
+      }
+
+      // backend connection: (DEL: delete_topic)
+      deleteTopicInBackend = async (moduleName, topicName) => {
+        const url = "http://127.0.0.1:5002/delete_topic/" + moduleName + "/" + topicName;
+
+        try {
+          const response = await fetch(url, {
+            method: "DELETE",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: "Bearer 1q0Md3McyGa6cOJ9EXx3sk5GF5AZoaku",
+            },
+          });
+
+          const result = await response.json();
+          if (response.ok) {
+            console.log("Topic deleted successfully:", result);
+            return true;
+          } else {
+            console.log("Failed to delete topic:", result);
+            alert("Failed to delete topic");
+          }
+        } catch (error) {
+          console.error("Error:", error);
+          alert("Error:", error);
+        }
+      };
+
+      // Helper functions
+      function makeFoldersVisible() {
+        const foldersParagraph = document.getElementById("folders-paragraph");
+        const foldersContainer = document.getElementById("folders-container");
+        const filesHeader = document.getElementById("files-header");
+        const filesParagraph = document.getElementById("files-paragraph");
+        const filesContainer = document.getElementById("files-container");
+
+        foldersParagraph.style.display = "none";
+        foldersContainer.style.display = "flex";
+        filesHeader.style.display = "flex";
+        filesParagraph.style.display = "flex";
+        filesContainer.style.display = "none";
+      }
+
+      makeFilesVisible = () => {
+        const filesParagraph = document.getElementById("files-paragraph");
+        const filesContainer = document.getElementById("files-container");
+        
+        filesParagraph.style.display = "none";
+        filesContainer.style.display = "flex";
+      };
+
+      makeFoldersInvisible = () => {
+        const foldersParagraph = document.getElementById("folders-paragraph");
+        const foldersContainer = document.getElementById("folders-container");
+        const filesHeader = document.getElementById("files-header");
+        const filesParagraph = document.getElementById("files-paragraph");
+        const filesContainer = document.getElementById("files-container");
+        
+        foldersParagraph.style.display = "flex";
+        foldersContainer.style.display = "none";
+        filesHeader.style.display = "none";
+        filesParagraph.style.display = "none";
+        filesContainer.style.display = "none";
+      };
+
+      function makeFilesInvisible() {
+        const filesParagraph = document.getElementById("files-paragraph");
+        const filesContainer = document.getElementById("files-container");
+
+        filesParagraph.style.display = "flex";
+        filesContainer.style.display = "none";
+      }
+     
+      // with backend connection -- end */
+
       const foldersContainer = document.getElementById("folders-container");
       const foldersParagraph = document.getElementById("folders-paragraph");
       const filesHeader = document.getElementById("files-header");
@@ -233,6 +582,7 @@
             newFolder.className = "folder";
             newFolder.innerHTML = `<i class="fas fa-folder folder-icon-design"></i><p>${folderName}</p>`;
             foldersContainer.appendChild(newFolder);
+
             // Make the new folder clickable
             newFolder.addEventListener("click", () => {
               makeFilesVisible(newFolder);
