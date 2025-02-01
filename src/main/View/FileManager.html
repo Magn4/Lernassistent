@@ -439,6 +439,72 @@
       // JSON-Daten als String in das Textarea-Feld laden
       const textarea = document.getElementById("edit-text");
       textarea.value = jsonData["description"];
+
+      // Add this inside the existing <script> tag
+      const API_BASE_URL = 'http://maguna.me:5002';
+
+      // List modules
+      async function listModules() {
+          try {
+              const response = await fetch(`${API_BASE_URL}/modules`, {
+                  headers: {
+                      'Authorization': 'Bearer ' + localStorage.getItem('token')
+                  }
+              });
+              const data = await response.json();
+              // Update modules list UI
+              updateModulesList(data);
+          } catch (error) {
+              console.error('Error fetching modules:', error);
+          }
+      }
+
+      // Create module
+      async function createModule(moduleName) {
+          try {
+              const response = await fetch(`${API_BASE_URL}/create_module`, {
+                  method: 'POST',
+                  headers: {
+                      'Content-Type': 'application/json',
+                      'Authorization': 'Bearer ' + localStorage.getItem('token')
+                  },
+                  body: JSON.stringify({ module_name: moduleName })
+              });
+              if (response.ok) {
+                  listModules(); // Refresh the list
+              }
+          } catch (error) {
+              console.error('Error creating module:', error);
+          }
+      }
+
+      // Delete module
+      async function deleteModule(moduleName) {
+          try {
+              await fetch(`${API_BASE_URL}/delete_module/${moduleName}`, {
+                  method: 'DELETE',
+                  headers: {
+                      'Authorization': 'Bearer ' + localStorage.getItem('token')
+                  }
+              });
+              listModules(); // Refresh the list
+          } catch (error) {
+              console.error('Error deleting module:', error);
+          }
+      }
+
+      // Add event listeners to the existing UI elements
+      document.getElementById('add-module').addEventListener('click', () => {
+          const moduleName = prompt('Enter module name:');
+          if (moduleName) {
+              createModule(moduleName);
+          }
+      });
+
+      // Initialize the page
+      document.addEventListener('DOMContentLoaded', () => {
+          listModules();
+      });
     </script>
   </body>
 </html>

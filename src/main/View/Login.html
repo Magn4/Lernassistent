@@ -67,26 +67,16 @@
         passwordInput.addEventListener("input", validateInputs);
       });
 
-      loginButton.onclick = () => {
+      // Update the login button onclick handler
+      loginButton.onclick = async () => {
         const username = document.getElementById("username").value;
         const password = document.getElementById("password").value;
-      
-        // TODO: Implement login logic
-        /* if(loginUser(username, password)) {
-          window.location.href = "Dashboard.html";
-        } */
-        
-        // Redirect to Dashboard.html
-        window.location.href = "Dashboard.html";
+        await loginUser(username, password);
       };
 
       //backend conntection: Endpoint für login
       const loginUser = async (username, password) => {
-        
-        // Message from Taha 
-        
-        const url = "http://localhost:5002/login"; // Leave this uncommented for local testing
-        //const url = "http://maguna.me:5002/login"; // User this for production
+        const url = "http://maguna.me:5002/login";
 
         const userData = {
           userName: username,
@@ -98,19 +88,22 @@
             method: "POST",
             headers: {
               "Content-Type": "application/json",
-              "Authorization": "Bearer 1q0Md3McyGa6cOJ9EXx3sk5GF5AZoaku",
             },
             body: JSON.stringify(userData),
+            credentials: "include",
           });
 
           const result = await response.json();
           if (response.ok) {
-            console.log("Account created successfully:", result);
+            localStorage.setItem("token", result.token);
+            window.location.href = "Dashboard.html";
             return true;
+          } else {
+            alert("Login failed: " + result.error);
           }
         } catch (error) {
           console.error("Error:", error);
-          alert("Error:", error);
+          alert("Error during login");
         }
       };
 

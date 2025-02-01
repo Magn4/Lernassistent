@@ -127,40 +127,34 @@
 
       // backend connection: Endpoint for registration
       const registerUser = async (username, email, password) => {
-        
-        // Message from Taha: 
-        // const url = "http://localhost:5002/register"; // Leave this uncommented for local testing
-        const url = "http://maguna.me:5002/register"; // Use this for production
-
+        const url = "http://maguna.me:5002/register";
 
         const userData = {
-          userName: username,
-          eMail: email,
-          password: password,
+            userName: username,
+            eMail: email,
+            password: password,
         };
 
         try {
-          const response = await fetch(url, {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-              "Authorization": "Bearer Token",
-            },
-            body: JSON.stringify(userData),
-            /* mode: 'no-cors' */
-          });
+            const response = await fetch(url, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(userData),
+                credentials: 'include'
+            });
 
-          const result = await response.json();
-          if (response.ok) {
-            console.log("Account created successfully:", result);
-            return true;
-          } else {
-            console.log("Account already exists:", result);
-            alert("Account already exists");
-          }
+            const result = await response.json();
+            if (response.ok) {
+                window.location.href = "Login.html";
+                return true;
+            } else {
+                alert("Registration failed: " + result.error);
+            }
         } catch (error) {
-          console.error("Error:", error);
-          alert("Error:", error);
+            console.error("Error:", error);
+            alert("Error during registration");
         }
       };
 

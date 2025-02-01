@@ -7,10 +7,11 @@ import json
 app = Flask(__name__)
 CORS(app, resources={
     r"/*": {
-        # "origins": ["http://127.0.0.1:3000", "http://localhost:3000", "https://maguna.me"],
-        "origins": "*",
+        "origins": ["http://maguna.me", "http://localhost", "http://127.0.0.1"],
         "methods": ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-        "allow_headers": ["Content-Type", "Authorization"]
+        "allow_headers": ["Content-Type", "Authorization"],
+        "expose_headers": ["Content-Type"],
+        "supports_credentials": True
     }
 })
 # Initialize the database context
