@@ -119,23 +119,24 @@
           document.getElementById("passwordRepeated").value;
 
         if (password !== passwordRepeated) {
-          alert("Passwörter stimmen nicht überein");
+          alert("Passwords do not match");
         } else {
           const username = document.getElementById("username").value;
           const email = document.getElementById("email").value;
 
           // with backend connection
           if (registerUser(username, email, password)) {
-            /* window.location.href = "Dashboard.html"; */
+            window.location.href = "Dashboard.html";
           }
 
-          /* window.location.href = "Dashboard.html"; */
+          /* // without backend connection
+          window.location.href = "Dashboard.html"; */
         }
       };
 
-      // backend connection: Endpoint for registration
+      // backend connection: (POST: create_account)
       const registerUser = async (username, email, password) => {
-        const url = "http://maguna.me/main_controller/register"; // Ersetze durch den tatsächlichen Endpunkt
+        const url = "http://maguna.me/main_controller/register";
         const userData = {
           userName: username,
           eMail: email,
@@ -150,7 +151,6 @@
               Authorization: "Bearer Token",
             },
             body: JSON.stringify(userData),
-            /* mode: 'no-cors' */
           });
 
           const result = await response.json();

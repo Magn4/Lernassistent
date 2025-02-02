@@ -172,10 +172,13 @@
 
         //Save Button with backend connection
         const saveButton = document.getElementById("save");
+
         saveButton.onclick = () => {
           const modulename = document.getElementById("input1").value;
           const directoryname = document.getElementById("input2").value;
+
           alert(`Modulename: ${modulename}, Directoryname: ${directoryname}`);
+
           if (uploadFile(files[0], moduleName, folderName)) {
             document.getElementById("input1").value = "";
             document.getElementById("input2").value = "";
@@ -188,7 +191,7 @@
 
       // backend connection: (POST: upload_a_file)
       const uploadFile = async (dropArea, moduleName, folderName) => {
-        const url = "http://127.0.0.1:5002/upload_file";
+        const url = "http://maguna.me/main_controller/upload_file";
         const file = event.dataTransfer.file;
         const uploadData = {
           module_name: moduleName,
@@ -201,7 +204,7 @@
             method: "POST",
             headers: {
               "Content-Type": "application/json",
-              Authorization: "Bearer 1q0Md3McyGa6cOJ9EXx3sk5GF5AZoaku",
+              Authorization: "Bearer Token",
             },
             body: JSON.stringify(uploadData),
           });
@@ -228,8 +231,8 @@
         modal.style.display = "none";
       };
 
-      // save button without backend connection
-      /* const save = document.getElementById("save");
+      /* // save button without backend connection
+      const save = document.getElementById("save");
 
       // When the user clicks on the save button, save and close the modal
         save.onclick = () => {

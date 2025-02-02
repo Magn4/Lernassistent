@@ -71,18 +71,18 @@
         const username = document.getElementById("username").value;
         const password = document.getElementById("password").value;
       
-        // TODO: Implement login logic
-        /* if(loginUser(username, password)) {
+        // with backend connection
+        if(loginUser(username, password)) {
           window.location.href = "Dashboard.html";
-        } */
+        }
         
-        // Redirect to Dashboard.html
-        window.location.href = "Dashboard.html";
+        /* // without backend connection
+        window.location.href = "Dashboard.html"; */
       };
 
-      //backend conntection: Endpoint für login
+      // backend conntection:(POST: login)
       const loginUser = async (username, password) => {
-        const url = "http://maguna.me/main_controller/login"; // Ersetze durch den tatsächlichen Endpunkt
+        const url = "http://maguna.me/main_controller/login";
         const userData = {
           userName: username,
           password: password,
@@ -93,7 +93,7 @@
             method: "POST",
             headers: {
               "Content-Type": "application/json",
-              "Authorization": "Bearer 1q0Md3McyGa6cOJ9EXx3sk5GF5AZoaku",
+              "Authorization": "Bearer Token",
             },
             body: JSON.stringify(userData),
           });
