@@ -60,45 +60,18 @@
                     <i class="fas fa-upload fa-2xl"></i>
                     <p class="description-text">Trau dich</p>
                   </div>
-                  <div class="upload-button">
+                  <!-- <div class="upload-button">
                     <input type="file" id="file-input" />
                     <label for="file-input">Explorer durchsuchen</label>
-                  </div>
+                  </div> -->
 
-                  <!-- Trigger/Open The Modal -->
-                  <button id="myBtn">Open Modal</button>
                   <!-- The Modal -->
                   <div id="myModal" class="modal">
                     <!-- Modal content -->
                     <div class="modal-content">
                       <!-- <p style="font-size: large;"><b>Store File</b></p> -->
                       <h2 class="modal-title"><b>Store File</b></h2>
-                      <!-- <input
-                        class="modal-input"
-                        type="text"
-                        id="Modulename"
-                        placeholder="Modulename"
-                      />
-                      <input
-                        class="modal-input"
-                        type="text"
-                        id="Directoryname"
-                        placeholder="Directoryname"
-                      /> -->
-
-                      <!-- <label for="browser">Choose your browser from the list:</label>
-                      <input list="browsers" name="browser" id="browser">
-                      
-                      <datalist id="browsers">
-                        <option value="Edge">
-                        <option value="Firefox">
-                        <option value="Chrome">
-                        <option value="Opera">
-                        <option value="Safari">
-                      </datalist>  -->
-
                       <div class="dropdown-container">
-                        <!-- <label for="input1">Wähle oder gib ein (1):</label> -->
                         <input
                           type="text"
                           class="modal-input"
@@ -122,7 +95,6 @@
                       </div>
 
                       <div class="dropdown-container">
-                        <!-- <label for="input2">Wähle oder gib ein (2):</label> -->
                         <input
                           type="text"
                           class="modal-input"
@@ -190,21 +162,42 @@
         dropArea.style.backgroundColor = "#ffffff";
         const files = event.dataTransfer.files;
         alert(`You dropped ${files.length} file(s).`);
+        modal.style.display = "block";
+
+        //Save Button with backend connection
+        const saveButton = document.getElementById("save");
+        saveButton.onclick = () => {
+          const modulename = document.getElementById("input1").value;
+          const directoryname = document.getElementById("input2").value;
+          alert(`Modulename: ${modulename}, Directoryname: ${directoryname}`);
+          if (uploadFile(files[0], moduleName, folderName)) {
+            document.getElementById("input1").value = "";
+            document.getElementById("input2").value = "";
+            modal.style.display = "none";
+          } else {
+            alert("Error: File could not be uploaded");
+          }
+        };
       });
 
-      //Endpoint
-      const uploadFile = async (dropArea) => {
+      // backend connection: (POST: upload_a_file)
+      const uploadFile = async (dropArea, moduleName, folderName) => {
         const url = "http://127.0.0.1:5002/upload_file";
         const file = event.dataTransfer.file;
+        const uploadData = {
+          module_name: moduleName,
+          folder_name: folderName,
+          file: file,
+        };
 
         try {
           const response = await fetch(url, {
             method: "POST",
             headers: {
-             "Content-Type": "application/json",
-              "Authorization": "Bearer 1q0Md3McyGa6cOJ9EXx3sk5GF5AZoaku",
+              "Content-Type": "application/json",
+              Authorization: "Bearer 1q0Md3McyGa6cOJ9EXx3sk5GF5AZoaku",
             },
-            body: JSON.stringify(file),
+            body: JSON.stringify(uploadData),
           });
 
           const result = await response.json();
@@ -220,34 +213,27 @@
 
       //Modal Code
       const modal = document.getElementById("myModal");
-
-      const btn = document.getElementById("myBtn");
-
-      // When the user clicks on the button, open the modal
-      btn.onclick = () => {
-        modal.style.display = "block";
-      };
-
-      const quit = document.getElementById("quit");
+      const quitButton = document.getElementById("quit");
 
       // When the user clicks on the quit button, close the modal
-      quit.onclick = () => {
+      quitButton.onclick = () => {
         document.getElementById("input1").value = "";
         document.getElementById("input2").value = "";
         modal.style.display = "none";
       };
 
-      const save = document.getElementById("save");
+      // save button without backend connection
+      /* const save = document.getElementById("save");
 
       // When the user clicks on the save button, save and close the modal
-      save.onclick = () => {
+        save.onclick = () => {
         const modulename = document.getElementById("input1").value;
         const directoryname = document.getElementById("input2").value;
         alert(`Modulename: ${modulename}, Directoryname: ${directoryname}`); //TODO: Send to backend
         document.getElementById("input1").value = "";
         document.getElementById("input2").value = "";
         modal.style.display = "none";
-      };
+      }; */
 
       //Get the dropdown lists
       const dropdownList1 = document.getElementById("dropdown1");
@@ -261,15 +247,8 @@
         event.preventDefault(); // Prevents the input field from losing focus
       });
 
-      /* // When the user clicks anywhere outside of the modal, close it
-      window.onclick = function (event) {
-        if (event.target == modal) {
-          modal.style.display = "none";
-        }
-      }; */
-
       //Dropdown Code
-      // Zeigt die Dropdown-Liste an
+      // Shows the dropdown list
       function showDropdown(dropdownId) {
         const dropdown = document.getElementById(dropdownId);
         dropdown.style.display = "block";
@@ -278,13 +257,13 @@
         });
       }
 
-      // Versteckt die Dropdown-Liste
+      // Hides the dropdown list
       function hideDropdown(dropdownId) {
         const dropdown = document.getElementById(dropdownId);
         dropdown.style.display = "none";
       }
 
-      // Filtert die Dropdown-Liste basierend auf der Benutzereingabe
+      // Filters the dropdown list based on the user input
       function filterOptions(inputId, dropdownId) {
         const input = document.getElementById(inputId);
         const dropdown = document.getElementById(dropdownId);
@@ -299,7 +278,7 @@
         });
       }
 
-      // Wählt eine Option aus und blendet die Dropdown-Liste aus
+      // Selects an option and hides the dropdown list
       function selectOption(inputId, value) {
         const input = document.getElementById(inputId);
         input.value = value;
@@ -314,11 +293,6 @@
           });
         }
       });
-
-      /* // Versteckt das Dropdown, wenn das Input-Feld den Fokus verliert
-      input.addEventListener("blur", () => {
-        setTimeout(() => (dropdown.style.display = "none"), 200); // Verzögerung für Klicks
-      }); */
     </script>
   </body>
 </html>
