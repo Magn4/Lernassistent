@@ -22,8 +22,6 @@
       <div class="content-box">
         <div class="row">
           <h1>File Manager</h1>
-          <!-- Button to open Modal -->
-          <button id="myBtn">Open Modal</button>
           <div class="column">
             <div class="row" id="modules-box">
               <div id="header">
@@ -91,7 +89,7 @@
                   <div id="files-container">
                     <ul id="files-list">
                       <li>Lecture slides</li>
-                      <li>Summary</li>
+                      <li id="summary">Summary</li>
                       <li>AnkiCards</li>
                     </ul>
                   </div>
@@ -650,10 +648,10 @@
       //Modal Code
       const modal = document.getElementById("myModal");
 
-      const btn = document.getElementById("myBtn");
+      const summary = document.getElementById("summary");
 
-      // When the user clicks on the button, open the modal
-      btn.onclick = () => {
+      // When the user clicks on the summary, open the modal
+      summary.onclick = () => {
         modal.style.display = "block";
       };
 
