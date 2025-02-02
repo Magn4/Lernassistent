@@ -10,9 +10,9 @@
       rel="stylesheet"
     />
     <script
-    src="https://kit.fontawesome.com/3ff8e8ca0d.js"
-    crossorigin="anonymous"
-  ></script>
+      src="https://kit.fontawesome.com/3ff8e8ca0d.js"
+      crossorigin="anonymous"
+    ></script>
   </head>
   <body>
     <div class="login-box">
@@ -40,36 +40,44 @@
           placeholder="E-Mail"
         />
         <div class="input-wrapper">
-        <label for="password"></label>
-        <input
-          class="login-input"
-          type="password"
-          id="password"
-          placeholder="Password"
-        />
-        <div class="password-hidden-icon" onclick="showPassword()">
-          <i class="fa fa-eye fa-xs"></i>
+          <label for="password"></label>
+          <input
+            class="login-input"
+            type="password"
+            id="password"
+            placeholder="Password"
+          />
+          <div class="password-hidden-icon" onclick="showPassword()">
+            <i class="fa fa-eye fa-xs"></i>
           </div>
           <div class="password-shown-icon" onclick="showPassword()">
-          <i class="fa fa-eye-slash fa-xs"></i>
+            <i class="fa fa-eye-slash fa-xs"></i>
           </div>
         </div>
         <div class="input-wrapper">
-        <label for="passwordRepeated"></label>
-        <input
-          class="login-input"
-          type="password"
-          id="passwordRepeated"
-          placeholder="Repeat password"
-        />
-        <div class="password-repeated-hidden-icon" onclick="showPasswordRepeated()">
-        <i class="fa fa-eye fa-xs"></i>
+          <label for="passwordRepeated"></label>
+          <input
+            class="login-input"
+            type="password"
+            id="passwordRepeated"
+            placeholder="Repeat password"
+          />
+          <div
+            class="password-repeated-hidden-icon"
+            onclick="showPasswordRepeated()"
+          >
+            <i class="fa fa-eye fa-xs"></i>
+          </div>
+          <div
+            class="password-repeated-shown-icon"
+            onclick="showPasswordRepeated()"
+          >
+            <i class="fa fa-eye-slash fa-xs"></i>
+          </div>
         </div>
-        <div class="password-repeated-shown-icon" onclick="showPasswordRepeated()">
-        <i class="fa fa-eye-slash fa-xs"></i>
-        </div>
-        </div>
-        <button class="login-button" id="registerButton" disabled>Sign up</button>
+        <button class="login-button" id="registerButton" disabled>
+          Sign up
+        </button>
         <p>Already have an account? <a href="Login.html">Back</a></p>
       </div>
     </div>
@@ -115,9 +123,9 @@
         } else {
           const username = document.getElementById("username").value;
           const email = document.getElementById("email").value;
-          
+
           // with backend connection
-          if(registerUser(username, email, password)){
+          if (registerUser(username, email, password)) {
             /* window.location.href = "Dashboard.html"; */
           }
 
@@ -139,7 +147,7 @@
             method: "POST",
             headers: {
               "Content-Type": "application/json",
-              "Authorization": "Bearer Token",
+              Authorization: "Bearer Token",
             },
             body: JSON.stringify(userData),
             /* mode: 'no-cors' */
@@ -159,41 +167,43 @@
         }
       };
 
- //Show password
-      const passwordHidden = document.querySelector('.password-hidden-icon');
-      const passwordShown = document.querySelector('.password-shown-icon');
-      const passwordRepeatedHidden = document.querySelector('.password-repeated-hidden-icon');
-      const passwordRepeatedShown = document.querySelector('.password-repeated-shown-icon');
+      //Show password
+      const passwordHidden = document.querySelector(".password-hidden-icon");
+      const passwordShown = document.querySelector(".password-shown-icon");
+      const passwordRepeatedHidden = document.querySelector(
+        ".password-repeated-hidden-icon"
+      );
+      const passwordRepeatedShown = document.querySelector(
+        ".password-repeated-shown-icon"
+      );
 
       function showPassword() {
         const password = document.getElementById("password");
 
-        if(password.type === "password") {
+        if (password.type === "password") {
           password.type = "text";
-          passwordHidden.style.display = 'none';
-          passwordShown.style.display = 'flex';
+          passwordHidden.style.display = "none";
+          passwordShown.style.display = "flex";
         } else {
           password.type = "password";
-          passwordHidden.style.display = 'flex';
-          passwordShown.style.display = 'none';
+          passwordHidden.style.display = "flex";
+          passwordShown.style.display = "none";
         }
       }
 
       function showPasswordRepeated() {
         const passwordRepeated = document.getElementById("passwordRepeated");
 
-        if(passwordRepeated.type === "password") {
+        if (passwordRepeated.type === "password") {
           passwordRepeated.type = "text";
-          passwordRepeatedHidden.style.display = 'none';
-          passwordRepeatedShown.style.display = 'flex';
+          passwordRepeatedHidden.style.display = "none";
+          passwordRepeatedShown.style.display = "flex";
         } else {
           passwordRepeated.type = "password";
-          passwordRepeatedHidden.style.display = 'flex';
-          passwordRepeatedShown.style.display = 'none';
+          passwordRepeatedHidden.style.display = "flex";
+          passwordRepeatedShown.style.display = "none";
         }
       }
-
-
     </script>
   </body>
 </html>

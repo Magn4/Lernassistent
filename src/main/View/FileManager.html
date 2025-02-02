@@ -60,23 +60,23 @@
                 <div id="folders-container">
                   <div class="folder">
                     <i class="fas fa-folder folder-icon-design"></i>
-                    <p>Vorlesung 01</p>
+                    <p>Lecture 01</p>
                   </div>
                   <div class="folder">
                     <i class="fas fa-folder folder-icon-design"></i>
-                    <p>Vorlesung 02</p>
+                    <p>Lecture 02</p>
                   </div>
                   <div class="folder">
                     <i class="fas fa-folder folder-icon-design"></i>
-                    <p>Vorlesung 03</p>
+                    <p>Lecture 03</p>
                   </div>
                   <div class="folder">
                     <i class="fas fa-folder folder-icon-design"></i>
-                    <p>Vorlesung 04</p>
+                    <p>Lecture 04</p>
                   </div>
                   <div class="folder">
                     <i class="fas fa-folder folder-icon-design"></i>
-                    <p>Vorlesung 05</p>
+                    <p>Lecture 05</p>
                   </div>
                 </div>
                 <div>
@@ -90,8 +90,8 @@
                   <p id="files-paragraph">Select a folder.</p>
                   <div id="files-container">
                     <ul id="files-list">
-                      <li>Vorlesungsfolien</li>
-                      <li>Zusammenfassung</li>
+                      <li>Lecture slides</li>
+                      <li>Summary</li>
                       <li>AnkiCards</li>
                     </ul>
                   </div>
@@ -130,6 +130,7 @@
       });
 
 /*    // with backend connection -- start
+
       //Modules Code
       //Display modules and make folders-container visible when a module is clicked
       document.addEventListener("DOMContentLoaded", async () => {
@@ -246,7 +247,7 @@
         module.addEventListener("contextmenu", (event) => {
           event.preventDefault();
 
-          const deleteOption = confirm("Möchten Sie dieses Element löschen?");
+          const deleteOption = confirm("Would you like to delete this element?");
           if (deleteOption) {
             if (deleteModuleInBackend(moduleName)) {
               module.remove();
@@ -394,7 +395,7 @@
         folder.addEventListener("contextmenu", (event) => {
           event.preventDefault();
 
-          const deleteOption = confirm("Möchten Sie dieses Element löschen?");
+          const deleteOption = confirm("Would you like to delete this element?");
           if (deleteOption) {
             if (deleteTopicInBackend(moduleName, folder)) {  // TODO: get moduleName 
               module.remove();
@@ -478,6 +479,9 @@
      
       // with backend connection -- end */
 
+
+      // without backend connection -- start
+
       const foldersContainer = document.getElementById("folders-container");
       const foldersParagraph = document.getElementById("folders-paragraph");
       const filesHeader = document.getElementById("files-header");
@@ -551,7 +555,7 @@
         module.addEventListener("contextmenu", (event) => {
           event.preventDefault();
 
-          const deleteOption = confirm("Möchten Sie dieses Element löschen?");
+          const deleteOption = confirm("Would you like to delete this element?");
           if (deleteOption) {
             module.remove();
             makeFoldersInvisible();
@@ -618,7 +622,7 @@
         folder.addEventListener("contextmenu", (event) => {
           event.preventDefault();
 
-          const deleteOption = confirm("Möchten Sie dieses Element löschen?");
+          const deleteOption = confirm("Would you like to delete this element?");
           if (deleteOption) {
             folder.remove();
             makeFilesInvisible();
@@ -635,7 +639,7 @@
           item.addEventListener("contextmenu", (event) => {
             event.preventDefault();
 
-            const deleteOption = confirm("Möchten Sie dieses Element löschen?");
+            const deleteOption = confirm("Would you like to delete this element?");
             if (deleteOption) {
               item.remove();
             }
@@ -684,8 +688,8 @@
 
       // Load JSON data
       const jsonData = {
-        title: "Zusammenfassung Vorlesung 1",
-        description: "Hier steht der Inhalt der Zusammenfassung.",
+        title: "Summary Lecture 1",
+        description: "Summary content.",
       };
 
       //JSON-Daten in den Header laden
@@ -699,6 +703,8 @@
       // JSON-Daten als String in das Textarea-Feld laden
       const textarea = document.getElementById("edit-text");
       textarea.value = jsonData["description"];
+
+      // without backend connection -- end
     </script>
   </body>
 </html>
