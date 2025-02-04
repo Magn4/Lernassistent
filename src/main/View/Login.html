@@ -71,12 +71,22 @@
       loginButton.onclick = async () => {
         const username = document.getElementById("username").value;
         const password = document.getElementById("password").value;
-        await loginUser(username, password);
+
+      
+        // with backend connection
+        if(loginUser(username, password)) {
+          window.location.href = "Dashboard.html";
+        }
+        
+        /* // without backend connection
+        window.location.href = "Dashboard.html"; */
+
       };
 
-      //backend conntection: Endpoint für login
+      // backend conntection:(POST: login)
       const loginUser = async (username, password) => {
-        const url = "http://maguna.me:5002/login";
+      // To Change
+        const url = "http://maguna.me/main_controller/login";
 
         const userData = {
           userName: username,
@@ -88,6 +98,9 @@
             method: "POST",
             headers: {
               "Content-Type": "application/json",
+
+              "Authorization": "Bearer Token",
+
             },
             body: JSON.stringify(userData),
             credentials: "include",

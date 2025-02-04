@@ -25,30 +25,36 @@
           <div class="column">
             <div class="row left">
               <p class="description-text">
-                Der Lernassistent erstellt Dir mit Hilfe einer künstlichen
-                Intelligenz Zusammenfassungen zu deinen Vorlesungsfolien.
-                <!-- The "Learning Assistent" works with a artificial intelligence
-                that creates summarys based on the PDFs that you upload. -->
+                <!-- Der Lernassistent erstellt Dir mit Hilfe einer künstlichen
+                Intelligenz Zusammenfassungen zu deinen Vorlesungsfolien. -->
+                Generate summaries and AnkiCards in one click with the help of
+                the Learning Assistant. Simply upload a PDF and be surprised how
+                easy learning can be!
               </p>
               <div class="list-container">
                 <ul>
                   <li class="list-items">
-                    <b>Dashboard:</b> Lade deine erste Vorlesungsfolie hoch und
-                    sei gespannt, was das Programm zu bieten hat!
-                    <!-- Try it yourself. Upload your first PDF! -->
+                    <b>Dashboard:</b>
+                    <!-- Lade deine erste Vorlesungsfolie hoch und
+                    sei gespannt, was das Programm zu bieten hat! -->
+                    Try it yourself. Upload your first PDF!
                   </li>
                   <li class="list-items">
-                    <b>File Manager:</b> Hier findest du alle bereits
-                    hochgeladenen Folien / Zusammenfassungen.
+                    <b>File Manager:</b>
+                    <!-- Hier findest du alle bereits
+                    hochgeladenen Folien / Zusammenfassungen. -->
+                    Find all your already uploaded slides / summaries.
                   </li>
                   <li class="list-items">
-                    <b>Anki Cards:</b> Es ist noch kein Meister vom Himmel
+                    <b>Anki Cards:</b>
+                    <!-- Es ist noch kein Meister vom Himmel
                     gefallen! Lerne mit Anki Cards, um für deine Prüfungen
-                    bestens vorbereitet zu sein.
+                    bestens vorbereitet zu sein. -->
+                    No master has yet fallen from the sky! Learn with Anki Cards
+                    to be well prepared for your exams.
                   </li>
                   <!-- <li class="list-items">
-                    <b>Profil:</b> Du möchtest deine persönlichen Daten ändern
-                    oder einsehen?
+                    <b>Profile:</b> Manage your personal data.
                   </li> -->
                 </ul>
               </div>
@@ -58,47 +64,20 @@
                 <div class="upload-container">
                   <div class="drag-drop-area" id="drag-drop-area">
                     <i class="fas fa-upload fa-2xl"></i>
-                    <p class="description-text">Trau dich</p>
+                    <p class="description-text">Upload File</p>
                   </div>
-                  <div class="upload-button">
+                  <!-- <div class="upload-button">
                     <input type="file" id="file-input" />
-                    <label for="file-input">Explorer durchsuchen</label>
-                  </div>
+                    <label for="file-input">Search Explorer</label>
+                  </div> -->
 
-                  <!-- Trigger/Open The Modal -->
-                  <button id="myBtn">Open Modal</button>
                   <!-- The Modal -->
                   <div id="myModal" class="modal">
                     <!-- Modal content -->
                     <div class="modal-content">
                       <!-- <p style="font-size: large;"><b>Store File</b></p> -->
                       <h2 class="modal-title"><b>Store File</b></h2>
-                      <!-- <input
-                        class="modal-input"
-                        type="text"
-                        id="Modulename"
-                        placeholder="Modulename"
-                      />
-                      <input
-                        class="modal-input"
-                        type="text"
-                        id="Directoryname"
-                        placeholder="Directoryname"
-                      /> -->
-
-                      <!-- <label for="browser">Choose your browser from the list:</label>
-                      <input list="browsers" name="browser" id="browser">
-                      
-                      <datalist id="browsers">
-                        <option value="Edge">
-                        <option value="Firefox">
-                        <option value="Chrome">
-                        <option value="Opera">
-                        <option value="Safari">
-                      </datalist>  -->
-
                       <div class="dropdown-container">
-                        <!-- <label for="input1">Wähle oder gib ein (1):</label> -->
                         <input
                           type="text"
                           class="modal-input"
@@ -122,7 +101,6 @@
                       </div>
 
                       <div class="dropdown-container">
-                        <!-- <label for="input2">Wähle oder gib ein (2):</label> -->
                         <input
                           type="text"
                           class="modal-input"
@@ -153,9 +131,9 @@
                   </div>
                 </div>
               </div>
-              <div class="row">
-                <p class="description-text">Hier könnten unsere Namen stehen</p>
-              </div>
+              <!-- <div class="row">
+                <p class="description-text">Our names could be here</p>
+              </div> -->
             </div>
           </div>
         </div>
@@ -190,38 +168,81 @@
         dropArea.style.backgroundColor = "#ffffff";
         const files = event.dataTransfer.files;
         alert(`You dropped ${files.length} file(s).`);
+        modal.style.display = "block";
+
+        //Save Button with backend connection
+        const saveButton = document.getElementById("save");
+
+        saveButton.onclick = () => {
+          const modulename = document.getElementById("input1").value;
+          const directoryname = document.getElementById("input2").value;
+
+          alert(`Modulename: ${modulename}, Directoryname: ${directoryname}`);
+
+          if (uploadFile(files[0], moduleName, folderName)) {
+            document.getElementById("input1").value = "";
+            document.getElementById("input2").value = "";
+            modal.style.display = "none";
+          } else {
+            alert("Error: File could not be uploaded");
+          }
+        };
       });
+
+      // backend connection: (POST: upload_a_file)
+      const uploadFile = async (dropArea, moduleName, folderName) => {
+        const url = "http://maguna.me/main_controller/upload_file";
+        const file = event.dataTransfer.file;
+        const uploadData = {
+          module_name: moduleName,
+          folder_name: folderName,
+          file: file,
+        };
+
+        try {
+          const response = await fetch(url, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: "Bearer Token",
+            },
+            body: JSON.stringify(uploadData),
+          });
+
+          const result = await response.json();
+          if (response.ok) {
+            console.log("Account created successfully:", result);
+            return true;
+          }
+        } catch (error) {
+          console.error("Error:", error);
+          alert("Error:", error);
+        }
+      };
 
       //Modal Code
       const modal = document.getElementById("myModal");
-
-      const btn = document.getElementById("myBtn");
-
-      // When the user clicks on the button, open the modal
-      btn.onclick = () => {
-        modal.style.display = "block";
-      };
-
-      const quit = document.getElementById("quit");
+      const quitButton = document.getElementById("quit");
 
       // When the user clicks on the quit button, close the modal
-      quit.onclick = () => {
+      quitButton.onclick = () => {
         document.getElementById("input1").value = "";
         document.getElementById("input2").value = "";
         modal.style.display = "none";
       };
 
+      /* // save button without backend connection
       const save = document.getElementById("save");
 
       // When the user clicks on the save button, save and close the modal
-      save.onclick = () => {
+        save.onclick = () => {
         const modulename = document.getElementById("input1").value;
         const directoryname = document.getElementById("input2").value;
         alert(`Modulename: ${modulename}, Directoryname: ${directoryname}`); //TODO: Send to backend
         document.getElementById("input1").value = "";
         document.getElementById("input2").value = "";
         modal.style.display = "none";
-      };
+      }; */
 
       //Get the dropdown lists
       const dropdownList1 = document.getElementById("dropdown1");
@@ -235,15 +256,8 @@
         event.preventDefault(); // Prevents the input field from losing focus
       });
 
-      /* // When the user clicks anywhere outside of the modal, close it
-      window.onclick = function (event) {
-        if (event.target == modal) {
-          modal.style.display = "none";
-        }
-      }; */
-
       //Dropdown Code
-      // Zeigt die Dropdown-Liste an
+      // Shows the dropdown list
       function showDropdown(dropdownId) {
         const dropdown = document.getElementById(dropdownId);
         dropdown.style.display = "block";
@@ -252,13 +266,13 @@
         });
       }
 
-      // Versteckt die Dropdown-Liste
+      // Hides the dropdown list
       function hideDropdown(dropdownId) {
         const dropdown = document.getElementById(dropdownId);
         dropdown.style.display = "none";
       }
 
-      // Filtert die Dropdown-Liste basierend auf der Benutzereingabe
+      // Filters the dropdown list based on the user input
       function filterOptions(inputId, dropdownId) {
         const input = document.getElementById(inputId);
         const dropdown = document.getElementById(dropdownId);
@@ -273,7 +287,7 @@
         });
       }
 
-      // Wählt eine Option aus und blendet die Dropdown-Liste aus
+      // Selects an option and hides the dropdown list
       function selectOption(inputId, value) {
         const input = document.getElementById(inputId);
         input.value = value;
@@ -288,11 +302,6 @@
           });
         }
       });
-
-      /* // Versteckt das Dropdown, wenn das Input-Feld den Fokus verliert
-      input.addEventListener("blur", () => {
-        setTimeout(() => (dropdown.style.display = "none"), 200); // Verzögerung für Klicks
-      }); */
     </script>
   </body>
 </html>
