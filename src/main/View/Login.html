@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Login</title>
-    <link rel="stylesheet" href="LoginStyles.css" />
+    <link rel="stylesheet" type="text/css" href="/View/LoginStyles.css" />
     <link
       href="https://fonts.googleapis.com/css?family=Quicksand"
       rel="stylesheet"
@@ -67,9 +67,11 @@
         passwordInput.addEventListener("input", validateInputs);
       });
 
-      loginButton.onclick = () => {
+      // Update the login button onclick handler
+      loginButton.onclick = async () => {
         const username = document.getElementById("username").value;
         const password = document.getElementById("password").value;
+
       
         // with backend connection
         if(loginUser(username, password)) {
@@ -78,11 +80,14 @@
         
         /* // without backend connection
         window.location.href = "Dashboard.html"; */
+
       };
 
       // backend conntection:(POST: login)
       const loginUser = async (username, password) => {
+      // To Change
         const url = "http://maguna.me/main_controller/login";
+
         const userData = {
           userName: username,
           password: password,
@@ -93,19 +98,25 @@
             method: "POST",
             headers: {
               "Content-Type": "application/json",
+
               "Authorization": "Bearer Token",
+
             },
             body: JSON.stringify(userData),
+            credentials: "include",
           });
 
           const result = await response.json();
           if (response.ok) {
-            console.log("Account created successfully:", result);
+            localStorage.setItem("token", result.token);
+            window.location.href = "Dashboard.html";
             return true;
+          } else {
+            alert("Login failed: " + result.error);
           }
         } catch (error) {
           console.error("Error:", error);
-          alert("Error:", error);
+          alert("Error during login");
         }
       };
 

@@ -1,5 +1,6 @@
 from flask import Flask, request, jsonify
 from werkzeug.exceptions import HTTPException
+from flask_cors import CORS
 
 from Controllers.DashboardController import DashboardController
 
@@ -17,10 +18,19 @@ from Services.AITextProcessor import AITextProcessor
 from Services.AIExternalService import AIExternalService
 from Services.AILocalService import AILocalService
 from Services.UserService import UserService
+from Services.InstructionProcessor import InstructionProcessor  # Import the new class
 
 # Flask Setup
 app = Flask(__name__)
-
+CORS(app, resources={
+    r"/*": {
+        "origins": ["http://maguna.me", "http://localhost", "http://127.0.0.1"],
+        "methods": ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+        "allow_headers": ["Content-Type", "Authorization"],
+        "expose_headers": ["Content-Type"],
+        "supports_credentials": True
+    }
+})
 # Configuration
 app.config['UPLOAD_FOLDER'] = 'C:/Users/hp/Desktop/Uploads'  # Set this to the desired upload folder path
 
@@ -45,6 +55,8 @@ local_service = AILocalService(local_api_url)
 ai_controller = AIController(external_service, local_service)
 text_extractor = TextExtractor(text_extractor_url)
 AI_text_processor = AITextProcessor(ai_controller)
+instruction_processor = InstructionProcessor(api_key, api_url, local_api_url)
+
 
 # Create the TextController
 text_controller = TextController(text_extractor, AI_text_processor)
@@ -107,34 +119,92 @@ def upload_dashboard():
     }), 200
 
 
-@app.route('/process_pdf', methods=['POST'])
-async def process_pdf():
-    try:
-        data = request.form
-        user_id = data.get('user_id')
-        use_local = data.get('use_local', 'false').lower() == 'true'
-        instruction = data.get('instruction', '')
+# Endpoints for PDF Processing with Summary and Explanation Features
+
+@app.route('/get_summary', methods=['POST'])
+async def get_summary():
+    # Retrieve data from the POST request
+    data = request.form
+    use_local = data.get('use_local', 'false').lower() == 'true'
+
+    # Get the optional title from the form data
+    title = data.get('title')  # Title can be passed with the request
+
+    pdf_file = request.files.get('file')
+    if not pdf_file:
+        return jsonify({"error": "No PDF file provided"}), 400
+
+    pdf_data = pdf_file.read()
+    extracted_text = text_controller.convert_to_text(pdf_data)
+
+    if "Error" in extracted_text or "Exception" in extracted_text:
+        return jsonify({"error": extracted_text}), 500
+
+    # Check if the summary already exists in the database
+    existing_summary = db_context.find_summary_by_text(extracted_text)
+    if existing_summary:
+        return jsonify({
+            "status": "success",
+            "data": {
+                "summary": existing_summary.summary_text,
+                "title": existing_summary.title,
+                "details": {
+                    "length": len(existing_summary.summary_text),
+                    "generated_with": "cached_result",
+                }
+            }
+        })
+
+    # Generate a new summary if not found
+    result = await instruction_processor.get_summary(extracted_text, use_local)
+
+    # Save the new summary in the database, including the optional title
+    summary_id = db_context.save_summary(extracted_text, result['data']['summary'], title=title)
+
+    return jsonify({
+        "status": "success",
+        "data": {
+            "summary": result['data']['summary'],
+            "summary_id": summary_id,
+            "details": {
+                "length": len(result['data']['summary']),
+                "generated_with": "external_ai" if not use_local else "local_ai",
+            }
+        }
+    })
 
 
-        pdf_file = request.files.get('file')
-        if not pdf_file:
-            return jsonify({"error": "No PDF file provided"}), 400
+@app.route('/get_explanation', methods=['POST'])
+async def get_explanation():
+    # Retrieve data from the POST request
+    data = request.form
+    # Check if 'use_local' is provided, and convert it to a boolean (default: False)
+    use_local = data.get('use_local', 'false').lower() == 'true'
 
-        pdf_data = pdf_file.read()
-        print("PDF data received")  # Log the receipt of the PDF data
+    # Retrieve the uploaded PDF file from the request
+    pdf_file = request.files.get('file')
+    if not pdf_file:
+        # Return an error if no file was provided
+        return jsonify({"error": "No PDF file provided"}), 400
 
-        extracted_text = text_controller.convert_to_text(pdf_data)
-        # print(f"Extracted text: {extracted_text}")  # Log extracted text or error message
+    # Read the file data from the uploaded PDF
+    pdf_data = pdf_file.read()
+    print("PDF data received")  # Log the receipt of the file for debugging purposes
 
-        if "Error" in extracted_text or "Exception" in extracted_text:
-            return jsonify({"error": extracted_text}), 500
+    # Extract the text from the uploaded PDF using the TextController
+    extracted_text = text_controller.convert_to_text(pdf_data)
 
-        result = await text_controller.process_text(extracted_text, user_id, use_local, instruction)
-        print(f"Processing result: {result}")  # Log result from AI processing
+    # Check if there was an error during text extraction
+    if "Error" in extracted_text or "Exception" in extracted_text:
+        # Return an error response if text extraction failed
+        return jsonify({"error": extracted_text}), 500
 
-        return jsonify({"result": result})
-    except Exception as e:
-        return handle_exception(e)
+    # Process the extracted text to generate a detailed explanation
+    result = await instruction_processor.get_explanation(extracted_text, use_local)
+    print(f"Explanation result: {result}")  # Log the result of the explanation processing
+
+    # Return the generated explanation to the client
+    return jsonify({"result": result})
 
 
 
