@@ -127,8 +127,6 @@
           .catch((error) => console.error("Error loading navigation:", error));
       });
 
-   // with backend connection -- start
-
       //Modules Code
       //Display modules and make folders-container visible when a module is clicked
       document.addEventListener("DOMContentLoaded", async () => {
@@ -138,7 +136,7 @@
 
       // backend connection: (GET: list_all_modules)
       async function getModules() {
-        const url = "http://maguna.me/main_controller/modules ";
+        const url = "http://127.0.0.1:5002/modules";
         try {
           const response = await fetch(url, {
             method: "GET",
@@ -177,7 +175,7 @@
           });
 
           // Make the module deletable
-          deleteModule(moduleItem); // <--
+          deleteModule(moduleItem, module);
         });
       }
 
@@ -197,26 +195,21 @@
               modulesContainer.appendChild(newListItem);
 
               // Make the new child clickable
-              newListItem.addEventListener("click", async  () => {
-                const topics = await getTopics(module);
+              newListItem.addEventListener("click", async () => {
+                const topics = await getTopics(moduleName);
                 displayTopics(topics);
               });
 
               // Make the new child deletable
-              deleteModule(newListItem);
+              deleteModule(newListItem, moduleName);
             }
           }
         });
       });
 
       // backend connection (POST: create_module)
-      createModuleInBackend = async (moduleName) => {
-        
-        
-        // Message from Taha
-        const url = "http://127.0.0.1:5002/create_module"; // Leave this uncommented for local testing
-        //const url = "http://maguna.me:5002/create_module"; // Use this for production
-        
+      async function createModuleInBackend(moduleName) {
+        const url = "http://127.0.0.1:5002/create_module";
         const moduleData = {
           module_name: moduleName,
         };
@@ -243,25 +236,25 @@
           console.error("Error:", error);
           alert("Error:", error);
         }
-      };
+      }
 
       // Delete module on right-click
-      deleteModule = (module) => {
-        module.addEventListener("contextmenu", (event) => {
+      function deleteModule(moduleItem, moduleName) {
+        moduleItem.addEventListener("contextmenu", (event) => {
           event.preventDefault();
 
           const deleteOption = confirm("Would you like to delete this element?");
           if (deleteOption) {
             if (deleteModuleInBackend(moduleName)) {
-              module.remove();
+              moduleItem.remove();
               makeFoldersInvisible();
             }
           }
         });
-      };
+      }
 
-      // backend connection: (DEL: delete_module)
-      deleteModuleInBackend = async (moduleName) => {
+      // backend connection: (DELETE: delete_module)
+      async function deleteModuleInBackend(moduleName) {
         const url = "http://127.0.0.1:5002/delete_module/" + moduleName;
 
         try {
@@ -285,7 +278,7 @@
           console.error("Error:", error);
           alert("Error:", error);
         }
-      };
+      }
 
       // Folders Code
       // Display folders and make files-container visible when a module is clicked
@@ -325,12 +318,13 @@
           foldersContainer.appendChild(newFolder);
 
           // Make the new folder clickable
-          newFolder.addEventListener("click", () => {
-            makeFilesVisible(newFolder);
+          newFolder.addEventListener("click", async () => {
+            const files = await getFiles(currentModule, topic);
+            displayFiles(files);
           });
 
           // Make the new folder deletable
-          deleteFolder(newFolder);
+          deleteFolder(newFolder, currentModule, topic);
         });
 
         makeFoldersVisible();
@@ -343,26 +337,27 @@
         addFolderIcon.addEventListener("click", () => {
           const folderName = prompt("Enter the name for the new folder:");
           if (folderName) {
-            if(createTopicInBackend(moduleName, folderName)) {   // TODO: get module name
+            if (createTopicInBackend(currentModule, folderName)) {
               const newFolder = document.createElement("div");
               newFolder.className = "folder";
               newFolder.innerHTML = `<i class="fas fa-folder folder-icon-design"></i><p>${folderName}</p>`;
               foldersContainer.appendChild(newFolder);
-              
+
               // Make the new folder clickable
-              newFolder.addEventListener("click", () => {
-                makeFilesVisible(newFolder);
+              newFolder.addEventListener("click", async () => {
+                const files = await getFiles(currentModule, folderName);
+                displayFiles(files);
               });
 
               // Make the new folder deletable
-              deleteFolder(newFolder);
+              deleteFolder(newFolder, currentModule, folderName);
             }
           }
         });
       });
 
       // backend connection (POST: create_topic)
-      createTopicInBackend = async (moduleName, folderName) => {
+      async function createTopicInBackend(moduleName, folderName) {
         const url = "http://127.0.0.1:5002/create_topic";
         const topicData = {
           module_name: moduleName,
@@ -391,26 +386,26 @@
           console.error("Error:", error);
           alert("Error:", error);
         }
-      };
+      }
 
       //Delete folder on right-click
-      function deleteFolder(folder) {
+      function deleteFolder(folder, moduleName, folderName) {
         folder.addEventListener("contextmenu", (event) => {
           event.preventDefault();
 
           const deleteOption = confirm("Would you like to delete this element?");
           if (deleteOption) {
-            if (deleteTopicInBackend(moduleName, folder)) {  // TODO: get moduleName 
-              module.remove();
+            if (deleteTopicInBackend(moduleName, folderName)) {
+              folder.remove();
               makeFoldersInvisible();
             }
           }
         });
       }
 
-      // backend connection: (DEL: delete_topic)
-      deleteTopicInBackend = async (moduleName, topicName) => {
-        const url = "http://127.0.0.1:5002/delete_topic/" + moduleName + "/" + topicName;
+      // backend connection: (DELETE: delete_topic)
+      async function deleteTopicInBackend(moduleName, topicName) {
+        const url = `http://127.0.0.1:5002/delete_topic/${moduleName}/${topicName}`;
 
         try {
           const response = await fetch(url, {
@@ -433,7 +428,131 @@
           console.error("Error:", error);
           alert("Error:", error);
         }
-      };
+      }
+
+      // Files Code
+      // Display files when a folder is clicked
+      // backend connection: (GET: list_all_files_in_a_topic)
+      async function getFiles(moduleName, topicName) {
+        const url = `http://127.0.0.1:5002/modules/${moduleName}/topics/${topicName}/files`;
+        try {
+          const response = await fetch(url, {
+            method: "GET",
+            headers: {
+              Authorization: "Bearer Token",
+            },
+          });
+
+          if (response.ok) {
+            const files = await response.json();
+            return files;
+          } else {
+            console.error("Failed to fetch files:", response.statusText);
+            return [];
+          }
+        } catch (error) {
+          console.error("Error fetching files:", error);
+          return [];
+        }
+      }
+
+      function displayFiles(files) {
+        const filesContainer = document.getElementById("files-container");
+        filesContainer.innerHTML = ""; // Clear existing files
+
+        files.forEach((file) => {
+          // fill files container
+          const fileItem = document.createElement("li");
+          fileItem.textContent = file;
+          filesContainer.appendChild(fileItem);
+
+          // Make the file clickable
+          fileItem.addEventListener("click", () => {
+            openFile(currentModule, currentFolder, file);
+          });
+
+          // Make the file deletable
+          deleteFile(fileItem, currentModule, currentFolder, file);
+        });
+
+        makeFilesVisible();
+      }
+
+      // Open file
+      async function openFile(moduleName, topicName, fileName) {
+        const url = `http://127.0.0.1:5002/files/${moduleName}/${topicName}/${fileName}`;
+        try {
+          const response = await fetch(url, {
+            method: "GET",
+            headers: {
+              Authorization: "Bearer Token",
+            },
+          });
+
+          if (response.ok) {
+            const fileContent = await response.text();
+            displayFileContent(fileContent);
+          } else {
+            console.error("Failed to open file:", response.statusText);
+          }
+        } catch (error) {
+          console.error("Error opening file:", error);
+        }
+      }
+
+      function displayFileContent(content) {
+        const modal = document.getElementById("myModal");
+        const fileNameElement = document.getElementById("file-name");
+        const readTextElement = document.getElementById("read-text");
+        const editTextElement = document.getElementById("edit-text");
+
+        fileNameElement.textContent = currentFile;
+        readTextElement.textContent = content;
+        editTextElement.value = content;
+
+        modal.style.display = "block";
+      }
+
+      //Delete file on right-click
+      function deleteFile(fileItem, moduleName, topicName, fileName) {
+        fileItem.addEventListener("contextmenu", (event) => {
+          event.preventDefault();
+
+          const deleteOption = confirm("Would you like to delete this element?");
+          if (deleteOption) {
+            if (deleteFileInBackend(moduleName, topicName, fileName)) {
+              fileItem.remove();
+            }
+          }
+        });
+      }
+
+      // backend connection: (DELETE: delete_file)
+      async function deleteFileInBackend(moduleName, topicName, fileName) {
+        const url = `http://127.0.0.1:5002/files/${moduleName}/${topicName}/${fileName}`;
+
+        try {
+          const response = await fetch(url, {
+            method: "DELETE",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: "Bearer Token",
+            },
+          });
+
+          const result = await response.json();
+          if (response.ok) {
+            console.log("File deleted successfully:", result);
+            return true;
+          } else {
+            console.log("Failed to delete file:", result);
+            alert("Failed to delete file");
+          }
+        } catch (error) {
+          console.error("Error:", error);
+          alert("Error:", error);
+        }
+      }
 
       // Helper functions
       function makeFoldersVisible() {
@@ -450,27 +569,27 @@
         filesContainer.style.display = "none";
       }
 
-      makeFilesVisible = () => {
+      function makeFilesVisible() {
         const filesParagraph = document.getElementById("files-paragraph");
         const filesContainer = document.getElementById("files-container");
-        
+
         filesParagraph.style.display = "none";
         filesContainer.style.display = "flex";
-      };
+      }
 
-      makeFoldersInvisible = () => {
+      function makeFoldersInvisible() {
         const foldersParagraph = document.getElementById("folders-paragraph");
         const foldersContainer = document.getElementById("folders-container");
         const filesHeader = document.getElementById("files-header");
         const filesParagraph = document.getElementById("files-paragraph");
         const filesContainer = document.getElementById("files-container");
-        
+
         foldersParagraph.style.display = "flex";
         foldersContainer.style.display = "none";
         filesHeader.style.display = "none";
         filesParagraph.style.display = "none";
         filesContainer.style.display = "none";
-      };
+      }
 
       function makeFilesInvisible() {
         const filesParagraph = document.getElementById("files-paragraph");
@@ -479,187 +598,9 @@
         filesParagraph.style.display = "flex";
         filesContainer.style.display = "none";
       }
-     
-      // with backend connection -- end 
 
-/*
-      // without backend connection -- start
-
-      const foldersContainer = document.getElementById("folders-container");
-      const foldersParagraph = document.getElementById("folders-paragraph");
-      const filesHeader = document.getElementById("files-header");
-      const filesParagraph = document.getElementById("files-paragraph");
-      const filesContainer = document.getElementById("files-container");
-
-      //Modules Code
-      //Make folders-container visible when a module is clicked
-      document.addEventListener("DOMContentLoaded", () => {
-        const modulesListItems = document.querySelectorAll("#modules-list li");
-
-        modulesListItems.forEach((module) => {
-          module.addEventListener("click", () => {
-            makeFoldersVisible(module);
-          });
-        });
-      });
-
-      //Add modules by pressing the add-module icon
-      document.addEventListener("DOMContentLoaded", () => {
-        const addModuleIcon = document.getElementById("add-module");
-        const modulesContainer = document
-          .getElementById("modules-container")
-          .querySelector("ul");
-
-        addModuleIcon.addEventListener("click", () => {
-          const moduleName = prompt("Enter the name for the new module:");
-          if (moduleName) {
-            const newListItem = document.createElement("li");
-            newListItem.textContent = moduleName;
-            modulesContainer.appendChild(newListItem);
-
-            // Make the new child clickable
-            newListItem.addEventListener("click", () => {
-              makeFoldersVisible();
-            });
-
-            // Make the new child deletable
-            deleteModule(newListItem);
-          }
-        });
-      });
-
-      //Add folders by pressing the add-folder icon
-      document.addEventListener("DOMContentLoaded", () => {
-        const modulesListItems = document.querySelectorAll("#modules-list li");
-
-        modulesListItems.forEach((item) => {
-          deleteModule(item);
-        });
-      });
-
-      //Helper functions
-      makeFoldersVisible = () => {
-        foldersParagraph.style.display = "none";
-        foldersContainer.style.display = "flex";
-        filesHeader.style.display = "flex";
-        filesParagraph.style.display = "flex";
-        filesContainer.style.display = "none";
-      };
-
-      makeFoldersInvisible = () => {
-        foldersParagraph.style.display = "flex";
-        foldersContainer.style.display = "none";
-        filesHeader.style.display = "none";
-        filesParagraph.style.display = "none";
-        filesContainer.style.display = "none";
-      };
-
-      deleteModule = (module) => {
-        module.addEventListener("contextmenu", (event) => {
-          event.preventDefault();
-
-          const deleteOption = confirm("Would you like to delete this element?");
-          if (deleteOption) {
-            module.remove();
-            makeFoldersInvisible();
-          }
-        });
-      };
-
-      //Folders Code
-      //Make files-container visible when a folder is clicked
-      document.addEventListener("DOMContentLoaded", () => {
-        const folders = document.querySelectorAll(".folder");
-
-        folders.forEach((folder) => {
-          folder.addEventListener("click", () => {
-            makeFilesVisible();
-          });
-        });
-      });
-
-      //Add folders by pressing the add-folder icon
-      document.addEventListener("DOMContentLoaded", () => {
-        const addFolderIcon = document.getElementById("add-folder");
-
-        addFolderIcon.addEventListener("click", () => {
-          const folderName = prompt("Enter the name for the new folder:");
-          if (folderName) {
-            const newFolder = document.createElement("div");
-            newFolder.className = "folder";
-            newFolder.innerHTML = `<i class="fas fa-folder folder-icon-design"></i><p>${folderName}</p>`;
-            foldersContainer.appendChild(newFolder);
-
-            // Make the new folder clickable
-            newFolder.addEventListener("click", () => {
-              makeFilesVisible(newFolder);
-            });
-
-            // Make the new folder deletable
-            deleteFolder(newFolder);
-          }
-        });
-      });
-
-      //Delete folders on right-click
-      document.addEventListener("DOMContentLoaded", () => {
-        const folders = document.querySelectorAll(".folder");
-
-        folders.forEach((folder) => {
-          deleteFolder(folder);
-        });
-      });
-
-      //Helper functions
-      makeFilesVisible = () => {
-        filesParagraph.style.display = "none";
-        filesContainer.style.display = "flex";
-      };
-
-      makeFilesInvisible = () => {
-        filesParagraph.style.display = "flex";
-        filesContainer.style.display = "none";
-      };
-
-      deleteFolder = (folder) => {
-        folder.addEventListener("contextmenu", (event) => {
-          event.preventDefault();
-
-          const deleteOption = confirm("Would you like to delete this element?");
-          if (deleteOption) {
-            folder.remove();
-            makeFilesInvisible();
-          }
-        });
-      };
-
-      //Files Code
-      //Delete files on right-click
-      document.addEventListener("DOMContentLoaded", () => {
-        const filesListItems = document.querySelectorAll("#files-list li");
-
-        filesListItems.forEach((item) => {
-          item.addEventListener("contextmenu", (event) => {
-            event.preventDefault();
-
-            const deleteOption = confirm("Would you like to delete this element?");
-            if (deleteOption) {
-              item.remove();
-            }
-          });
-        });
-      });
-
-      //Modal Code
+      // Modal Code
       const modal = document.getElementById("myModal");
-
-      const summary = document.getElementById("summary");
-
-      // When the user clicks on the summary, open the modal
-      summary.onclick = () => {
-        modal.style.display = "block";
-      };
-
       const quitButton = document.getElementById("quit");
       const editButton = document.getElementById("edit");
       const saveButton = document.getElementById("save");
@@ -688,97 +629,6 @@
         saveButton.style.display = "none";
         editButton.style.display = "flex";
       };
-
-      // Load JSON data
-      const jsonData = {
-        title: "Summary Lecture 1",
-        description: "Summary content.",
-      };
-
-      //JSON-Daten in den Header laden
-      const fileTitle = document.getElementById("file-name");
-      fileTitle.textContent = jsonData.title;
-
-      // JSON-Daten in den Paragraphen laden
-      const paragraph = document.getElementById("read-text");
-      paragraph.textContent = jsonData.description;
-
-      // JSON-Daten als String in das Textarea-Feld laden
-      const textarea = document.getElementById("edit-text");
-      textarea.value = jsonData["description"];
-
-
-      
-      
-      
-      
-      
-      // Add this inside the existing <script> tag
-      const API_BASE_URL = 'http://maguna.me:5002';
-
-      // List modules
-      async function listModules() {
-          try {
-              const response = await fetch(`${API_BASE_URL}/modules`, {
-                  headers: {
-                      'Authorization': 'Bearer ' + localStorage.getItem('token')
-                  }
-              });
-              const data = await response.json();
-              // Update modules list UI
-              updateModulesList(data);
-          } catch (error) {
-              console.error('Error fetching modules:', error);
-          }
-      }
-
-      // Create module
-      async function createModule(moduleName) {
-          try {
-              const response = await fetch(`${API_BASE_URL}/create_module`, {
-                  method: 'POST',
-                  headers: {
-                      'Content-Type': 'application/json',
-                      'Authorization': 'Bearer ' + localStorage.getItem('token')
-                  },
-                  body: JSON.stringify({ module_name: moduleName })
-              });
-              if (response.ok) {
-                  listModules(); // Refresh the list
-              }
-          } catch (error) {
-              console.error('Error creating module:', error);
-          }
-      }
-
-      // Delete module
-      async function deleteModule(moduleName) {
-          try {
-              await fetch(`${API_BASE_URL}/delete_module/${moduleName}`, {
-                  method: 'DELETE',
-                  headers: {
-                      'Authorization': 'Bearer ' + localStorage.getItem('token')
-                  }
-              });
-              listModules(); // Refresh the list
-          } catch (error) {
-              console.error('Error deleting module:', error);
-          }
-      }
-
-      // Add event listeners to the existing UI elements
-      document.getElementById('add-module').addEventListener('click', () => {
-          const moduleName = prompt('Enter module name:');
-          if (moduleName) {
-              createModule(moduleName);
-          }
-      });
-
-      // Initialize the page
-      document.addEventListener('DOMContentLoaded', () => {
-          listModules();
-      });
-*/
     </script>
   </body>
 </html>
