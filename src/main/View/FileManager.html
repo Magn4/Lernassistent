@@ -127,7 +127,7 @@
           .catch((error) => console.error("Error loading navigation:", error));
       });
 
-/*    // with backend connection -- start
+   // with backend connection -- start
 
       //Modules Code
       //Display modules and make folders-container visible when a module is clicked
@@ -214,7 +214,7 @@
         
         
         // Message from Taha
-        const url = "http://localhost:5002/create_module"; // Leave this uncommented for local testing
+        const url = "http://127.0.0.1:5002/create_module"; // Leave this uncommented for local testing
         //const url = "http://maguna.me:5002/create_module"; // Use this for production
         
         const moduleData = {
@@ -363,7 +363,7 @@
 
       // backend connection (POST: create_topic)
       createTopicInBackend = async (moduleName, folderName) => {
-        const url = "http://maguna.me/main_controller/create_topic";
+        const url = "http://127.0.0.1:5002/create_topic";
         const topicData = {
           module_name: moduleName,
           topic_name: folderName,
@@ -480,9 +480,9 @@
         filesContainer.style.display = "none";
       }
      
-      // with backend connection -- end */
+      // with backend connection -- end 
 
-
+/*
       // without backend connection -- start
 
       const foldersContainer = document.getElementById("folders-container");
@@ -710,8 +710,6 @@
 
       
       
-      // This might need to be removed
-      // ---------------------------------------------------------------------------------------------------- // 
       
       
       
@@ -780,7 +778,7 @@
       document.addEventListener('DOMContentLoaded', () => {
           listModules();
       });
-
+*/
     </script>
   </body>
 </html>

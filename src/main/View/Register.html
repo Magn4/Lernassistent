@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Register</title>
     <link rel="stylesheet" href="RegisterStyles.css" />
-    <link rel="stylesheet" type="text/css" href="/View/RegisterStyles.css" />
+
     <link
       href="https://fonts.googleapis.com/css?family=Quicksand"
       rel="stylesheet"
@@ -126,9 +126,11 @@
           const email = document.getElementById("email").value;
 
           // with backend connection
-          if (registerUser(username, email, password)) {
-            window.location.href = "Dashboard.html";
-          }
+          registerUser(username, email, password).then((success) => {
+            if (success) {
+              window.location.href = "Dashboard.html";
+            }
+          });
 
           /* // without backend connection
           window.location.href = "Dashboard.html"; */
@@ -137,13 +139,12 @@
 
       // backend connection: (POST: create_account)
       const registerUser = async (username, email, password) => {
-
-        const url = "http://maguna.me/main_controller/register";
+        const url = "http://127.0.0.1:5002/register";
 
         const userData = {
-            userName: username,
-            eMail: email,
-            password: password,
+          userName: username,
+          eMail: email,
+          password: password,
         };
 
         try {
@@ -159,16 +160,17 @@
           const result = await response.json();
           if (response.ok) {
             console.log("Account created successfully:", result);
+            alert(result.message);
             return true;
           } else {
-            console.log("Account already exists:", result);
-            alert("Account already exists");
+            console.log("Account already exists or error:", result);
+            alert(result.message || "Account already exists");
           }
-
         } catch (error) {
-            console.error("Error:", error);
-            alert("Error during registration");
+          console.error("Error:", error);
+          alert("Error during registration");
         }
+        return false;
       };
 
       //Show password
