@@ -7,7 +7,8 @@ import json
 app = Flask(__name__)
 CORS(app, resources={
     r"/*": {
-        "origins": ["http://maguna.me", "http://localhost", "http://127.0.0.1"],
+        # "origins": ["http://maguna.me", "http://localhost", "http://127.0.0.1"],
+        "origins": ["*"],
         "methods": ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
         "allow_headers": ["Content-Type", "Authorization"],
         "expose_headers": ["Content-Type"],
@@ -185,6 +186,49 @@ def update_deck(deck_id):
         }), 200
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+
+# List all decks
+@app.route('/decks', methods=['GET'])
+def list_decks():
+    session = db_context.Session()
+    try:
+        decks = session.query(Deck).all()
+        result = []
+        for deck in decks:
+            cards = session.query(Card).filter_by(deck_id=deck.id).all()
+            result.append({
+                "id": deck.id,
+                "name": deck.name,
+                "description": deck.description,
+                "cards": [{"id": card.id, "front": card.front, "back": card.back} for card in cards]
+            })
+        return jsonify(result), 200
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+    finally:
+        session.close()
+
+# Get a specific deck and its cards
+@app.route('/decks/<int:deck_id>', methods=['GET'])
+def get_deck(deck_id):
+    session = db_context.Session()
+    try:
+        deck = session.query(Deck).get(deck_id)
+        if not deck:
+            return jsonify({"error": "Deck not found."}), 404
+
+        cards = session.query(Card).filter_by(deck_id=deck.id).all()
+        result = {
+            "id": deck.id,
+            "name": deck.name,
+            "description": deck.description,
+            "cards": [{"id": card.id, "front": card.front, "back": card.back} for card in cards]
+        }
+        return jsonify(result), 200
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+    finally:
+        session.close()
 
 # List all cards
 @app.route('/cards', methods=['GET'])

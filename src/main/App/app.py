@@ -24,7 +24,8 @@ from Services.InstructionProcessor import InstructionProcessor  # Import the new
 app = Flask(__name__)
 CORS(app, resources={
     r"/*": {
-        "origins": ["http://maguna.me", "http://localhost", "http://127.0.0.1"],
+        # "origins": ["http://maguna.me", "http://localhost", "http://127.0.0.1"],
+        "origins": ["*"],
         "methods": ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
         "allow_headers": ["Content-Type", "Authorization"],
         "expose_headers": ["Content-Type"],
