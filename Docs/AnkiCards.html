@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Anki Cards</title>
+    <link rel="stylesheet" href="Styles.css" />
+    <link rel="stylesheet" href="AnkiCardsStyles.css" />
+    <link
+      href="https://fonts.googleapis.com/css?family=Quicksand"
+      rel="stylesheet"
+    />
+    <script src="https://kit.fontawesome.com/3ff8e8ca0d.js" crossorigin="anonymous"></script>
+</head>
+<body>
+    <div class="main-box">
+        <div id="Navigation"></div>
+        <div class="content-box">
+            <div class="row">
+                <h1>Anki Cards</h1>
+                <button class="create-module-button" onclick="showCreateModuleForm()">Create New Module</button>
+                <div class="row">
+
+                    <div class="module-card-area">
+                    </div>
+
+                <div class="current-card-area">
+                        <button class="goBack-button" onclick="quitLearningSession()">Quit</button>
+
+                    <div class="current-card" onclick="toggleAnswer()">
+                        <div class="row">
+                            <div class="current-card-question">
+                                Question
+                            </div>
+                            <div class="current-card-answer">
+                                Answer
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="answer-button-area">
+                        <button class="answer-button" onclick="verHard()">Very hard</button>
+                        <button class="answer-button" onclick="okay()">Okay</button>
+                        <button class="answer-button" onclick="easy()">Easy</button>
+                        <button class="answer-button" onclick="veryEasy()">Very easy</button>
+
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Create Module Form -->
+    <div class="create-module-form" style="display: none;">
+        <h2>Create New Module</h2>
+        <label for="moduleName">Module Name:</label>
+        <input type="text" id="moduleName" placeholder="Enter module name" />
+        <label for="moduleDescription">Module Description:</label>
+        <textarea id="moduleDescription" placeholder="Enter module description"></textarea>
+        <div class="form-buttons">
+          <button class="form-button" onclick="createModule()">Create</button>
+          <button class="form-button" onclick="hideCreateModuleForm()">Cancel</button>
+        </div>
+    </div>
+
+    <!-- Create Card Form -->
+    <div class="create-card-form" style="display: none;">
+        <h2>Create New Card</h2>
+        <label for="cardFront">Front:</label>
+        <input type="text" id="cardFront" placeholder="Enter card front" />
+        <label for="cardBack">Back:</label>
+        <textarea id="cardBack" placeholder="Enter card back"></textarea>
+        <div class="form-buttons">
+          <button class="form-button" onclick="createCard()">Create</button>
+          <button class="form-button" onclick="hideCreateCardForm()">Cancel</button>
+        </div>
+    </div>
+
+    <!-- Auto Generate Cards Form -->
+    <div class="auto-generate-cards-form" style="display: none;">
+        <h2>Auto Generate Cards</h2>
+        <label for="content">Content:</label>
+        <textarea id="content" placeholder="Enter content for auto generation"></textarea>
+        <label for="fileSelection">Select File:</label>
+        <select id="fileSelection" class="file-selection-dropdown">
+            <!-- Options will be populated dynamically -->
+        </select>
+        <div class="form-buttons">
+          <button class="form-button" onclick="autoGenerateCards()">Generate</button>
+          <button class="form-button" onclick="hideAutoGenerateCardsForm()">Cancel</button>
+        </div>
+    </div>
+
+    <script>
+        //Navigation Code
+        document.addEventListener('DOMContentLoaded', () => {
+            fetch('Navigation.html')
+            .then(response => response.text())
+            .then(html => {
+                document.getElementById('Navigation').innerHTML = html;
+            })
+            .catch(error => console.error('Error loading navigation:', error));
+        });
+
+        const chooseWindow = document.querySelector('.module-card-area');
+        const currentCard = document.querySelector('.current-card-area');
+        const answerButton = document.querySelector('.answer-button-area');
+        const answer = document.querySelector('.current-card-answer');
+        const question = document.querySelector('.current-card-question');
+        let currentDeckId = null;
+        let currentCards = [];
+        let currentCardIndex = 0;
+
+        // Fetch modules and cards count from the API
+        async function fetchModules() {
+            try {
+                const response = await fetch('http://127.0.0.1:8000/decks', {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer Token'
+                    }
+                });
+                const modules = await response.json();
+                return modules;
+            } catch (error) {
+                console.error('Error fetching modules:', error);
+                return [];
+            }
+        }
+
+        // Display modules and cards count
+        async function displayModules() {
+            const modules = await fetchModules();
+            const moduleCardArea = document.querySelector('.module-card-area');
+            moduleCardArea.innerHTML = ''; // Clear existing content
+
+            modules.forEach(module => {
+                const moduleContainer = document.createElement('div');
+                moduleContainer.className = 'module-card-container';
+
+                const moduleHeader = document.createElement('h2');
+                moduleHeader.className = 'module-card-header';
+                moduleHeader.textContent = module.name;
+
+                const moduleList = document.createElement('div');
+                moduleList.className = 'module-card-list';
+                moduleList.style.maxHeight = '200px'; // Set max height for scrollable area
+                moduleList.style.overflowY = 'auto'; // Enable vertical scrolling
+
+                const ul = document.createElement('ul');
+                module.cards.forEach(card => {
+                    const li = document.createElement('li');
+                    li.textContent = card.front;
+                    li.setAttribute('data-deck-id', module.id);
+                    ul.appendChild(li);
+                });
+
+                moduleList.appendChild(ul);
+                moduleContainer.appendChild(moduleHeader);
+                moduleContainer.appendChild(moduleList);
+                moduleCardArea.appendChild(moduleContainer);
+
+                // Add create card button
+                const createCardButton = document.createElement('button');
+                createCardButton.className = 'create-card-button';
+                createCardButton.innerHTML = '<i class="fas fa-plus"></i>';
+                createCardButton.onclick = () => showCreateCardForm(module.id);
+                moduleContainer.appendChild(createCardButton);
+
+                // Add auto generate cards button
+                const autoGenerateCardsButton = document.createElement('button');
+                autoGenerateCardsButton.className = 'auto-generate-cards-button';
+                autoGenerateCardsButton.textContent = 'Auto Generate Cards';
+                autoGenerateCardsButton.onclick = () => showAutoGenerateCardsForm(module.id);
+                moduleContainer.appendChild(autoGenerateCardsButton);
+            });
+
+            // Add event listeners to the new list items
+            const moduleCardListItems = document.querySelectorAll(".module-card-list li");
+            moduleCardListItems.forEach((item) => {
+                item.addEventListener("click", () => {
+                    const deckId = item.getAttribute('data-deck-id');
+                    startLearningSession(deckId);
+                });
+            });
+        }
+
+        // Fetch cards from the API
+        async function fetchCards(deckId) {
+            try {
+                const response = await fetch(`http://127.0.0.1:8000/decks/${deckId}`, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer Token'
+                    }
+                });
+                const deck = await response.json();
+                return deck.cards;
+            } catch (error) {
+                console.error('Error fetching cards:', error);
+                return [];
+            }
+        }
+
+        // Start learning session
+        async function startLearningSession(deckId) {
+            currentCards = await fetchCards(deckId);
+            currentCardIndex = 0;
+            if (currentCards.length > 0) {
+                currentCard.style.display = "flex";
+                chooseWindow.style.display = "none";
+                displayCard(currentCards[currentCardIndex]);
+            } else {
+                console.log('No cards available in this deck');
+            }
+        }
+
+        // Display card
+        function displayCard(card) {
+            question.textContent = card.front;
+            answer.textContent = card.back;
+            answer.style.display = 'none';
+            answerButton.style.display = 'none';
+        }
+
+        // Clickable card
+        function toggleAnswer() {
+            answer.style.display = answer.style.display === 'none' || answer.style.display === '' ? 'block' : 'none';
+            answerButton.style.display = "flex";
+        }
+
+        // Switch back
+        function quitLearningSession() {
+            currentCard.style.display = "none";
+            chooseWindow.style.display = "flex";
+            answer.style.display = "none";
+            answerButton.style.display = "none";
+        }
+
+        // Answer button functions
+        function verHard() {
+            answer.style.display = "none";
+            answerButton.style.display = "none";
+        }
+
+        function okay() {
+            answer.style.display = "none";
+            answerButton.style.display = "none";
+        }
+
+        function easy() {
+            answer.style.display = "none";
+            answerButton.style.display = "none";
+        }
+
+        function veryEasy() {
+            answer.style.display = "none";
+            answerButton.style.display = "none";
+        }
+
+        // Show create module form
+        function showCreateModuleForm() {
+            document.querySelector('.create-module-form').style.display = 'block';
+        }
+
+        // Hide create module form
+        function hideCreateModuleForm() {
+            document.querySelector('.create-module-form').style.display = 'none';
+        }
+
+        // Create new module
+        async function createModule() {
+            const moduleName = document.getElementById('moduleName').value;
+            const moduleDescription = document.getElementById('moduleDescription').value;
+
+            if (!moduleName) {
+                console.log('Module name is required');
+                return;
+            }
+
+            try {
+                const response = await fetch('http://127.0.0.1:8000/decks', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        name: moduleName,
+                        description: moduleDescription
+                    })
+                });
+
+                if (response.ok) {
+                    console.log('Module created successfully');
+                    hideCreateModuleForm();
+                    displayModules();
+                } else {
+                    const result = await response.json();
+                    console.log('Error creating module: ' + result.error);
+                }
+            } catch (error) {
+                console.error('Error creating module:', error);
+            }
+        }
+
+        // Show create card form
+        function showCreateCardForm(deckId) {
+            currentDeckId = deckId;
+            document.querySelector('.create-card-form').style.display = 'block';
+        }
+
+        // Hide create card form
+        function hideCreateCardForm() {
+            document.querySelector('.create-card-form').style.display = 'none';
+        }
+
+        // Create new card
+        async function createCard() {
+            const cardFront = document.getElementById('cardFront').value;
+            const cardBack = document.getElementById('cardBack').value;
+
+            if (!cardFront || !cardBack) {
+                console.log('Both front and back of the card are required');
+                return;
+            }
+
+            try {
+                const response = await fetch('http://127.0.0.1:8000/cards', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        Authorization: 'Bearer Token',
+                    },
+                    body: JSON.stringify({
+                        front: cardFront,
+                        back: cardBack,
+                        deck_id: currentDeckId
+                    })
+                });
+
+                const result = await response.json();
+                if (response.ok) {
+                    console.log('Card created successfully');
+                    hideCreateCardForm();
+                    displayModules();
+                } else {
+                    console.log('Error creating card: ' + result.error);
+                }
+            } catch (error) {
+                console.error('Error creating card:', error);
+            }
+        }
+
+        // Show auto generate cards form
+        async function showAutoGenerateCardsForm(deckId) {
+            currentDeckId = deckId;
+            await populateFileSelection();
+            document.querySelector('.auto-generate-cards-form').style.display = 'block';
+        }
+
+        // Hide auto generate cards form
+        function hideAutoGenerateCardsForm() {
+            document.querySelector('.auto-generate-cards-form').style.display = 'none';
+        }
+
+        // Auto generate cards
+        async function autoGenerateCards() {
+            const content = document.getElementById('content').value;
+
+            if (!content) {
+                console.log('Content is required for auto generation');
+                return;
+            }
+
+            try {
+                const response = await fetch('http://127.0.0.1:8000/generate-cards', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        Authorization: 'Bearer Token',
+                    },
+                    body: JSON.stringify({
+                        content: content,
+                        deck_id: currentDeckId
+                    })
+                });
+
+                const result = await response.json();
+                if (response.ok) {
+                    console.log('Cards auto generated successfully');
+                    hideAutoGenerateCardsForm();
+                    displayModules();
+                } else {
+                    console.log('Error auto generating cards: ' + result.error);
+                }
+            } catch (error) {
+                console.error('Error auto generating cards:', error);
+            }
+        }
+
+        // Fetch files from the API
+        async function fetchFiles() {
+            try {
+                const response = await fetch('http://127.0.0.1:8000/files', {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    }
+                });
+                const files = await response.json();
+                return files;
+            } catch (error) {
+                console.error('Error fetching files:', error);
+                return [];
+            }
+        }
+
+        // Populate file selection dropdown
+        async function populateFileSelection() {
+            const files = await fetchFiles();
+            const fileSelection = document.getElementById('fileSelection');
+            fileSelection.innerHTML = ''; // Clear existing options
+
+            files.forEach(file => {
+                const option = document.createElement('option');
+                option.value = file.id;
+                option.textContent = file.name;
+                fileSelection.appendChild(option);
+            });
+        }
+
+        // Initialize modules display on page load
+        document.addEventListener("DOMContentLoaded", () => {
+            displayModules();
+        });
+     </script>
+</body>
+</html>

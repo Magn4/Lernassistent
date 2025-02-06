@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="de">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login</title>
+    <link rel="stylesheet" type="text/css" href="LoginStyles.css" />
+    <link
+      href="https://fonts.googleapis.com/css?family=Quicksand"
+      rel="stylesheet
+    />
+    <script
+      src="https://kit.fontawesome.com/3ff8e8ca0d.js"
+      crossorigin="anonymous"
+    ></script>
+  </head>
+  <body>
+    <div class="login-box">
+      <div class="login-left-side">
+        <h1 class="login-header">Get started</h1>
+        <label for="username"></label>
+        <input
+          class="login-input"
+          type="text"
+          id="username"
+          placeholder="Username"
+        />
+        <label for="email"></label>
+        <input
+          class="login-input"
+          type="text"
+          id="email"
+          placeholder="E-Mail"
+        />
+        <div class="input-wrapper">
+          <label for="password"></label>
+          <input
+            class="login-input"
+            type="password"
+            id="password"
+            placeholder="Password"
+          />
+          <i class="fa fa-eye fa-xs" onclick="showPassword()"></i>
+          <i class="fa fa-eye-slash fa-xs" style="display: none" onclick="showPassword()"></i>
+
+        </div>
+        <button class="login-button" id="loginButton" disabled>Sign in</button>
+        <p>No account yet? <a href="Register.html">Register</a></p>
+      </div>
+      <div class="login-right-side">
+        <img
+          class="login-image"
+          src="/src/main/View/assets/images/login-image.jpg"
+          alt="Login Image"
+        />
+      </div>
+    </div>
+    <script>
+      const loginButton = document.getElementById("loginButton");
+
+      //enable login button only if username, email, and password are not empty
+      document.addEventListener("DOMContentLoaded", function () {
+        const usernameInput = document.getElementById("username");
+        const emailInput = document.getElementById("email");
+        const passwordInput = document.getElementById("password");
+        const loginButton = document.getElementById("loginButton");
+
+        function validateInputs() {
+          const username = usernameInput.value.trim();
+          const email = emailInput.value.trim();
+          const password = passwordInput.value.trim();
+          loginButton.disabled = !(username && email && password);
+        }
+
+        usernameInput.addEventListener("input", validateInputs);
+        emailInput.addEventListener("input", validateInputs);
+        passwordInput.addEventListener("input", validateInputs);
+      });
+
+      // Update the login button onclick handler
+      loginButton.onclick = async () => {
+        const username = document.getElementById("username").value;
+        const email = document.getElementById("email").value;
+        const password = document.getElementById("password").value;
+
+        // with backend connection
+        loginUser(username, email, password).then((success) => {
+          if (success) {
+            window.location.href = "Dashboard.html";
+          }
+        });
+
+        /* // without backend connection
+        window.location.href = "Dashboard.html"; */
+      };
+
+      // backend connection: (POST: login)
+      const loginUser = async (username, email, password) => {
+        const url = "http://127.0.0.1:5002/login";
+
+        const userData = {
+          userName: username,
+          eMail: email,
+          password: password,
+        };
+
+        try {
+          const response = await fetch(url, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: "Bearer Token",
+            },
+            body: JSON.stringify(userData),
+            credentials: "include",
+          });
+
+          const result = await response.json();
+          if (response.ok) {
+            console.log("Login successful:", result);
+            alert(result.message);
+            return true;
+          } else {
+            console.log("Login failed:", result);
+            alert(result.message || "Login failed");
+          }
+        } catch (error) {
+          console.error("Error:", error);
+          alert("Error during login");
+        }
+        return false;
+      };
+
+      //Show password
+      const eye = document.querySelector('.fa-eye');
+      const eyeSlash = document.querySelector('.fa-eye-slash');
+
+      function showPassword() {
+        const password = document.getElementById("password");
+        if (password.type === "password") {
+          password.type = "text";
+          eye.style.display = 'none';
+          eyeSlash.style.display = 'flex';
+        } else {
+          password.type = "password";
+          eye.style.display = 'flex';
+          eyeSlash.style.display = 'none';
+        }
+      }
+    </script>
+  </body>
+</html>
