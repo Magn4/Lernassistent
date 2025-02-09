@@ -282,7 +282,6 @@ class DatabaseContext:
             session.close()
 
 
-    # ADD: New methods for DashboardUploads (Ni)
     def get_all_dashboards(self):
         """Fetch all dashboard uploads from the database."""
         session = self.Session()

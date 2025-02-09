@@ -1,14 +1,9 @@
-# InstructionProcessor.py 
-
-# InstructionProcessor.py
-
 from Services.AIExternalService import AIExternalService
-
 from Services.AILocalService import AILocalService
 from Services.AITextProcessor import AITextProcessor
 
 
-class InstructionProcessor:
+class SummaryProcessor:
     def __init__(self, api_key, external_api_url, local_api_url):
         # Create instances for both external and local services
         self.ai_external_service = AIExternalService(api_key, external_api_url)
@@ -45,16 +40,3 @@ class InstructionProcessor:
         }
         return summary_response
 
-    async def get_explanation(self, text, use_local=False):
-        """
-        Generates a detailed explanation of the provided text.
-        """
-        # Instruction to explain the content in detail
-        instruction = "explain the following content in detail:"
-
-        # Choose the appropriate AI service (local or external)
-        ai_service = self.ai_local_service if use_local else self.ai_external_service
-
-        # Use AITextProcessor to process the text with the chosen service
-        ai_text_processor = AITextProcessor(ai_service)
-        return await ai_text_processor.process_text(text, user_id=None, use_local=use_local, instruction=instruction)

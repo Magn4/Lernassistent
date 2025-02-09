@@ -18,7 +18,7 @@ from Services.AITextProcessor import AITextProcessor
 from Services.AIExternalService import AIExternalService
 from Services.AILocalService import AILocalService
 from Services.UserService import UserService
-from Services.InstructionProcessor import InstructionProcessor  # Import the new class
+from main.App.Services.SummaryProcessor import SummaryProcessor
 
 # Flask Setup
 app = Flask(__name__)
@@ -56,7 +56,7 @@ local_service = AILocalService(local_api_url)
 ai_controller = AIController(external_service, local_service)
 text_extractor = TextExtractor(text_extractor_url)
 AI_text_processor = AITextProcessor(ai_controller)
-instruction_processor = InstructionProcessor(api_key, api_url, local_api_url)
+summary_processor = SummaryProcessor(api_key, api_url, local_api_url)
 
 
 # Create the TextController
@@ -78,7 +78,6 @@ def handle_exception(e):
         response["code"] = 500
     return jsonify(response), response["code"]
 
-# **New Endpoint for Dashboard File Upload (This is the new part)**
 
 @app.route('/upload_dashboard', methods=['POST'])
 def upload_dashboard():
@@ -120,7 +119,7 @@ def upload_dashboard():
     }), 200
 
 
-# Endpoints for PDF Processing with Summary and Explanation Features
+# Endpoints for PDF Processing with Summary 
 
 @app.route('/get_summary', methods=['POST'])
 async def get_summary():
@@ -157,7 +156,7 @@ async def get_summary():
         })
 
     # Generate a new summary if not found
-    result = await instruction_processor.get_summary(extracted_text, use_local)
+    result = await summary_processor.get_summary(extracted_text, use_local)
 
     # Save the new summary in the database, including the optional title
     summary_id = db_context.save_summary(extracted_text, result['data']['summary'], title=title)
@@ -174,38 +173,6 @@ async def get_summary():
         }
     })
 
-
-@app.route('/get_explanation', methods=['POST'])
-async def get_explanation():
-    # Retrieve data from the POST request
-    data = request.form
-    # Check if 'use_local' is provided, and convert it to a boolean (default: False)
-    use_local = data.get('use_local', 'false').lower() == 'true'
-
-    # Retrieve the uploaded PDF file from the request
-    pdf_file = request.files.get('file')
-    if not pdf_file:
-        # Return an error if no file was provided
-        return jsonify({"error": "No PDF file provided"}), 400
-
-    # Read the file data from the uploaded PDF
-    pdf_data = pdf_file.read()
-    print("PDF data received")  # Log the receipt of the file for debugging purposes
-
-    # Extract the text from the uploaded PDF using the TextController
-    extracted_text = text_controller.convert_to_text(pdf_data)
-
-    # Check if there was an error during text extraction
-    if "Error" in extracted_text or "Exception" in extracted_text:
-        # Return an error response if text extraction failed
-        return jsonify({"error": extracted_text}), 500
-
-    # Process the extracted text to generate a detailed explanation
-    result = await instruction_processor.get_explanation(extracted_text, use_local)
-    print(f"Explanation result: {result}")  # Log the result of the explanation processing
-
-    # Return the generated explanation to the client
-    return jsonify({"result": result})
 
 
 
