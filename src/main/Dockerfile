@@ -1,18 +1,15 @@
-# Use the official Nginx image
-FROM nginx:latest
+# Use the official Caddy image
+FROM caddy:latest
 
-# Copy your custom Nginx configuration file into the container
-# Make sure nginx.conf is present in the same directory as this Dockerfile
-COPY nginx.conf /etc/nginx/nginx.conf
+# Copy your custom Caddy configuration file into the container
+COPY Caddyfile /etc/caddy/Caddyfile
 
-# Optionally, you can copy static content (e.g., a website's HTML files) to the Nginx server
-COPY ./View /usr/share/nginx/html
+# Optionally, you can copy static content (e.g., a website's HTML files) to the Caddy server
+COPY ./View /usr/share/caddy
 
-# Expose the HTTP port (default is 80)
+# Expose the HTTP and HTTPS ports
 EXPOSE 80
+EXPOSE 443
 
-# Set permissions to ensure Nginx can access the config file (if needed)
-# RUN chown -R nginx:nginx /etc/nginx/nginx.conf
-
-# Start Nginx and keep it running in the foreground
-CMD ["nginx", "-g", "daemon off;"]
+# Start Caddy and keep it running in the foreground
+CMD ["caddy", "run", "--config", "/etc/caddy/Caddyfile"]

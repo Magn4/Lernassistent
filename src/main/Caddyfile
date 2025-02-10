@@ -1,0 +1,33 @@
+{
+    email your-email@example.com
+    # Enable automatic HTTPS with disabled redirects
+    auto_https disable_redirects
+}
+
+maguna.me {
+    root * /usr/share/caddy
+
+    # Serve static files
+    file_server
+
+    # Proxy requests to services
+    reverse_proxy /extract_pdf/* extract_pdf:5001
+    reverse_proxy /main_controller/* main_controller:5002
+    reverse_proxy /anki_service/* anki_service:8000
+    reverse_proxy /validate-token auth:5003
+
+    # CORS headers
+    header {
+        Access-Control-Allow-Origin *
+        Access-Control-Allow-Credentials true
+        Access-Control-Allow-Methods "GET, POST, OPTIONS, DELETE, PUT"
+        Access-Control-Allow-Headers *
+        Access-Control-Expose-Headers "Content-Length,Content-Range"
+    }
+
+    # Handle preflight requests
+    @options_preflight {
+        method OPTIONS
+    }
+    respond @options_preflight 204
+}
