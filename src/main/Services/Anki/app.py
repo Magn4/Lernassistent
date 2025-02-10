@@ -5,16 +5,8 @@ import requests
 import json
 
 app = Flask(__name__)
-CORS(app, resources={
-    r"/*": {
-        # "origins": ["http://maguna.me", "http://localhost", "http://127.0.0.1"],
-        "origins": ["*"],
-        "methods": ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-        "allow_headers": ["Content-Type", "Authorization"],
-        "expose_headers": ["Content-Type"],
-        "supports_credentials": True
-    }
-})
+CORS(app, resources={r"/*": {"origins": "*"}})
+
 # Initialize the database context
 db_context = AnkiDatabaseContext()
 

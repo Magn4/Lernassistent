@@ -3,16 +3,11 @@ from werkzeug.exceptions import HTTPException
 from flask_cors import CORS
 
 from Controllers.DashboardController import DashboardController
-
-
 from Database.DatabaseContext import DatabaseContext
-
 from Controllers.TextController import TextController
 from Controllers.AIController import AIController
 from Controllers.UserController import UserController
 from Controllers.FileManagerController import FileManagerController
-
-
 from Services.TextExtractor import TextExtractor
 from Services.AITextProcessor import AITextProcessor
 from Services.AIExternalService import AIExternalService
@@ -22,26 +17,16 @@ from Services.SummaryProcessor import SummaryProcessor
 
 # Flask Setup
 app = Flask(__name__)
-CORS(app, resources={
-    r"/*": {
-        # "origins": ["http://maguna.me", "http://localhost", "http://127.0.0.1"],
-        "origins": ["*"],
-        "methods": ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-        "allow_headers": ["Content-Type", "Authorization"],
-        "expose_headers": ["Content-Type"],
-        "supports_credentials": True
-    }
-})
+CORS(app, resources={r"/*": {"origins": "*"}})
+
 # Configuration
 app.config['UPLOAD_FOLDER'] = '/app/uploads'  
 
 # Create an instance of the DatabaseContext
 db_context = DatabaseContext()
 
-
 # Create an instance of the DashboardController (with the db_context passed in)
 dashboard_controller = DashboardController(db_context)
-
 
 # Create instances of the services
 api_key = "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"
@@ -49,15 +34,12 @@ api_url = "https://api.groq.com/openai/v1/chat/completions"
 local_api_url = "http://127.0.0.1:9191/api/generate"
 text_extractor_url = "http://127.0.0.1:5001/api/extract"
 
-
-
 external_service = AIExternalService(api_key, api_url)
 local_service = AILocalService(local_api_url)
 ai_controller = AIController(external_service, local_service)
 text_extractor = TextExtractor(text_extractor_url)
 AI_text_processor = AITextProcessor(ai_controller)
 summary_processor = SummaryProcessor(api_key, api_url, local_api_url, text_extractor_url)
-
 
 # Create the TextController
 text_controller = TextController(text_extractor, AI_text_processor)
@@ -77,7 +59,6 @@ def handle_exception(e):
     else:
         response["code"] = 500
     return jsonify(response), response["code"]
-
 
 @app.route('/upload_dashboard', methods=['POST'])
 def upload_dashboard():
@@ -118,7 +99,6 @@ def upload_dashboard():
         "extracted_text": extracted_text  # Optional, depending if you want to return the extracted text
     }), 200
 
-
 # Endpoints for PDF Processing with Summary 
 
 @app.route('/get_summary', methods=['POST'])
@@ -156,7 +136,6 @@ async def get_summary():
             }
         }
     })
-
 
 @app.route('/files', methods=['POST'])
 def open_file():
