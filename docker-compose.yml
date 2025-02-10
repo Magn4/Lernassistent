@@ -4,7 +4,7 @@ services:
     ports:
       - "9191:9191"
     container_name: llm_api
-    restart: unless-stopped
+    # restart: unless-stopped
 
   extract_pdf:
     image: ghcr.io/magn4/extract_pdf:latest
@@ -27,7 +27,7 @@ services:
       DB_NAME: ${DB_NAME}
       DB_USER: ${DB_USER}
       DB_PASSWORD: ${DB_PASSWORD}
-    restart: unless-stopped
+      restart: unless-stopped
 
   auth:
     image: ghcr.io/magn4/auth:latest
@@ -43,7 +43,7 @@ services:
       DB_NAME: ${DB_NAME}
       DB_USER: ${DB_USER}
       DB_PASSWORD: ${DB_PASSWORD}
-    restart: unless-stopped
+    # restart: unless-stopped
 
   db:
     image: ghcr.io/magn4/database:latest
