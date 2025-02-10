@@ -36,7 +36,7 @@ services:
       DB_NAME: ${DB_NAME}
       DB_USER: ${DB_USER}
       DB_PASSWORD: ${DB_PASSWORD}
-    # entrypoint: ["./wait-for-it.sh", "database", "5432", "--", "python", "app.py"]
+    entrypoint: ["./wait-for-it.sh", "database", "5432", "--", "python", "app.py"]
     restart: unless-stopped
   auth:
     build:
@@ -54,7 +54,7 @@ services:
       DB_NAME: ${DB_NAME}
       DB_USER: ${DB_USER}
       DB_PASSWORD: ${DB_PASSWORD}
-   # entrypoint: ["./wait-for-it.sh", "database", "5432", "--", "python", "auth.py"]
+    entrypoint: ["./wait-for-it.sh", "database", "5432", "--", "python", "auth.py"]
     restart: unless-stopped
   
   # PostgreSQL Database

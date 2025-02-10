@@ -5,7 +5,7 @@ FROM caddy:latest
 COPY Caddyfile /etc/caddy/Caddyfile
 
 # Optionally, you can copy static content (e.g., a website's HTML files) to the Caddy server
-COPY ./View /usr/share/caddy
+COPY ./View /var/www/html
 
 # Expose the HTTP and HTTPS ports
 EXPOSE 80
