@@ -61,7 +61,7 @@ services:
   db:
     build:
       context: ./Services/Database
-      dockerfile: Dockerfile.db
+      dockerfile: Dockerfile
     container_name: database
     environment:
       POSTGRES_USER: ${DB_USER}
@@ -82,7 +82,7 @@ services:
   anki_service:
     build:
       context: ./Services/Anki
-      dockerfile: Dockerfile.anki
+      dockerfile: Dockerfile
     ports:
       - "8000:8000"
     container_name: anki_service
@@ -101,7 +101,7 @@ services:
   nginx:
     build:
       context: .
-      dockerfile: Dockerfile.nginx
+      dockerfile: Dockerfile
     container_name: nginx
     ports:
       - "80:80"
