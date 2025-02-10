@@ -1,26 +1,30 @@
 <!-- Create Module Form -->
-<div class="create-module-form" style="display: none;">
+ <div class="create-module-form">
+<div class="modal">
     <h2>Create New Module</h2>
-    <label for="moduleName">Module Name:</label>
+    <label for="moduleName"></label>
     <input type="text" id="moduleName" placeholder="Enter module name" />
-    <label for="moduleDescription">Module Description:</label>
+    <label for="moduleDescription"></label>
     <textarea id="moduleDescription" placeholder="Enter module description"></textarea>
     <div class="form-buttons">
+        <button class="form-button" onclick="hideCreateModuleForm()">Quit</button>
         <button class="form-button" onclick="createModule()">Create</button>
-        <button class="form-button" onclick="hideCreateModuleForm()">Cancel</button>
     </div>
 </div>
+ </div>
 
 <!-- Create Card Form -->
-<div class="create-card-form" style="display: none;">
+<div class="create-card-form">
+    <div class="modal">
     <h2>Create New Card</h2>
-    <label for="cardFront">Front:</label>
-    <input type="text" id="cardFront" placeholder="Enter card front" />
-    <label for="cardBack">Back:</label>
-    <textarea id="cardBack" placeholder="Enter card back"></textarea>
+    <label for="cardFront"></label>
+    <input type="text" id="cardFront" placeholder="Enter card question" />
+    <label for="cardBack"></label>
+    <textarea id="cardBack" placeholder="Enter card answer"></textarea>
     <div class="form-buttons">
+        <button class="form-button" onclick="hideCreateCardForm()">Quit</button>
         <button class="form-button" onclick="createCard()">Create</button>
-        <button class="form-button" onclick="hideCreateCardForm()">Cancel</button>
+    </div>
     </div>
 </div>
 
@@ -38,7 +42,7 @@
     <label for="existingFiles">Select a file:</label>
     <select id="existingFiles" class="file-selection-dropdown"></select>
     <div class="form-buttons">
+        <button class="form-button" onclick="hideAutoGenerateCardsForm()">Quit</button>
         <button class="form-button" onclick="autoGenerateCards()">Generate</button>
-        <button class="form-button" onclick="hideAutoGenerateCardsForm()">Cancel</button>
     </div>
 </div>

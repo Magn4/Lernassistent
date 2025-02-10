@@ -1,3 +1,24 @@
+.title {
+    display: flex;
+    flex-direction: row;
+}
+
+  .ellipsis-icon-design {
+    font-size: 17px;
+    color: #dbdbd9;
+    margin-left: auto;
+    margin-right: 75px;
+    cursor: pointer;
+  }
+  
+  .ellipsis-icon-design:hover {
+    color: #98a55d;
+  }
+  
+  .ellipsis-icon-design:active {
+    color: #dbdbd9;
+  }
+
 .module-card-area {
     flex-basis: 100%;
     max-width: fit-content;
@@ -150,16 +171,38 @@
     background-color: #7a8b4a;
 }
 
+.modal {
+    background-color: #fefefe;
+  margin: 15% auto; /* 15% from the top and centered */
+  padding: 20px;
+  height: 270px;
+  width: 270px; /* width: 80%; */ /* Could be more or less, depending on screen size */
+  border-radius: 10px;
+  z-index: 5;
+  }
+
 .create-module-form {
-    position: fixed;
+    /* position: fixed;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    background-color: #fafafa;
+    background-color: #fefefe;
     padding: 20px;
     border-radius: 10px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    z-index: 1000;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.4);
+    z-index: 1000; */
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 1; /* Sit on top */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgb(0, 0, 0); /* Fallback color */
+    background-color: rgba(0, 0, 0, 0.4); /* Black w/ opacity */
+    justify-content: center;
+    align-items: center;
 }
 
 .create-module-form h2 {
@@ -192,15 +235,14 @@
 
 .create-module-form .form-button {
     padding: 10px 20px;
-    background-color: #98a55d;
-    color: white;
-    border: none;
+    background-color: #fafafa;
+    border: 1px solid #ccc;
     border-radius: 5px;
     cursor: pointer;
 }
 
 .create-module-form .form-button:hover {
-    background-color: #7a8b4a;
+    background-color: #ccc;
 }
 
 .create-card-button {
@@ -223,17 +265,18 @@
 }
 
 .create-card-form {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background-color: #fafafa;
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    z-index: 1000;
-    width: 500px; /* Increased width */
-    height: 600px; /* Increased height */
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 1; /* Sit on top */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgb(0, 0, 0); /* Fallback color */
+    background-color: rgba(0, 0, 0, 0.4); /* Black w/ opacity */
+    justify-content: center;
+    align-items: center;
 }
 
 .create-card-form h2 {
