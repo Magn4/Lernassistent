@@ -14,7 +14,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 RUN apt-get update && apt-get install -y netcat-openbsd
 
-
+CMD ["./wait-for-it.sh", "database", "5432", "--", "python", "auth.py"]
 # Specify the command to run the application
 
 EXPOSE 5003
