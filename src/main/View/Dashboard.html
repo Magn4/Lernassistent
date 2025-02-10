@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Dashboard</title>
-    <link rel="stylesheet"  href="Styles.css">
-    <link rel="stylesheet" href="DashboardStyles.css">
+    <link rel="stylesheet"  href="CSS/Styles.css">
+    <link rel="stylesheet" href="CSS/DashboardStyles.css">
     <link
       href="https://fonts.googleapis.com/css?family=Quicksand"
       rel="stylesheet"
@@ -170,16 +170,19 @@
         alert(`You dropped ${files.length} file(s).`);
         modal.style.display = "block";
 
-        //Save Button with backend connection
+        // Populate module and directory dropdowns
+        populateDropdowns();
+
+        // Save Button with backend connection
         const saveButton = document.getElementById("save");
 
-        saveButton.onclick = () => {
-          const modulename = document.getElementById("input1").value;
-          const directoryname = document.getElementById("input2").value;
+        saveButton.onclick = async () => {
+          const moduleName = document.getElementById("input1").value;
+          const directoryName = document.getElementById("input2").value;
 
-          alert(`Modulename: ${modulename}, Directoryname: ${directoryname}`);
+          alert(`Module Name: ${moduleName}, Directory Name: ${directoryName}`);
 
-          if (uploadFile(files[0], moduleName, folderName)) {
+          if (await uploadFile(files[0], moduleName, directoryName)) {
             document.getElementById("input1").value = "";
             document.getElementById("input2").value = "";
             modal.style.display = "none";
@@ -190,13 +193,47 @@
       });
 
       // backend connection: (POST: upload_a_file)
-      const uploadFile = async (dropArea, moduleName, folderName) => {
-        const url = "http://maguna.me/main_controller/upload_file";
-        const file = event.dataTransfer.file;
-        const uploadData = {
+      const uploadFile = async (file, moduleName, directoryName) => {
+        const url = "http://127.0.0.1:5002/upload_file";
+        const formData = new FormData();
+        formData.append("module_name", moduleName);
+        formData.append("topic_name", directoryName);
+        formData.append("file", file);
+
+        try {
+          const response = await fetch(url, {
+            method: "POST",
+            headers: {
+              Authorization: "Bearer Token",
+            },
+            body: formData,
+          });
+
+          const result = await response.json();
+          if (response.ok) {
+            console.log("File uploaded successfully:", result);
+            return true;
+          } else if (result.error.includes("does not exist")) {
+            console.log("Creating topic and retrying upload...");
+            if (await createTopic(moduleName, directoryName)) {
+              return await uploadFile(file, moduleName, directoryName);
+            }
+          } else {
+            console.error("Error uploading file:", result);
+            return false;
+          }
+        } catch (error) {
+          console.error("Error:", error);
+          return false;
+        }
+      };
+
+      // backend connection: (POST: create_topic)
+      const createTopic = async (moduleName, topicName) => {
+        const url = "http://127.0.0.1:5002/create_topic";
+        const topicData = {
           module_name: moduleName,
-          folder_name: folderName,
-          file: file,
+          topic_name: topicName,
         };
 
         try {
@@ -206,17 +243,80 @@
               "Content-Type": "application/json",
               Authorization: "Bearer Token",
             },
-            body: JSON.stringify(uploadData),
+            body: JSON.stringify(topicData),
           });
 
           const result = await response.json();
           if (response.ok) {
-            console.log("Account created successfully:", result);
+            console.log("Topic created successfully:", result);
             return true;
+          } else {
+            console.error("Error creating topic:", result);
+            return false;
           }
         } catch (error) {
           console.error("Error:", error);
-          alert("Error:", error);
+          return false;
+        }
+      };
+
+      // Fetch modules and directories from the API
+      const fetchModulesAndDirectories = async () => {
+        const modulesUrl = "http://127.0.0.1:5002/modules";
+        const directoriesUrl = "http://127.0.0.1:5002/modules/{module_name}/topics";
+
+        try {
+          const modulesResponse = await fetch(modulesUrl, {
+            method: "GET",
+            headers: {
+              Authorization: "Bearer Token",
+            },
+          });
+          const modules = await modulesResponse.json();
+
+          const directories = {};
+          for (const module of modules) {
+            const response = await fetch(directoriesUrl.replace("{module_name}", module), {
+              method: "GET",
+              headers: {
+                Authorization: "Bearer Token",
+              },
+            });
+            directories[module] = await response.json();
+          }
+
+          return { modules, directories };
+        } catch (error) {
+          console.error("Error fetching modules and directories:", error);
+          return { modules: [], directories: {} };
+        }
+      };
+
+      // Populate module and directory dropdowns
+      const populateDropdowns = async () => {
+        const { modules, directories } = await fetchModulesAndDirectories();
+
+        const moduleDropdown = document.getElementById("dropdown1");
+        const directoryDropdown = document.getElementById("dropdown2");
+
+        moduleDropdown.innerHTML = "";
+        directoryDropdown.innerHTML = "";
+
+        modules.forEach((module) => {
+          const moduleOption = document.createElement("li");
+          moduleOption.textContent = module;
+          moduleOption.onclick = () => selectOption("input1", module);
+          moduleDropdown.appendChild(moduleOption);
+        });
+
+        const selectedModule = document.getElementById("input1").value;
+        if (selectedModule && directories[selectedModule]) {
+          directories[selectedModule].forEach((directory) => {
+            const directoryOption = document.createElement("li");
+            directoryOption.textContent = directory;
+            directoryOption.onclick = () => selectOption("input2", directory);
+            directoryDropdown.appendChild(directoryOption);
+          });
         }
       };
 
@@ -230,19 +330,6 @@
         document.getElementById("input2").value = "";
         modal.style.display = "none";
       };
-
-      /* // save button without backend connection
-      const save = document.getElementById("save");
-
-      // When the user clicks on the save button, save and close the modal
-        save.onclick = () => {
-        const modulename = document.getElementById("input1").value;
-        const directoryname = document.getElementById("input2").value;
-        alert(`Modulename: ${modulename}, Directoryname: ${directoryname}`); //TODO: Send to backend
-        document.getElementById("input1").value = "";
-        document.getElementById("input2").value = "";
-        modal.style.display = "none";
-      }; */
 
       //Get the dropdown lists
       const dropdownList1 = document.getElementById("dropdown1");
@@ -293,6 +380,9 @@
         input.value = value;
         const dropdown = input.nextElementSibling;
         dropdown.style.display = "none";
+        if (inputId === "input1") {
+          populateDropdowns(); // Update directories when a module is selected
+        }
       }
 
       document.addEventListener("click", (event) => {

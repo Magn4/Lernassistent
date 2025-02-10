@@ -1,0 +1,44 @@
+<!-- Create Module Form -->
+<div class="create-module-form" style="display: none;">
+    <h2>Create New Module</h2>
+    <label for="moduleName">Module Name:</label>
+    <input type="text" id="moduleName" placeholder="Enter module name" />
+    <label for="moduleDescription">Module Description:</label>
+    <textarea id="moduleDescription" placeholder="Enter module description"></textarea>
+    <div class="form-buttons">
+        <button class="form-button" onclick="createModule()">Create</button>
+        <button class="form-button" onclick="hideCreateModuleForm()">Cancel</button>
+    </div>
+</div>
+
+<!-- Create Card Form -->
+<div class="create-card-form" style="display: none;">
+    <h2>Create New Card</h2>
+    <label for="cardFront">Front:</label>
+    <input type="text" id="cardFront" placeholder="Enter card front" />
+    <label for="cardBack">Back:</label>
+    <textarea id="cardBack" placeholder="Enter card back"></textarea>
+    <div class="form-buttons">
+        <button class="form-button" onclick="createCard()">Create</button>
+        <button class="form-button" onclick="hideCreateCardForm()">Cancel</button>
+    </div>
+</div>
+
+<!-- Auto Generate Cards Form -->
+<div class="auto-generate-cards-form" style="display: none;">
+    <h2>Auto Generate Cards</h2>
+    <label for="content">Content:</label>
+    <textarea id="content" placeholder="Enter content for auto generation"></textarea>
+    <label for="fileInput">Select PDF File:</label>
+    <input type="file" id="fileInput" accept="application/pdf" />
+    <label for="modulesDropdown">Or choose an existing module:</label>
+    <select id="modulesDropdown" class="file-selection-dropdown" onchange="fetchTopics()"></select>
+    <label for="topicsDropdown">Select a topic:</label>
+    <select id="topicsDropdown" class="file-selection-dropdown" onchange="fetchFiles()"></select>
+    <label for="existingFiles">Select a file:</label>
+    <select id="existingFiles" class="file-selection-dropdown"></select>
+    <div class="form-buttons">
+        <button class="form-button" onclick="autoGenerateCards()">Generate</button>
+        <button class="form-button" onclick="hideAutoGenerateCardsForm()">Cancel</button>
+    </div>
+</div>

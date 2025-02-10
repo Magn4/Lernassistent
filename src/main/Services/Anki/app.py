@@ -187,6 +187,25 @@ def update_deck(deck_id):
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
+# Delete a deck
+@app.route('/decks/<int:deck_id>', methods=['DELETE'])
+def delete_deck(deck_id):
+    session = db_context.Session()
+    try:
+        deck = session.query(Deck).get(deck_id)
+        if not deck:
+            return jsonify({"error": "Deck not found."}), 404
+
+        # Delete all cards associated with the deck
+        session.query(Card).filter_by(deck_id=deck_id).delete()
+
+        session.delete(deck)
+        session.commit()
+        return jsonify({"message": "Deck and associated cards deleted successfully."}), 200
+    except Exception as e:
+        session.rollback()
+        return jsonify({"error": str(e)}), 500
+
 # List all decks
 @app.route('/decks', methods=['GET'])
 def list_decks():
@@ -254,6 +273,56 @@ def list_cards():
         return jsonify({"error": str(e)}), 500
     finally:
         session.close()
+
+@app.route('/auto-generate-cards', methods=['POST'])
+def auto_generate_cards():
+    try:
+        # Check if a PDF file is provided in the request
+        pdf_file = request.files.get('file')
+        if not pdf_file:
+            return jsonify({"error": "No PDF file provided"}), 400
+
+        # Ensure the file is in PDF format
+        if not pdf_file.filename.endswith('.pdf'):
+            return jsonify({"error": "The file must be in PDF format"}), 400
+
+        # Send the PDF file to the text extraction service
+        extract_url = "http://127.0.0.1:5001/api/extract"
+        files = {'file': pdf_file.read()}
+        extract_response = requests.post(extract_url, files=files)
+
+        # Check if the text extraction was successful
+        if extract_response.status_code != 200:
+            return jsonify({"error": "Failed to extract text from PDF"}), 500
+
+        # Extract the text content from the response
+        extracted_text = extract_response.json().get('text')
+        if not extracted_text:
+            return jsonify({"error": "No text extracted from PDF"}), 500
+
+        # Prepare the data for generating cards
+        data = {
+            "content": extracted_text,
+            "deck_id": request.form.get('deck_id'),
+            "num_cards": request.form.get('num_cards', 20)
+        }
+
+        # Call the generate_cards endpoint with the extracted text
+        generate_response = requests.post(
+            'http://127.0.0.1:8000/generate-cards',
+            json=data
+        )
+
+        # Check if the card generation was successful
+        if generate_response.status_code != 201:
+            return jsonify({"error": "Failed to generate cards"}), 500
+
+        # Return the generated cards
+        return generate_response.json(), 201
+
+    except Exception as e:
+        app.logger.error(f"Unexpected Error: {str(e)}")
+        return jsonify({"error": f"An unexpected error occurred: {str(e)}"}), 500
 
 # Generate Anki cards from content
 @app.route('/generate-cards', methods=['POST'])

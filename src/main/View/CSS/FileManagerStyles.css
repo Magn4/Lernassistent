@@ -105,20 +105,34 @@
 }
 
 #files-header {
-  display: none;
+  display: flex;
+  justify-content: space-between;
   align-items: center;
-  margin-top: 10px;
+  padding: 10px;
+  background-color: #e9e9e9;
+  border-bottom: 1px solid #ccc;
+  border-radius: 5px 5px 0 0;
+}
+
+#files-header h2 {
+  margin: 0;
 }
 
 #files-container {
-  display: none;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  background-color: #f9f9f9;
   height: 110px;
   overflow: auto;
-  padding: 20px 0px 20px 20px;
 }
 
 #files-paragraph {
-  display: none;
+  padding: 10px;
+  color: #666;
 }
 
 #files-container ul {
@@ -127,18 +141,17 @@
 }
 
 #files-container li {
-  padding: 0px 10px 0px 5px;
-  margin: 10px 10px 10px 0px;
-  width: fit-content;
+  padding: 10px;
+  margin: 5px 0;
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 5px;
   cursor: pointer;
-  border-radius: 6px;
-  background-color: #fafafa;
   transition: background-color 0.3s;
 }
 
 #files-container li:hover {
-  border-radius: 6px;
-  box-shadow: 0px 10px 30px 0px #dbdbd9;
+  background-color: #f1f1f1;
 }
 
 #files-container li:active {
@@ -147,7 +160,9 @@
 
 #files-list {
   margin-top: 0px;
-  /* width: 250px; */
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
 }
 
 /* The Modal (background) */
@@ -244,4 +259,20 @@
   font-size: 20px;
   resize: none;
   overflow: auto;
+}
+
+.summary-button {
+  padding: 10px 20px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  font-family: QuickSand;
+  cursor: pointer;
+}
+
+.summary-button:hover {
+  background-color: lightgray;
+}
+
+.summary-button:active {
+  background-color: #f0f0f0;
 }

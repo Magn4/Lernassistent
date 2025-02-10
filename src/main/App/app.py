@@ -18,7 +18,7 @@ from Services.AITextProcessor import AITextProcessor
 from Services.AIExternalService import AIExternalService
 from Services.AILocalService import AILocalService
 from Services.UserService import UserService
-from main.App.Services.SummaryProcessor import SummaryProcessor
+from Services.SummaryProcessor import SummaryProcessor
 
 # Flask Setup
 app = Flask(__name__)
@@ -33,7 +33,7 @@ CORS(app, resources={
     }
 })
 # Configuration
-app.config['UPLOAD_FOLDER'] = 'C:/Users/hp/Desktop/Uploads'  # Set this to the desired upload folder path
+app.config['UPLOAD_FOLDER'] = '/app/uploads'  
 
 # Create an instance of the DatabaseContext
 db_context = DatabaseContext()
@@ -47,7 +47,7 @@ dashboard_controller = DashboardController(db_context)
 api_key = "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"
 api_url = "https://api.groq.com/openai/v1/chat/completions"
 local_api_url = "http://127.0.0.1:9191/api/generate"
-text_extractor_url = "http://127.0.0.1/extract_pdf/api/extract"
+text_extractor_url = "http://127.0.0.1:5001/api/extract"
 
 
 
@@ -56,7 +56,7 @@ local_service = AILocalService(local_api_url)
 ai_controller = AIController(external_service, local_service)
 text_extractor = TextExtractor(text_extractor_url)
 AI_text_processor = AITextProcessor(ai_controller)
-summary_processor = SummaryProcessor(api_key, api_url, local_api_url)
+summary_processor = SummaryProcessor(api_key, api_url, local_api_url, text_extractor_url)
 
 
 # Create the TextController
@@ -123,43 +123,27 @@ def upload_dashboard():
 
 @app.route('/get_summary', methods=['POST'])
 async def get_summary():
-    # Retrieve data from the POST request
-    data = request.form
-    use_local = data.get('use_local', 'false').lower() == 'true'
+    data = request.get_json()
+    module_name = data.get('module_name')
+    topic_name = data.get('topic_name')
+    filename = data.get('filename')
 
-    # Get the optional title from the form data
-    title = data.get('title')  # Title can be passed with the request
+    if not module_name or not topic_name or not filename:
+        return jsonify({"error": "Module name, topic name, and filename are required"}), 400
 
-    pdf_file = request.files.get('file')
-    if not pdf_file:
-        return jsonify({"error": "No PDF file provided"}), 400
+    file_path = f"{app.config['UPLOAD_FOLDER']}/{module_name}/{topic_name}/{filename}"
+    if not os.path.exists(file_path):
+        return jsonify({"error": "File not found"}), 404
 
-    pdf_data = pdf_file.read()
-    extracted_text = text_controller.convert_to_text(pdf_data)
+    with open(file_path, 'rb') as pdf_file:
+        pdf_data = pdf_file.read()
 
-    if "Error" in extracted_text or "Exception" in extracted_text:
-        return jsonify({"error": extracted_text}), 500
+    result = await summary_processor.get_summary(pdf_data, use_local=False)
 
-    # Check if the summary already exists in the database
-    existing_summary = db_context.find_summary_by_text(extracted_text)
-    if existing_summary:
-        return jsonify({
-            "status": "success",
-            "data": {
-                "summary": existing_summary.summary_text,
-                "title": existing_summary.title,
-                "details": {
-                    "length": len(existing_summary.summary_text),
-                    "generated_with": "cached_result",
-                }
-            }
-        })
+    if "error" in result:
+        return jsonify({"error": result["error"]}), 500
 
-    # Generate a new summary if not found
-    result = await summary_processor.get_summary(extracted_text, use_local)
-
-    # Save the new summary in the database, including the optional title
-    summary_id = db_context.save_summary(extracted_text, result['data']['summary'], title=title)
+    summary_id = db_context.save_summary(result['data']['summary'], result['data']['summary'])
 
     return jsonify({
         "status": "success",
@@ -168,21 +152,35 @@ async def get_summary():
             "summary_id": summary_id,
             "details": {
                 "length": len(result['data']['summary']),
-                "generated_with": "external_ai" if not use_local else "local_ai",
+                "generated_with": "external_ai",
             }
         }
     })
 
 
-
-
-@app.route('/files/<module_name>/<topic_name>/<filename>', methods=['GET'])
-def open_file(module_name, topic_name, filename):
+@app.route('/files', methods=['POST'])
+def open_file():
+    data = request.get_json()
+    module_name = data.get('module_name')
+    topic_name = data.get('topic_name')
+    filename = data.get('filename')
     return file_manager_controller.open_file(module_name, topic_name, filename)
 
-@app.route('/download_file/<module_name>/<topic_name>/<filename>', methods=['GET'])
-def download_file(module_name, topic_name, filename):
+@app.route('/download_file', methods=['POST'])
+def download_file():
+    data = request.get_json()
+    module_name = data.get('module_name')
+    topic_name = data.get('topic_name')
+    filename = data.get('filename')
     return file_manager_controller.download_file(module_name, topic_name, filename)
+
+@app.route('/delete_file', methods=['DELETE'])
+def delete_file():
+    data = request.get_json()
+    module_name = data.get('module_name')
+    topic_name = data.get('topic_name')
+    filename = data.get('filename')
+    return file_manager_controller.delete_file(module_name, topic_name, filename)
 
 @app.route('/register', methods=['POST'])
 def register():
@@ -236,12 +234,6 @@ def delete_module(module_name):
 @app.route('/delete_topic/ ', methods=['DELETE'])
 def delete_topic(module_name, topic_name):
     return file_manager_controller.delete_topic(module_name, topic_name)
-
-@app.route('/files/<module_name>/<topic_name>/<filename>', methods=['DELETE'])
-def delete_file(module_name, topic_name, filename):
-    return file_manager_controller.delete_file(module_name, topic_name, filename)
-
-
 
 # Run the Flask app
 if __name__ == "__main__":

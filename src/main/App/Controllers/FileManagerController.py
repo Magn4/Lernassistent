@@ -62,7 +62,7 @@ class FileManagerController:
                 current_app.logger.error(f"File does not exist on the server at path: {file_path}")
                 return jsonify({"error": "File does not exist on the server"}), 404
 
-            return send_from_directory(os.path.dirname(file_path), os.path.basename(file_path))
+            return send_from_directory(os.path.dirname(file_path), os.path.basename(file_path), mimetype='application/pdf')
         except Exception as e:
             current_app.logger.error(f"Error opening file: {str(e)}")
             return jsonify({"error": str(e)}), 500

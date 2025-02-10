@@ -354,3 +354,48 @@
     border-radius: 5px;
     font-size: 14px;
 }
+
+.start-learning-button {
+    margin-top: 10px;
+    padding: 10px 20px;
+    background-color: #98a55d;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.start-learning-button:hover {
+    background-color: #7a8b4a;
+}
+
+.modify-deck-button {
+    margin-top: 10px;
+    padding: 5px 10px;
+    background-color: #4CAF50; /* Green */
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 12px;
+}
+
+.modify-deck-button:hover {
+    background-color: #45a049;
+}
+
+.delete-deck-button {
+    margin-top: 10px;
+    padding: 5px 10px;
+    background-color: #f44336; /* Red */
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 12px;
+}
+
+.delete-deck-button:hover {
+    background-color: #e53935;
+}

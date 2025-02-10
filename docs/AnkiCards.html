@@ -190,7 +190,7 @@
         // Fetch cards from the API
         async function fetchCards(deckId) {
             try {
-                const response = await fetch(`http://127.0.0.1:8000/decks/${deckId}`, {
+                const response = await fetch(`http://maguna.me:8000/decks/${deckId}`, {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json',
@@ -282,7 +282,7 @@
             }
 
             try {
-                const response = await fetch('http://127.0.0.1:8000/decks', {
+                const response = await fetch('http://maguna.me:8000/decks', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -328,7 +328,7 @@
             }
 
             try {
-                const response = await fetch('http://127.0.0.1:8000/cards', {
+                const response = await fetch('http://maguna.me:8000/cards', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -376,7 +376,7 @@
             }
 
             try {
-                const response = await fetch('http://127.0.0.1:8000/generate-cards', {
+                const response = await fetch('http://magune.me:8000/generate-cards', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -404,7 +404,7 @@
         // Fetch files from the API
         async function fetchFiles() {
             try {
-                const response = await fetch('http://127.0.0.1:8000/files', {
+                const response = await fetch('http://maguna.me:8000/files', {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json',
