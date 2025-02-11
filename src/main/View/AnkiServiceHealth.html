@@ -19,11 +19,12 @@
 
     <script>
         document.addEventListener("DOMContentLoaded", function () {
-            const targetUrl = 'https://maguna.me:8000/health'; // Use HTTPS
+            const targetUrl = 'https://maguna.me/anki_service/health'; // Use HTTPS
 
             fetch(targetUrl, {
                 headers: {
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer Token'
                 }
             })
             .then(response => {
