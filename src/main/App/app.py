@@ -17,7 +17,7 @@ from Services.SummaryProcessor import SummaryProcessor
 
 # Flask Setup
 app = Flask(__name__)
-CORS(app, resources={r"/*": {"origins": "*"}})
+CORS(app, resources={r"/*": {"origins": "*"}}, supports_credentials=True)
 
 # Configuration
 app.config['UPLOAD_FOLDER'] = '/app/uploads'  
