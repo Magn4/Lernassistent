@@ -1,6 +1,6 @@
 from flask import Flask, jsonify, request
 from database import AnkiDatabaseContext, Card, Deck  # Make sure Deck is imported from your models
-from flask_cors import CORS
+from flask_cors import CORS, cross_origin
 import requests
 import json
 
@@ -12,11 +12,13 @@ db_context = AnkiDatabaseContext()
 
 # Health check endpoint
 @app.route('/health', methods=['GET'])
+@cross_origin()
 def health():
     return jsonify({"status": "ok"}), 200
 
 # Create a new card
 @app.route('/cards', methods=['POST'])
+@cross_origin()
 def create_card():
     data = request.get_json()
     front = data.get('front')
@@ -39,6 +41,7 @@ def create_card():
 
 # Get a specific card by ID
 @app.route('/cards/<int:card_id>', methods=['GET'])
+@cross_origin()
 def get_card(card_id):
     try:
         card = db_context.get_card(card_id)
@@ -61,6 +64,7 @@ def get_card(card_id):
 
 # Update a card (e.g., after a review session)
 @app.route('/cards/<int:card_id>', methods=['PUT'])
+@cross_origin()
 def update_card(card_id):
     data = request.get_json()
 
@@ -125,6 +129,7 @@ def update_card_logic(button, interval, ef, repetitions, lapses):
 
 # Delete a card
 @app.route('/cards/<int:card_id>', methods=['DELETE'])
+@cross_origin()
 def delete_card(card_id):
     session = db_context.Session()
     try:
@@ -141,6 +146,7 @@ def delete_card(card_id):
 
 # Create a new deck
 @app.route('/decks', methods=['POST'])
+@cross_origin()
 def create_deck():
     data = request.get_json()
     name = data.get('name')
@@ -161,6 +167,7 @@ def create_deck():
 
 # Update an existing deck
 @app.route('/decks/<int:deck_id>', methods=['PUT'])
+@cross_origin()
 def update_deck(deck_id):
     data = request.get_json()
     name = data.get('name')
@@ -181,6 +188,7 @@ def update_deck(deck_id):
 
 # Delete a deck
 @app.route('/decks/<int:deck_id>', methods=['DELETE'])
+@cross_origin()
 def delete_deck(deck_id):
     session = db_context.Session()
     try:
@@ -200,6 +208,7 @@ def delete_deck(deck_id):
 
 # List all decks
 @app.route('/decks', methods=['GET'])
+@cross_origin()
 def list_decks():
     session = db_context.Session()
     try:
@@ -221,6 +230,7 @@ def list_decks():
 
 # Get a specific deck and its cards
 @app.route('/decks/<int:deck_id>', methods=['GET'])
+@cross_origin()
 def get_deck(deck_id):
     session = db_context.Session()
     try:
@@ -243,6 +253,7 @@ def get_deck(deck_id):
 
 # List all cards
 @app.route('/cards', methods=['GET'])
+@cross_origin()
 def list_cards():
     session = db_context.Session()
     try:
@@ -267,6 +278,7 @@ def list_cards():
         session.close()
 
 @app.route('/auto-generate-cards', methods=['POST'])
+@cross_origin()
 def auto_generate_cards():
     try:
         # Check if a PDF file is provided in the request
@@ -318,6 +330,7 @@ def auto_generate_cards():
 
 # Generate Anki cards from content
 @app.route('/generate-cards', methods=['POST'])
+@cross_origin()
 def generate_cards():
     try:
         # Parse incoming JSON

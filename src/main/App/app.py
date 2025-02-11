@@ -1,6 +1,6 @@
 from flask import Flask, request, jsonify
 from werkzeug.exceptions import HTTPException
-from flask_cors import CORS
+from flask_cors import CORS, cross_origin
 
 from Controllers.DashboardController import DashboardController
 from Database.DatabaseContext import DatabaseContext
@@ -50,6 +50,7 @@ user_controller = UserController(user_service)
 file_manager_controller = FileManagerController(db_context)
 
 @app.errorhandler(Exception)
+@cross_origin()
 def handle_exception(e):
     response = {
         "error": str(e)
@@ -61,6 +62,7 @@ def handle_exception(e):
     return jsonify(response), response["code"]
 
 @app.route('/upload_dashboard', methods=['POST'])
+@cross_origin()
 def upload_dashboard():
     # Retrieve form data from the request (sent from the frontend)
     data = request.form
@@ -102,6 +104,7 @@ def upload_dashboard():
 # Endpoints for PDF Processing with Summary 
 
 @app.route('/get_summary', methods=['POST'])
+@cross_origin()
 async def get_summary():
     data = request.get_json()
     module_name = data.get('module_name')
@@ -138,6 +141,7 @@ async def get_summary():
     })
 
 @app.route('/files', methods=['POST'])
+@cross_origin()
 def open_file():
     data = request.get_json()
     module_name = data.get('module_name')
@@ -146,6 +150,7 @@ def open_file():
     return file_manager_controller.open_file(module_name, topic_name, filename)
 
 @app.route('/download_file', methods=['POST'])
+@cross_origin()
 def download_file():
     data = request.get_json()
     module_name = data.get('module_name')
@@ -154,6 +159,7 @@ def download_file():
     return file_manager_controller.download_file(module_name, topic_name, filename)
 
 @app.route('/delete_file', methods=['DELETE'])
+@cross_origin()
 def delete_file():
     data = request.get_json()
     module_name = data.get('module_name')
@@ -162,6 +168,7 @@ def delete_file():
     return file_manager_controller.delete_file(module_name, topic_name, filename)
 
 @app.route('/register', methods=['POST'])
+@cross_origin()
 def register():
     try:
         return user_controller.register()
@@ -169,6 +176,7 @@ def register():
         return handle_exception(e)
 
 @app.route('/login', methods=['POST'])
+@cross_origin()
 def login():
     try:
         return user_controller.login()
@@ -176,18 +184,22 @@ def login():
         return handle_exception(e)
 
 @app.route('/create_module', methods=['POST'])
+@cross_origin()
 def create_module():
     return file_manager_controller.create_module()
 
 @app.route('/create_topic', methods=['POST'])
+@cross_origin()
 def create_topic():
     return file_manager_controller.create_topic()
 
 @app.route('/upload_file', methods=['POST'])
+@cross_origin()
 def upload_file():
     return file_manager_controller.upload_file()
 
 @app.route('/users', methods=['GET'])
+@cross_origin()
 def get_all_users():
     try:
         return user_controller.get_all_users()
@@ -195,22 +207,27 @@ def get_all_users():
         return handle_exception(e)
 
 @app.route('/modules', methods=['GET'])
+@cross_origin()
 def list_modules():
     return file_manager_controller.list_modules()
 
 @app.route('/modules/<module_name>/topics', methods=['GET'])
+@cross_origin()
 def list_topics(module_name):
     return file_manager_controller.list_topics(module_name)
 
 @app.route('/modules/<module_name>/topics/<topic_name>/files', methods=['GET'])
+@cross_origin()
 def list_files(module_name, topic_name):
     return file_manager_controller.list_files(module_name, topic_name)
 
 @app.route('/delete_module/<module_name>', methods=['DELETE'])
+@cross_origin()
 def delete_module(module_name):
     return file_manager_controller.delete_module(module_name)
 
 @app.route('/delete_topic/ ', methods=['DELETE'])
+@cross_origin()
 def delete_topic(module_name, topic_name):
     return file_manager_controller.delete_topic(module_name, topic_name)
 
