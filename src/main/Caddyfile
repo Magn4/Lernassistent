@@ -24,10 +24,10 @@ maguna.me {
     rewrite @html_files {path}.html
 
     # Proxy requests to services
-    reverse_proxy /extract_pdf* https://extract_pdf:5001
-    reverse_proxy /main_controller* https://main_controller:5002
-    reverse_proxy /anki_service* https://anki_service:8000
-    reverse_proxy /validate-token https://auth:5003
+    reverse_proxy /extract_pdf* http://extract_pdf:5001
+    reverse_proxy /main_controller* http://main_controller:5002
+    reverse_proxy /anki_service* http://anki_service:8000
+    reverse_proxy /validate-token http://auth:5003
 
     # CORS headers
     header {
